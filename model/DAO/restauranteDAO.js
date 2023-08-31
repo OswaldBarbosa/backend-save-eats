@@ -115,5 +115,6 @@ module.exports = {
     insertRestaurante,
     deleteRestaurante,
     selectRestauranteByID,
+    updateRestaurante,
     selectLastId
 }

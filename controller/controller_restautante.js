@@ -69,6 +69,48 @@ const deletarRestaurante = async function (idRestaurante) {
 
 }
 
+const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
+
+    if (
+        dadosRestaurante.nome_proprietario == '' || dadosRestaurante.nome_proprietario == undefined || dadosRestaurante.nome_proprietario.length > 150 ||
+        dadosRestaurante.nome_fantasia == '' || dadosRestaurante.nome_fantasia == undefined || dadosRestaurante.nome_fantasia.length > 150 ||
+        dadosRestaurante.razao_social == '' || dadosRestaurante.razao_social == undefined || dadosRestaurante.razao_social > 150 ||
+        dadosRestaurante.email == '' || dadosRestaurante.email == undefined || dadosRestaurante.email > 255 ||
+        dadosRestaurante.senha == '' || dadosRestaurante.senha == undefined || dadosRestaurante.senha > 150 ||
+        dadosRestaurante.id_categoria == '' || dadosRestaurante.id_categoria == undefined ||
+        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined 
+
+    ){
+        return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
+
+    } else if (idCliente == '' || idCliente == undefined || idCliente == isNaN(idCliente)) {
+
+        return message.message.ERROR_INVALID_ID
+    } else {
+        dadosCliente.id = idCliente;
+
+        let statusId = await clienteDAO.selectLastId();
+
+        if (statusId) {
+            //Encaminha os dados para a model do cliente
+            let resultDadosCliente = await clienteDAO.updateCliente(dadosCliente);
+
+            if (resultDadosCliente) {
+
+                let dadosClienteJSON = {}
+                dadosClienteJSON.status = message.SUCESS_UPDATED_ITEM.status
+                dadosClienteJSON.message = message.SUCESS_UPDATED_ITEM.message
+                dadosClienteJSON.cliente = dadosCliente
+                return dadosClienteJSON
+            } else
+                return message.ERROR_INTERNAL_SERVER
+
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
 
 module.exports = {
     inserirRestaurante,

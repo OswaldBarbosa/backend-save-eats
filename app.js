@@ -115,4 +115,15 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
 
     response.status(dados.status)
     response.json(dados)
-})
+});
+
+
+///////////////////////////////////////// Restaurante //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle do Cliente
+* Data : 31/08/2023
+********************************/
+
+
