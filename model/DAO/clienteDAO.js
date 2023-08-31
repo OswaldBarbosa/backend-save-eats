@@ -45,11 +45,14 @@ const deleteCliente = async function (id) {
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
-    if (resultStatus)
+    if (resultStatus){
         return true
-    else
+    } else {
         return false
+    }
+
 }
+
 
 ///////////////////////Updates//////////////////////////
 const updateCliente = async function (dadosCliente) {
@@ -68,10 +71,11 @@ const updateCliente = async function (dadosCliente) {
     //Executa o scriptSQL no BD
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
-    if (resultStatus)
+    if (resultStatus){
         return true
-    else
+    } else {
         return false
+    }
 }
 
 ///////////////////////Selects//////////////////////////
@@ -93,12 +97,14 @@ const selectClienteByID = async function (id) {
 
     let rsCliente = await prisma.$queryRawUnsafe(sql)
 
-    if (rsCliente.length > 0)
+    if (rsCliente.length > 0){
         return rsCliente
-    else
+    }{
         return false
+    }
+    
+        
 }
-
 
 
 const selectLastId = async function () {
@@ -106,10 +112,12 @@ const selectLastId = async function () {
 
     let rsCliente = await prisma.$queryRawUnsafe(sql)
 
-    if (rsCliente.length > 0)
+    if (rsCliente.length > 0){
         return rsCliente
-    else
+    } else{
         return false
+    }
+   
 }          
 
 module.exports = {
