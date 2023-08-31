@@ -107,6 +107,25 @@ const atualizarCliente = async function (dadosCliente, idCliente) {
     }
 }
 
+const getClientes = async function () {
+    let dadosClientesJSON = {};
+
+
+    let dadosCliente = await clienteDAO.selectAllClientes();
+
+    if (dadosCliente) {
+
+        dadosClientesJSON.status = message.SUCESS_REQUEST.status
+        dadosClientesJSON.message = message.SUCESS_REQUEST.message
+        dadosClientesJSON.quantidade = dadosUsuario.length;
+        dadosClientesJSON.clientes = dadosCliente
+        return dadosClientesJSON
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+
+}
+
 const getClientePorID = async function (id) {
 
     if (id == '' || id == undefined || isNaN(id)) {
@@ -132,5 +151,6 @@ module.exports = {
     inserirCliente,
     deletarCliente,
     atualizarCliente,
+    getClientes,
     getClientePorID
 }

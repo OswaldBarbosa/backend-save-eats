@@ -83,25 +83,26 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
 
-    } else if (idCliente == '' || idCliente == undefined || idCliente == isNaN(idCliente)) {
+    } else if (idRestaurante == '' || idRestaurante == undefined || idRestaurante == isNaN(idRestaurante)) {
 
         return message.message.ERROR_INVALID_ID
     } else {
-        dadosCliente.id = idCliente;
+        dadosRestaurante.id = idRestaurante;
 
-        let statusId = await clienteDAO.selectLastId();
+        let statusId = await restauranteDAO.selectLastId();
 
         if (statusId) {
-            //Encaminha os dados para a model do cliente
-            let resultDadosCliente = await clienteDAO.updateCliente(dadosCliente);
+      
+            let resultDados = await restauranteDAO.updateRestaurante(dadosRestaurante);
 
-            if (resultDadosCliente) {
+            if (resultDados) {
 
-                let dadosClienteJSON = {}
-                dadosClienteJSON.status = message.SUCESS_UPDATED_ITEM.status
-                dadosClienteJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosClienteJSON.cliente = dadosCliente
-                return dadosClienteJSON
+                let dadosRestauranteJSON = {}
+                dadosRestauranteJSON.status = message.SUCESS_UPDATED_ITEM.status
+                dadosRestauranteJSON.message = message.SUCESS_UPDATED_ITEM.message
+                dadosRestauranteJSON.cliente = dadosRestaurante
+
+                return dadosRestauranteJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
 
@@ -111,8 +112,48 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
     }
 }
 
+const getRestaurantes = async function () {
+    let dadosRestaurantesJSON = {};
+
+    let dadosRestaurante = await restauranteDAO.selectAllRestaurante();
+
+    if (dadosRestaurante) {
+
+        dadosRestaurantesJSON.status = message.SUCESS_REQUEST.status
+        dadosRestaurantesJSON.message = message.SUCESS_REQUEST.message
+        dadosRestaurantesJSON.quantidade = dadosRestaurante.length;
+        dadosRestaurantesJSON.restaurantes = dadosRestaurante
+        return dadosRestaurantesJSON
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+
+}
+
+const getRestaurantePorID = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosJSON = {}
+
+        let dados = await restauranteDAO.selectRestauranteByID(id)
+
+        if (dados) {
+            dadosJSON.status = message.SUCESS_REQUEST.status
+            dadosJSON.message = message.SUCESS_REQUEST.message
+            dadosJSON.restaurantes = dados
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
 
 module.exports = {
     inserirRestaurante,
-    deletarRestaurante
+    deletarRestaurante,
+    atualizarRestaurante,
+    getRestaurantes,
+    getRestaurantePorID
 }

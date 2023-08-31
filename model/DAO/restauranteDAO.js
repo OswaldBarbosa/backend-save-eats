@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************
  * Objetivo: Responsavel pela manipulação de dados do RESTAURANTE no Banco de Dados
- * Data: 31/09/2023
+ * Data: 31/08/2023
  * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************///Import da biblioteca do prisma client
@@ -83,6 +83,20 @@ const updateRestaurante = async function (dadosRestaurante) {
 
 
 ///////////////////////Selects//////////////////////////
+
+const selectAllRestaurante = async function () {
+    let sql = `select * from tbl_restaurante`
+
+    let rsRestaurante = await prisma.$queryRawUnsafe(sql)
+
+    if (rsRestaurante.length > 0) {
+        return rsRestaurante;
+    }
+    else {
+        return false;
+    }
+}
+
 const selectRestauranteByID = async function (id) {
     let sql = `select * from tbl_restaurante where id = ${id}`
 
@@ -116,5 +130,6 @@ module.exports = {
     deleteRestaurante,
     selectRestauranteByID,
     updateRestaurante,
+    selectAllRestaurante,
     selectLastId
 }
