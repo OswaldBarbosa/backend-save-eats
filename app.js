@@ -41,6 +41,7 @@ var controllerCategoriaRestaurante = require ('./controller/controller_categoria
 var controllerDiaSemana = require ('./controller/controller_dia_semana.js')
 var controllerHorarioFuncionamento = require ('./controller/controller_horario_funcionamento.js')
 var controllerRestauranteFuncionamentoDiaSemana = require ('./controller/controller_restaurante_funcionamento_dia_semana.js')
+var controllerEnderecoRestaurante = require ('./controller/controller_endereco_restaurante.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -665,3 +666,91 @@ app.get('/v1/saveeats/restaurante/funcionamento/dia/semana/id/:id', cors(), body
     response.json(dados)
 });
 
+
+///////////////////////////////////////// Endereco Restaurante  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Endereco Restaurante
+* Data : 04/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de endereco do restaurante
+app.post('/v1/saveeats/endereco/restaurante', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerEnderecoRestaurante.inserirEnderecoRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro do endereco de um restaurante pelo id
+app.delete('/v1/saveeats/endereco/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idEnderecoRestaurante = request.params.id;
+
+    let resultDados = await controllerEnderecoRestaurante.deletarEnderecoRestaurante(idEnderecoRestaurante)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro do endereco de um restaurante pelo id
+app.put('/v1/saveeats/endereco/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idEnderecoRestaurante = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerEnderecoRestaurante.atualizarEnderecoRestaurante(dadosBody, idEnderecoRestaurante);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/endereco/restaurante', cors(), async function (request, response) {
+
+    let dados = await controllerEnderecoRestaurante.getEnderecoRestaurante();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/endereco/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerEnderecoRestaurante.getEnderecoRestaurantePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
