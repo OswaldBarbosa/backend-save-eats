@@ -51,7 +51,7 @@ const updateHorarioFuncionamento = async function (dadosHorarioFuncionamento) {
     let sql = `update tbl_horario_funcionamento set
                     dia = '${dadosHorarioFuncionamento.dia}',
                     horario_inicio = '${dadosHorarioFuncionamento.horario_inicio}',
-                    horario_final = '${dadosHorarioFuncionamento.horario_final}',
+                    horario_final = '${dadosHorarioFuncionamento.horario_final}'
           
                 where id = ${dadosHorarioFuncionamento.id}    
             `

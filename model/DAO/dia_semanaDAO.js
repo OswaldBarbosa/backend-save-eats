@@ -44,9 +44,9 @@ const deleteDiaSemana = async function (id) {
 ///////////////////////Updates//////////////////////////
 const updateDiaSemana = async function (dadosDiaSemana) {
     let sql = `update tbl_dia_semana set
-                    dia_semana = '${dadosDiaSemana.dia_semana}',
+                    dia_semana = '${dadosDiaSemana.dia_semana}'
           
-                where id = ${dadosTelefone.id}    
+                where id = ${dadosDiaSemana.id}    
             `
 
     //Executa o scriptSQL no BD

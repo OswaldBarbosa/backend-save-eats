@@ -14,7 +14,7 @@ const insertCategoriaRestaurante = async function (dadosCategoria) {
     let sql = `insert into tbl_categoria_restaurante (
         nome_categoria
     ) values (
-        '${dadosCategoria.nome_categoria}',
+        '${dadosCategoria.nome_categoria}'
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)

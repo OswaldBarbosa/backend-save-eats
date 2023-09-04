@@ -117,7 +117,7 @@ const getClientes = async function () {
 
         dadosClientesJSON.status = message.SUCESS_REQUEST.status
         dadosClientesJSON.message = message.SUCESS_REQUEST.message
-        dadosClientesJSON.quantidade = dadosUsuario.length;
+        dadosClientesJSON.quantidade = dadosCliente.length;
         dadosClientesJSON.clientes = dadosCliente
         return dadosClientesJSON
     } else {

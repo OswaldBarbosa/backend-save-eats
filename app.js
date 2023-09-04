@@ -42,6 +42,7 @@ var controllerDiaSemana = require ('./controller/controller_dia_semana.js')
 var controllerHorarioFuncionamento = require ('./controller/controller_horario_funcionamento.js')
 var controllerRestauranteFuncionamentoDiaSemana = require ('./controller/controller_restaurante_funcionamento_dia_semana.js')
 var controllerEnderecoRestaurante = require ('./controller/controller_endereco_restaurante.js')
+var controllerEstadoRestaurante = require ('./controller/controller_estado_restaurante.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -754,6 +755,94 @@ app.get('/v1/saveeats/endereco/restaurante/id/:id', cors(), bodyParserJSON, asyn
     response.status(dados.status)
     response.json(dados)
 });
+
+
+/********************************
+* Objetivo : API de controle do Estado Restaurante
+* Data : 04/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo estado no banco
+app.post('/v1/saveeats/estado/restaurante', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerEstadoRestaurante.inserirEstadoRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui um estado 
+app.delete('/v1/saveeats/estado/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idEstadoRestaurante = request.params.id;
+
+    let resultDados = await controllerEstadoRestaurante.deletarEstadoRestaurante(idEstadoRestaurante)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+//EndPoint: PUT - Atualiza um estado pelo id
+app.put('/v1/saveeats/estado/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idEstadoRestaurante = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerEstadoRestaurante.atualizarEstadoRestaurante(dadosBody, idEstadoRestaurante);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/estado/restaurante', cors(), async function (request, response) {
+
+    let dados = await controllerEstadoRestaurante.getEstadoRestaurante();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/estado/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerEstadoRestaurante.getEstadoRestaurantePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
 
 
 app.listen(8080, function () {
