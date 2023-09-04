@@ -754,3 +754,8 @@ app.get('/v1/saveeats/endereco/restaurante/id/:id', cors(), bodyParserJSON, asyn
     response.status(dados.status)
     response.json(dados)
 });
+
+
+app.listen(8080, function () {
+    console.log('Servidor aguardando requisição na porta 8080')
+})
