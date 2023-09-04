@@ -20,8 +20,8 @@ const inserirRestaurante = async function (dadosRestaurante) {
         dadosRestaurante.razao_social == '' || dadosRestaurante.razao_social == undefined || dadosRestaurante.razao_social > 150 ||
         dadosRestaurante.email == '' || dadosRestaurante.email == undefined || dadosRestaurante.email > 255 ||
         dadosRestaurante.senha == '' || dadosRestaurante.senha == undefined || dadosRestaurante.senha > 150 ||
-        dadosRestaurante.id_categoria == '' || dadosRestaurante.id_categoria == undefined ||
-        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined 
+        dadosRestaurante.id_categoria == '' || dadosRestaurante.id_categoria == undefined || isNaN(dadosRestaurante.id_categoria) ||
+        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined || isNaN(dadosRestaurante.id_endereco_restaurante) 
 
     ){
         return message.ERROR_REQUIRED_FIELDS

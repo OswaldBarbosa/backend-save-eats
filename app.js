@@ -37,7 +37,10 @@ const bodyParserJSON = bodyParser.json();
 var controllerCliente = require ('./controller/controller_cliente.js');
 var controllerRestaurante = require ('./controller/controller_restautante.js');
 var controllerTelefoneDoRestaurante = require ('./controller/controller_telefone_restaurante.js')
-var conntrollerCategoriaRestaurante = require ('./controller/controller_categoria_restaurante.js')
+var controllerCategoriaRestaurante = require ('./controller/controller_categoria_restaurante.js')
+var controllerDiaSemana = require ('./controller/controller_dia_semana.js')
+var controllerHorarioFuncionamento = require ('./controller/controller_horario_funcionamento.js')
+var controllerRestauranteFuncionamentoDiaSemana = require ('./controller/controller_restaurante_funcionamento_dia_semana.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -325,7 +328,7 @@ app.post('/v1/saveeats/categoria/restaurante', cors(), bodyParserJSON, async fun
     if (String(contentType).toLowerCase() == 'application/json') {
         let dadosBody = request.body
 
-        let resulDados = await conntrollerCategoriaRestaurante.inserirCategoriaRestaurante(dadosBody)
+        let resulDados = await controllerCategoriaRestaurante.inserirCategoriaRestaurante(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)
@@ -341,7 +344,7 @@ app.delete('/v1/saveeats/categoria/restaurante/id/:id', cors(), bodyParserJSON, 
 
     let idCategoria = request.params.id;
 
-    let resultDados = await conntrollerCategoriaRestaurante.deletarCategoriaRestaurante(idCategoria)
+    let resultDados = await controllerCategoriaRestaurante.deletarCategoriaRestaurante(idCategoria)
 
     if (resultDados) {
         response.json(resultDados);
@@ -365,7 +368,7 @@ app.put('/v1/saveeats/categoria/restaurante/:id', cors(), bodyParserJSON, async 
         let dadosBody = request.body;
 
         //Encaminha os dados para a controller
-        let resultDados = await conntrollerCategoriaRestaurante.atualizarCategoriaRestaurante(dadosBody, idCategoriaRestaurante);
+        let resultDados = await controllerCategoriaRestaurante.atualizarCategoriaRestaurante(dadosBody, idCategoriaRestaurante);
 
         response.status(resultDados.status)
         response.json(resultDados)
@@ -380,9 +383,285 @@ app.put('/v1/saveeats/categoria/restaurante/:id', cors(), bodyParserJSON, async 
 //EndPoint: GET - Retorna todas categorias
 app.get('/v1/saveeats/categoria/restaurante', cors(), async function (request, response) {
 
-    let dados = await conntrollerCategoriaRestaurante.getCategoriaRestaurante();
+    let dados = await controllerCategoriaRestaurante.getCategoriaRestaurante();
 
     response.status(dados.status)
     response.json(dados)
 
 });
+
+//EndPoint: GET - Retorna a categoria pelo id
+app.get('/v1/saveeats/categoria/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCategoriaRestaurante.getCategoriaRestaurantePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Dia Semana  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da tabela dia_semana
+* Data : 04/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de dia
+app.post('/v1/saveeats/dia/semana', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerDiaSemana.inserirDiaSemana(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui um registro de dia pelo id
+app.delete('/v1/saveeats/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idDiaSemana = request.params.id;
+
+    let resultDados = await controllerDiaSemana.deletarDiaSemana(idDiaSemana)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza dia da semana pelo id
+app.put('/v1/saveeats/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idDiaSemana = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerDiaSemana.atualizarDiaSemana(dadosBody, idDiaSemana);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros de dias
+app.get('/v1/saveeats/dia/semana', cors(), async function (request, response) {
+
+    let dados = await controllerDiaSemana.getDiaSemana();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna dia semana pelo id
+app.get('/v1/saveeats/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerDiaSemana.getDiaSemanaPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Horario Funcionamento  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle do horario de funcionamento
+* Data : 04/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo horario de funcionamento
+app.post('/v1/saveeats/horario/funcionamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerHorarioFuncionamento.inserirHorarioFuncionamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui um horario de funcionamento pelo id
+app.delete('/v1/saveeats/horario/funcionamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idHorarioFuncionamento = request.params.id;
+
+    let resultDados = await controllerHorarioFuncionamento.deletarHorarioFuncionamento(idHorarioFuncionamento)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza horario de funcionamento pelo id
+app.put('/v1/saveeats/horario/funcionamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idHorarioFuncionamento = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerHorarioFuncionamento.atualizarHorarioFuncionamento(dadosBody, idHorarioFuncionamento);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos horarios de funcionamento
+app.get('/v1/saveeats/horario/funcionamento', cors(), async function (request, response) {
+
+    let dados = await controllerHorarioFuncionamento.getHorarioFuncionamento();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna horario funcionamento pelo id
+app.get('/v1/saveeats/horario/funcionamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerHorarioFuncionamento.getHorarioFuncionamentoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Restaurante Funcionamento Dia Semana (Intermediaria)  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle do funcionamento do restaurante
+* Data : 04/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de funcionamento do restaurante
+app.post('/v1/saveeats/restaurante/funcionamento/dia/semana', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestauranteFuncionamentoDiaSemana.inserirRestauranteFuncionamentoDiaSemana(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro de funcionamento do restaurante pelo id
+app.delete('/v1/saveeats/restaurante/funcionamento/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestauranteFuncionamentoDiaSemana = request.params.id;
+
+    let resultDados = await controllerRestauranteFuncionamentoDiaSemana.deletarRestauranteFuncionamentoDiaSemana(idRestauranteFuncionamentoDiaSemana)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro de funcionamento do restaurante pelo id
+app.put('/v1/saveeats/restaurante/funcionamento/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestauranteFuncionamentoDiaSemana = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestauranteFuncionamentoDiaSemana.atualizarRestauranteFuncionamentoDiaSemana(dadosBody, idRestauranteFuncionamentoDiaSemana);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/restaurante/funcionamento/dia/semana', cors(), async function (request, response) {
+
+    let dados = await controllerRestauranteFuncionamentoDiaSemana.getRestauranteFuncionamentoDiaSemana();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/restaurante/funcionamento/dia/semana/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRestauranteFuncionamentoDiaSemana.getRestauranteFuncionamentoDiaSemanaPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
