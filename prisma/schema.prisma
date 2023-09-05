@@ -11,7 +11,7 @@ datasource db {
 //Sempre que for sincronizar o prisma com o banco de dados,
 //temos que criar pelo menos uma tabela via ORM,para acontecer o processo de sincronizar
 
-//model tbl_teste {
-  //id Int @id @default(autoincrement())
-  //nome String
-//}
+model tbl_teste {
+  id Int @id @default(autoincrement())
+  nome String
+}
