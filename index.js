@@ -214,6 +214,17 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 
 });
 
+//EndPoint: GET - Retorna o restaurante pelo email e senha
+app.get('/v1/saveeats/:email/:senha', cors(), async function(request, response) {
+    let email = request.params.email
+    let senha = request.params.senha
+
+    let Dados = await controllerRestaurante.getRestauranteByEmailSenha(email, senha)
+
+    response.status(Dados.status)
+    response.json(Dados)
+})
+
 //EndPoint: GET - Retorna o restaurante pelo id
 app.get('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
 

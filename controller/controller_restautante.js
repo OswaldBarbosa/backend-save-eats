@@ -130,6 +130,33 @@ const getRestaurantes = async function () {
 
 }
 
+const getRestauranteByEmailSenha = async function (email, password) {
+    
+    if (
+        email == '' || email == undefined || email.length > 255 ||
+        password == '' || password == undefined || password.length > 150
+    ) {
+        return message.ERROR_REQUIRED_FIELDS
+
+    } else {
+
+        let RestauranteJsonEmailpassword = {}
+
+        let dadosRestaurante = await restauranteDAO.selectRestauranteByEmailPassword(email, password)
+
+        if (dadosRestaurante != null && dadosRestaurante != undefined && isNaN(dadosRestaurante)) {
+            RestauranteJsonEmailpassword.status = message.SUCESS_REQUEST.status
+            RestauranteJsonEmailpassword.Restaurante = dadosRestaurante;
+
+            return RestauranteJsonEmailpassword
+
+        } else {
+            return message.ERROR_INVALID_EMAIL_PASSWORD
+        }
+    }
+
+}
+
 const getRestaurantePorID = async function (id) {
 
     if (id == '' || id == undefined || isNaN(id)) {
@@ -155,5 +182,6 @@ module.exports = {
     deletarRestaurante,
     atualizarRestaurante,
     getRestaurantes,
-    getRestaurantePorID
+    getRestaurantePorID,
+    getRestauranteByEmailSenha
 }
