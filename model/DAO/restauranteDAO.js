@@ -110,6 +110,18 @@ const selectRestauranteByID = async function (id) {
         
 }
 
+const selectRestauranteByEmailPassword = async function(email, password){
+    let sql = `select * from tbl_restaurante where email = '${email}' and senha = '${password}';`
+
+    let rsRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsRestaurante.length > 0){
+        return rsRestaurante
+    } else{
+        return false
+    }
+}
+
 
 const selectLastId = async function () {
     let sql = `select * from tbl_restaurante order by id desc limit 1;`
@@ -131,5 +143,6 @@ module.exports = {
     selectRestauranteByID,
     updateRestaurante,
     selectAllRestaurante,
+    selectRestauranteByEmailPassword,
     selectLastId
 }
