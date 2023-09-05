@@ -31,7 +31,7 @@ const insertEstadoRestaurante = async function (dadosEstadoRestaurante) {
 
 //////////////////////Deletes///////////////////////////
 const deleteEstadoRestaurante = async function (id) {
-    let sql = `delete from tbl_estado_restaurante id = ${id}`
+    let sql = `delete from tbl_estado_restaurante where id = ${id};`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -47,7 +47,7 @@ const deleteEstadoRestaurante = async function (id) {
 ///////////////////////Updates//////////////////////////
 const updateEstadoRestaurante = async function (dadosEstadoRestaurante) {
     let sql = `update tbl_estado_restaurante set
-                    nome_estado = '${dadosEstadoRestaurante.nome_estado}',
+                    nome_estado = '${dadosEstadoRestaurante.nome_estado};'
   
                     where id = ${dadosEstadoRestaurante.id}    
             `

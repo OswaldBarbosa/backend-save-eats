@@ -72,7 +72,7 @@ const atualizarEstadoRestaurante = async function (dadosEstadoRestaurante, idEst
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
 
-    } else if (idEstadoRestaurante == '' || idEstadoRestaurante == undefined || idCliente == isNaN(idEstadoRestaurante)) {
+    } else if (idEstadoRestaurante == '' || idEstadoRestaurante == undefined || idEstadoRestaurante == isNaN(idEstadoRestaurante)) {
 
         return message.message.ERROR_INVALID_ID
     } else {
