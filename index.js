@@ -43,6 +43,7 @@ var controllerHorarioFuncionamento = require ('./controller/controller_horario_f
 var controllerRestauranteFuncionamentoDiaSemana = require ('./controller/controller_restaurante_funcionamento_dia_semana.js')
 var controllerEnderecoRestaurante = require ('./controller/controller_endereco_restaurante.js')
 var controllerEstadoRestaurante = require ('./controller/controller_estado_restaurante.js')
+var controllerCidadeRestaurante = require ('./controller/controller_cidade_restaurante.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -854,6 +855,97 @@ app.get('/v1/saveeats/estado/restaurante/id/:id', cors(), bodyParserJSON, async 
     response.json(dados)
 });
 
+
+
+///////////////////////////////////////// Cidade Restaurante  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Cidade Restaurante
+* Data : 05/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova cidade com id do estado no banco
+app.post('/v1/saveeats/cidade/restaurante', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCidadeRestaurante.inserirCidadeRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma cidade com id do estado
+app.delete('/v1/saveeats/cidade/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCidadeRestaurante = request.params.id;
+
+    let resultDados = await controllerCidadeRestaurante.deletarCidadeRestaurante(idCidadeRestaurante)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//Verificar esse endpoint
+//EndPoint: PUT - Atualiza uma cidade pelo id
+app.put('/v1/saveeats/cidade/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCidadeRestaurante = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCidadeRestaurante.atualizarCidadeRestaurante(dadosBody, idCidadeRestaurante);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas cidades
+app.get('/v1/saveeats/cidade/restaurante', cors(), async function (request, response) {
+
+    let dados = await controllerCidadeRestaurante.getCidadeRestaurante();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna cidade pelo id
+app.get('/v1/saveeats/cidade/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCidadeRestaurante.getCidadeRestaurantePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
 
 
 app.listen(8080, function () {
