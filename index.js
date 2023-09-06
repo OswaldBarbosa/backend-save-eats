@@ -45,6 +45,7 @@ var controllerEnderecoRestaurante = require ('./controller/controller_endereco_r
 var controllerEstadoRestaurante = require ('./controller/controller_estado_restaurante.js')
 var controllerEstadoCliente = require('./controller/controller_estado_cliente')
 var controllerCidadeRestaurante = require ('./controller/controller_cidade_restaurante.js')
+var controllerCidadeCliente= require ('./controller/controller_cidade_cliente.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -215,15 +216,15 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 
 });
 
-//EndPoint: GET - Retorna o restaurante pelo email e senha
-// app.get('/v1/saveeats/:email/:senha', cors(), async function(request, response) {
+// //EndPoint: GET - Retorna o restaurante pelo email e senha
+// app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function(request, response) {
 //     let email = request.params.email
 //     let senha = request.params.senha
 
-//     let Dados = await controllerRestaurante.getRestauranteByEmailSenha(email, senha)
+//     let dados = await controllerRestaurante.getRestauranteByEmailSenha(email, senha)
 
-//     //response.status(Dados.status)
-//     response.json(Dados)
+//     response.status(dados.status)
+//     response.json(dados)
 // })
 
 //EndPoint: GET - Retorna o restaurante pelo id
@@ -854,7 +855,9 @@ app.get('/v1/saveeats/estado/restaurante/id/:id', cors(), bodyParserJSON, async 
     response.status(dados.status)
     response.json(dados)
 });
- 
+
+///////////////////////////////////////// Estado Cliente  //////////////////////////////////////////////
+
 
 /********************************
 * Objetivo : API de controle do Estado Cliente
@@ -924,7 +927,7 @@ app.put('/v1/saveeats/estado/cliente/id/:id', cors(), bodyParserJSON, async func
 //EndPoint: GET - Retorna todos registros
 app.get('/v1/saveeats/estado/cliente', cors(), async function (request, response) {
 
-    let dados = await controllerEstadoCliente.getEstadoRestaurante();
+    let dados = await controllerEstadoCliente.getEstadoCliente();
 
     response.status(dados.status)
     response.json(dados)
@@ -936,7 +939,7 @@ app.get('/v1/saveeats/estado/cliente/id/:id', cors(), bodyParserJSON, async func
 
     let id = request.params.id
 
-    let dados = await controllerEstadoCliente.getEstadoRestaurantePorID(id)
+    let dados = await controllerEstadoCliente.getEstadoClientePorID(id)
 
     response.status(dados.status)
     response.json(dados)
@@ -1029,6 +1032,96 @@ app.get('/v1/saveeats/cidade/restaurante/id/:id', cors(), bodyParserJSON, async 
     let id = request.params.id
 
     let dados = await controllerCidadeRestaurante.getCidadeRestaurantePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+///////////////////////////////////////// Cidade Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Cidade Cliente
+* Data : 06/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova cidade com id do estado no banco
+app.post('/v1/saveeats/cidade/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCidadeCliente.inserirCidadeCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma cidade com id do estado
+app.delete('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCidadeCliente = request.params.id;
+
+    let resultDados = await controllerCidadeCliente.deletarCidadeCliente(idCidadeCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza uma cidade pelo id
+app.put('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCidadeCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCidadeCliente.atualizarCidadeCliente(dadosBody, idCidadeCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas cidades
+app.get('/v1/saveeats/cidade/cliente', cors(), async function (request, response) {
+
+    let dados = await controllerCidadeCliente.getCidadeCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna cidade pelo id
+app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCidadeCliente.getCidadeClientePorID(id)
 
     response.status(dados.status)
     response.json(dados)
