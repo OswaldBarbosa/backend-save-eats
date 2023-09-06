@@ -45,8 +45,9 @@ var controllerEnderecoRestaurante = require ('./controller/controller_endereco_r
 var controllerEstadoRestaurante = require ('./controller/controller_estado_restaurante.js')
 var controllerEstadoCliente = require('./controller/controller_estado_cliente')
 var controllerCidadeRestaurante = require ('./controller/controller_cidade_restaurante.js')
-var controllerCidadeCliente= require ('./controller/controller_cidade_cliente.js')
-var controllerEnderecoCliente= require ('./controller/controller_endereco_cliente')
+var controllerCidadeCliente = require ('./controller/controller_cidade_cliente.js')
+var controllerEnderecoCliente = require ('./controller/controller_endereco_cliente.js')
+var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -1135,7 +1136,7 @@ app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async func
 
 /********************************
 * Objetivo : API de controle de Endereco Cliente
-* Data : 04/09/2023
+* Data : 06/09/2023
 ********************************/
 
 //EndPoint: POST - Insere um novo registro de endereco do cliente
@@ -1218,6 +1219,93 @@ app.get('/v1/saveeats/endereco/cliente/id/:id', cors(), bodyParserJSON, async fu
     response.json(dados)
 });
 
+///////////////////////////////////////// Intermed Endereco Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da intermediária entre Endereco Cliente
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de endereco do cliente
+app.post('/v1/saveeats/intermed-endereco-cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerIntermedEnderecoCliente.inserirIntermedEnderecoCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro do endereco de um cliente pelo id
+app.delete('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idIntermedEnderecoCliente = request.params.id;
+
+    let resultDados = await controllerIntermedEnderecoCliente.deletarIntermedEnderecoCliente(idIntermedEnderecoCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro do endereco de um cliente pelo id
+app.put('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idIntermedEnderecoCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerIntermedEnderecoCliente.atualizarIntermedEnderecoCliente(dadosBody, idIntermedEnderecoCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/intermed-endereco-cliente', cors(), async function (request, response) {
+
+    let dados = await controllerIntermedEnderecoCliente.getIntermedEnderecoCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerIntermedEnderecoCliente.getIntermedEnderecoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
 
 
 app.listen(8080, function () {
