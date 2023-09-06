@@ -46,6 +46,8 @@ var controllerEstadoRestaurante = require ('./controller/controller_estado_resta
 var controllerEstadoCliente = require('./controller/controller_estado_cliente')
 var controllerCidadeRestaurante = require ('./controller/controller_cidade_restaurante.js')
 var controllerCidadeCliente = require ('./controller/controller_cidade_cliente.js')
+var controllerEnderecoCliente = require ('./controller/controller_endereco_cliente.js')
+var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
 var controllerFinanceiro = require ('./controller/controller_financeiro.js')
 var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
 
@@ -1131,6 +1133,273 @@ app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async func
 });
 
 
+///////////////////////////////////////// Endereco Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Endereco Cliente
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de endereco do cliente
+app.post('/v1/saveeats/endereco/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerEnderecoCliente.inserirEnderecoCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro do endereco de um cliente pelo id
+app.delete('/v1/saveeats/endereco/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idEnderecoCliente = request.params.id;
+
+    let resultDados = await controllerEnderecoCliente.deletarEnderecoCliente(idEnderecoCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro do endereco de um cliente pelo id
+app.put('/v1/saveeats/endereco/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idEnderecoCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerEnderecoCliente.atualizarEnderecoCliente(dadosBody, idEnderecoCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/endereco/cliente', cors(), async function (request, response) {
+
+    let dados = await controllerEnderecoCliente.getEnderecoCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/endereco/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerEnderecoCliente.getEnderecoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Intermed Endereco Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da intermediária entre Endereco Cliente
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de endereco do cliente
+app.post('/v1/saveeats/intermed-endereco-cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerIntermedEnderecoCliente.inserirIntermedEnderecoCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro do endereco de um cliente pelo id
+app.delete('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idIntermedEnderecoCliente = request.params.id;
+
+    let resultDados = await controllerIntermedEnderecoCliente.deletarIntermedEnderecoCliente(idIntermedEnderecoCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro do endereco de um cliente pelo id
+app.put('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idIntermedEnderecoCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerIntermedEnderecoCliente.atualizarIntermedEnderecoCliente(dadosBody, idIntermedEnderecoCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/intermed-endereco-cliente', cors(), async function (request, response) {
+
+    let dados = await controllerIntermedEnderecoCliente.getIntermedEnderecoCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerIntermedEnderecoCliente.getIntermedEnderecoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+///////////////////////////////////////// Cidade Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Cidade Cliente
+* Data : 06/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova cidade com id do estado no banco
+app.post('/v1/saveeats/cidade/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCidadeCliente.inserirCidadeCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma cidade com id do estado
+app.delete('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCidadeCliente = request.params.id;
+
+    let resultDados = await controllerCidadeCliente.deletarCidadeCliente(idCidadeCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza uma cidade pelo id
+app.put('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCidadeCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCidadeCliente.atualizarCidadeCliente(dadosBody, idCidadeCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas cidades
+app.get('/v1/saveeats/cidade/cliente', cors(), async function (request, response) {
+
+    let dados = await controllerCidadeCliente.getCidadeCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna cidade pelo id
+app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCidadeCliente.getCidadeClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
 ///////////////////////////////////////// Financeiro  //////////////////////////////////////////////
 
 
@@ -1314,6 +1583,11 @@ app.delete('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, asy
 
 
 
+
+
+app.listen(8080, function () {
+    console.log('Servidor aguardando requisição na porta 8080')
+});
 
 
 app.listen(8080, function () {
