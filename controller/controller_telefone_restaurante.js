@@ -109,7 +109,7 @@ const getTelefoneDoRestaurante = async function () {
 
         dadosTelefoneJSON.status = message.SUCESS_REQUEST.status
         dadosTelefoneJSON.message = message.SUCESS_REQUEST.message
-        dadosTelefoneJSON.quantidade = dadosRestaurante.length;
+        dadosTelefoneJSON.quantidade = dadosTelefoneRestaurante.length;
         dadosTelefoneJSON.telefones = dadosTelefoneRestaurante
         return  dadosTelefoneJSON
     } else {

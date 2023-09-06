@@ -265,7 +265,7 @@ app.post('/v1/saveeats/telefone/restaurante', cors(), bodyParserJSON, async func
 });
 
 //EndPoint: DELETE - Exclui telefone pelo id
-app.delete('/v1/saveeats/telefone/restaurante/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/saveeats/telefone/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let idTelefone = request.params.id;
 
@@ -281,7 +281,7 @@ app.delete('/v1/saveeats/telefone/restaurante/:id', cors(), bodyParserJSON, asyn
 });
 
 //EndPoint: PUT - Atualiza telefone  pelo id
-app.put('/v1/saveeats/telefone/restaurante/:id', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/saveeats/telefone/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
     //reccebe o content-type da requisicao
     let contentType = request.headers['content-type'];
 

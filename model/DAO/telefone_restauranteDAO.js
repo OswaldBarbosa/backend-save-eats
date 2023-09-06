@@ -13,14 +13,15 @@ var prisma = new PrismaClient()
 ////////////////////////Inserts//////////////////////////
 const insertTelefoneRestaurante = async function (dadosTelefone) {
 
-    let sql = `insert into tbl_telefone_restaurante (
-        numero,
-        id_restaurante,
-    ) values (
-        '${dadosTelefone.numero}',
-         ${dadosTelefone.id_restaurante}
+    let sql = `insert into tbl_telefone_restaurante 
+            (
+                numero, 
+                id_restaurante
+            )
+            values (
+    '${dadosTelefone.numero}',
+     ${dadosTelefone.id_restaurante}
     )`
-
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
     if (resultStatus) {
@@ -84,26 +85,26 @@ const selectTelefoneRestauranteByID = async function (id) {
 
     let rsTelefoneRestaurante = await prisma.$queryRawUnsafe(sql)
 
-    if (rsTelefoneRestaurante.length > 0){
+    if (rsTelefoneRestaurante.length > 0) {
         return rsTelefoneRestaurante
-    } else{
+    } else {
         return false
     }
-        
+
 }
 
 const selectLastId = async function () {
     let sql = `select * from tbl_telefone_restaurante order by id desc limit 1;`
 
-    let rsRestaurante = await prisma.$queryRawUnsafe(sql)
+    let rsTelefoneRestaurante = await prisma.$queryRawUnsafe(sql)
 
-    if (rsTelefoneRestaurante.length > 0){
+    if (rsTelefoneRestaurante.length > 0) {
         return rsTelefoneRestaurante
-    } else{
+    } else {
         return false
     }
-   
-}   
+
+}
 
 module.exports = {
     insertTelefoneRestaurante,
