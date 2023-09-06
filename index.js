@@ -165,7 +165,7 @@ app.post('/v1/saveeats/restaurante', cors(), bodyParserJSON, async function (req
 });
 
 //EndPoint: DELETE - Exclui restaurante pelo id
-app.delete('/v1/saveeats/restaurante/:id', cors(), bodyParserJSON, async function (request, response) {
+app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let idRestaurante = request.params.id;
 
@@ -181,7 +181,7 @@ app.delete('/v1/saveeats/restaurante/:id', cors(), bodyParserJSON, async functio
 });
 
 //EndPoint: PUT - Atualiza restaurante pelo id
-app.put('/v1/saveeats/restaurante/:id', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
     //reccebe o content-type da requisicao
     let contentType = request.headers['content-type'];
 

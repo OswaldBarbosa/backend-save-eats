@@ -15,11 +15,11 @@ const insertRestaurante = async function (dadosRestaurante) {
     let sql = `insert into tbl_restaurante (
         nome_proprietario,
         nome_fantasia,
-        razao_social
+        razao_social,
         email,
         senha,
         foto,
-        id_categoria,
+        id_categoria_restaurante,
         id_endereco_restaurante
     ) values (
         '${dadosRestaurante.nome_proprietario}',
@@ -28,9 +28,9 @@ const insertRestaurante = async function (dadosRestaurante) {
         '${dadosRestaurante.email}',
         '${dadosRestaurante.senha}',
         '${dadosRestaurante.foto}',
-        ${dadosRestaurante.id_categoria},
+        ${dadosRestaurante.id_categoria_restaurante},
         ${dadosRestaurante.id_endereco_restaurante}
-    )`
+    )`;
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -65,7 +65,7 @@ const updateRestaurante = async function (dadosRestaurante) {
                     email = '${dadosRestaurante.email}',
                     senha = '${dadosRestaurante.senha}',
                     foto = '${dadosRestaurante.foto}',
-                    id_categoria = ${dadosRestaurante.id_categoria},
+                    id_categoria_restaurante = ${dadosRestaurante.id_categoria_restaurante},
                     id_endereco_restaurante = ${dadosRestaurante.id_endereco_restaurante}
 
                 where id = ${dadosRestaurante.id}    

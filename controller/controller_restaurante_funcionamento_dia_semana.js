@@ -16,9 +16,10 @@ const { request } = require('express')
 const inserirRestauranteFuncionamentoDiaSemana = async function (dados) {
 
     if (
+        dados.id_restaurante == '' || dados.id_restaurante == undefined || isNaN(dados.id_restaurante)  ||
         dados.id_dia_semana == '' || dados.id_dia_semana == undefined || isNaN(dados.id_dia_semana) ||
-        dados.id_horario_funcionamento == '' || dados.id_horario_funcionamento == undefined || isNaN(dados.id_horario_funcionamento) ||
-        dados.id_restaurante == '' || dados.id_restaurante == undefined || isNaN(dados.id_restaurante)  
+        dados.id_horario_funcionamento == '' || dados.id_horario_funcionamento == undefined || isNaN(dados.id_horario_funcionamento) 
+      
     ){
         return message.ERROR_REQUIRED_FIELDS
     }else {
@@ -108,11 +109,11 @@ const getRestauranteFuncionamentoDiaSemana = async function () {
 
     let dadosRestauranteFuncionamentoDiaSemana = await restauranteFuncionamentoDiaSemanaDAO.selectAllRestauranteFuncionamentoDiaSemana();
 
-    if (dados) {
+    if (dadosRestauranteFuncionamentoDiaSemana) {
         dadosJSON.status = message.SUCESS_REQUEST.status
         dadosJSON.message = message.SUCESS_REQUEST.message
         dadosJSON.quantidade = dadosRestauranteFuncionamentoDiaSemana.length;
-        dadosJSON.restaurante_funcionamento_dia_semana = dados
+        dadosJSON.restaurante_funcionamento_dia_semana = dadosRestauranteFuncionamentoDiaSemana
 
         return dadosJSON
     } else {

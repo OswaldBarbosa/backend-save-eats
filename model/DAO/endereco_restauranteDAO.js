@@ -60,7 +60,7 @@ const updateEnderecoRestaurante = async function (dadosEnderecoRestaurante) {
                     cep = '${dadosEnderecoRestaurante.cep}',
                     bairro = '${dadosEnderecoRestaurante.bairro}',
                     numero = '${dadosEnderecoRestaurante.numero}',
-                    complemento = '${dadosEnderecoRestaurante.complemento}'
+                    complemento = '${dadosEnderecoRestaurante.complemento}',
                     id_cidade_restaurante = ${dadosEnderecoRestaurante.id_cidade_restaurante}
           
                 where id = ${dadosEnderecoRestaurante.id}    

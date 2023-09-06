@@ -12,13 +12,13 @@ var prisma = new PrismaClient();
  ////////////////////////Inserts//////////////////////////
  const insertRestauranteFuncionamentoDiaSemana = async function (dados) {
     let sql = `insert into tbl_restaurante_funcionamento_dia_semana (
-        id_dia_semana,
+        id_restaurante,
         id_horario_funcionamento,
-        id_restaurante
-    ) values (
-        ${dados.id_dia_semana},
+        id_dia_semana
+    )   values (
+        ${dados.id_restaurante},
         ${dados.id_horario_funcionamento},
-        ${dados.id_restaurante}
+        ${dados.id_dia_semana}
 
     )`
 
@@ -49,9 +49,10 @@ const deleteRestauranteFuncionamentoDiaSemana = async function (id) {
 ///////////////////////Updates//////////////////////////
 const updateRestauranteFuncionamentoDiaSemana = async function (dados) {
     let sql = `update tbl_restaurante_funcionamento_dia_semana set
-                    id_dia_semana = ${dados.id_dia_semana},
-                    id_horario_funcionamento = ${dados.id_horario_funcionamento},
-                    id_restaurante = ${dados.id_restaurante}',
+                    id_restaurante = '${dados.id_restaurante}',
+                    id_horario_funcionamento = '${dados.id_horario_funcionamento}',
+                    id_dia_semana = '${dados.id_dia_semana}'
+                    
           
                 where id = ${dados.id}    
             `
