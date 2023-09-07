@@ -48,6 +48,9 @@ var controllerCidadeRestaurante = require ('./controller/controller_cidade_resta
 var controllerCidadeCliente = require ('./controller/controller_cidade_cliente.js')
 var controllerEnderecoCliente = require ('./controller/controller_endereco_cliente.js')
 var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
+var controllerCategoriaDicas = require ('./controller/controller_categoria_dicas.js')
+var controllerDicas = require ('./controller/controller_dicas.js')
+var controllerIntermedCategoriaDicas = require ('./controller/controller_intermde_categoria_dicas.js')
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -1302,6 +1305,270 @@ app.get('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON,
     let id = request.params.id
 
     let dados = await controllerIntermedEnderecoCliente.getIntermedEnderecoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Categoria das Dicas //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle das Categorias das Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma nova CATEGORIA 
+app.post('/v1/saveeats/categoria/dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCategoriaDicas.inserirCategoriaDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma CATEGORIA pelo id
+app.delete('/v1/saveeats/categoria/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCategoria = request.params.id;
+
+    let resultDados = await controllerCategoriaDicas.deletarCategoriaDicas(idCategoria)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza categoria pelo id
+app.put('/v1/saveeats/categoria/dicas/:id', cors(), bodyParserJSON, async function (request, response) {
+    //reccebe o content-type da requisicao
+    let contentType = request.headers['content-type'];
+
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCategoriaDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCategoriaDicas.atualizarCategoriaDicas(dadosBody, idCategoriaDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas categorias
+app.get('/v1/saveeats/categoria/dicas', cors(), async function (request, response) {
+
+    let dados = await controllerCategoriaDicas.getCategoriaDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna a categoria pelo id
+app.get('/v1/saveeats/categoria/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCategoriaDicas.getCategoriaDicasPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Dicas //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle das Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma nova DICA 
+app.post('/v1/saveeats/dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerDicas.inserirDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma DICA pelo id
+app.delete('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idDicas = request.params.id;
+
+    let resultDados = await controllerDicas.deletarDicas(idDicas)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza DICA pelo id
+app.put('/v1/saveeats/dicas/:id', cors(), bodyParserJSON, async function (request, response) {
+    //reccebe o content-type da requisicao
+    let contentType = request.headers['content-type'];
+
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerDicas.atualizarDicas(dadosBody, idDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas DICAS
+app.get('/v1/saveeats/dicas', cors(), async function (request, response) {
+
+    let dados = await controllerDicas.getDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna a DICA pelo id
+app.get('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerDicas.getDicasPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Intermed Categoria Dicas  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da intermediária entre Categoria Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de categoria das dicas
+app.post('/v1/saveeats/intermed-categoria-dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerIntermedCategoriaDicas.inserirIntermedCategoriaDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro da categoria das dicas pelo id
+app.delete('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idIntermedCategoriaDicas = request.params.id;
+
+    let resultDados = await controllerIntermedCategoriaDicas.deletarIntermedCategoriaDicas(idIntermedCategoriaDicas)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro da categoria das dicas pelo id
+app.put('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idIntermedCategoriaDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerIntermedCategoriaDicas.atualizarIntermedCategoriaDicas(dadosBody, idIntermedCategoriaDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/intermed-categoria-dicas', cors(), async function (request, response) {
+
+    let dados = await controllerIntermedCategoriaDicas.getIntermedCategoriaDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerIntermedCategoriaDicas.getIntermedCategoriaDicasID(id)
 
     response.status(dados.status)
     response.json(dados)
