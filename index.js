@@ -51,6 +51,10 @@ var controllerIntermedEnderecoCliente = require ('./controller/controller_interm
 var controllerCategoriaDicas = require ('./controller/controller_categoria_dicas.js')
 var controllerDicas = require ('./controller/controller_dicas.js')
 var controllerIntermedCategoriaDicas = require ('./controller/controller_intermde_categoria_dicas.js')
+var controllerFinanceiro = require ('./controller/controller_financeiro.js')
+var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
+var controllerRestauranteFreteAreaEntrega = require ('./controller/controller_restaurante_frete_area_entrega.js')
+var controllerFavoritos = require ('./controller/controller_favoritos.js')
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -222,16 +226,16 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 
 });
 
-// //EndPoint: GET - Retorna o restaurante pelo email e senha
-// app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function(request, response) {
-//     let email = request.params.email
-//     let senha = request.params.senha
+//EndPoint: GET - Retorna o restaurante pelo email e senha
+app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function(request, response) {
+    let email = request.params.email
+    let senha = request.params.senha
 
-//     let dados = await controllerRestaurante.getRestauranteByEmailSenha(email, senha)
+    let dados = await controllerRestaurante.getRestauranteByEmailSenha(email, senha)
 
-//     response.status(dados.status)
-//     response.json(dados)
-// })
+    response.status(dados.status)
+    response.json(dados)
+})
 
 //EndPoint: GET - Retorna o restaurante pelo id
 app.get('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -1575,6 +1579,462 @@ app.get('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, 
 });
 
 
+///////////////////////////////////////// Cidade Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Cidade Cliente
+* Data : 06/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova cidade com id do estado no banco
+app.post('/v1/saveeats/cidade/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCidadeCliente.inserirCidadeCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma cidade com id do estado
+app.delete('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCidadeCliente = request.params.id;
+
+    let resultDados = await controllerCidadeCliente.deletarCidadeCliente(idCidadeCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza uma cidade pelo id
+app.put('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCidadeCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCidadeCliente.atualizarCidadeCliente(dadosBody, idCidadeCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas cidades
+app.get('/v1/saveeats/cidade/cliente', cors(), async function (request, response) {
+
+    let dados = await controllerCidadeCliente.getCidadeCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna cidade pelo id
+app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCidadeCliente.getCidadeClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+///////////////////////////////////////// Financeiro  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle do Financeiro
+* Data : 06/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma novo registro na tabela financeiro
+app.post('/v1/saveeats/financeiro', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFinanceiro.inserirFinanceiro(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela financeiro pelo id
+app.delete('/v1/saveeats/financeiro/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFinanceiro = request.params.id;
+
+    let resultDados = await controllerFinanceiro.deletarFinanceiro(idFinanceiro)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela financeiro
+app.get('/v1/saveeats/financeiro', cors(), async function (request, response) {
+
+    let dados = await controllerFinanceiro.getFinanceiro();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna financeiro pelo id
+app.get('/v1/saveeats/financeiro/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFinanceiro.getFinanceiroPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: PUT - Atualiza dados do financeiro pelo id
+app.put('/v1/saveeats/financeiro/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFinanceiro = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFinanceiro.atualizarFinanceiro(dadosBody, idFinanceiro);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+///////////////////////////////////////// Frete Area Entrega  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da tabela frete_area_entrega
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela frete_area_entrega
+app.post('/v1/saveeats/frete/area/entrega', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFreteAreaEntrega.inserirFreteAreaEntrega(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza registro da tabela frete_area_entrega por id
+app.put('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFreteAreaEntrega = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFreteAreaEntrega.atualizarFreteAreaEntrega(dadosBody, idFreteAreaEntrega);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela frete_area_entrega
+app.get('/v1/saveeats/frete/area/entrega', cors(), async function (request, response) {
+
+    let dados = await controllerFreteAreaEntrega.getFreteAreaEntrega();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro da tabela pelo id
+app.get('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFreteAreaEntrega.getFreteAreaEntregaPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela frete_area_entrega
+app.delete('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFreteAreaEntrega = request.params.id;
+
+    let resultDados = await controllerFreteAreaEntrega.deletarFreteAreaEntrega(idFreteAreaEntrega)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+/********************************
+* Objetivo : API de controle da tabela restaurante_frete_area_entrega
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela restaurante_frete_area_entrega
+app.post('/v1/saveeats/restaurante/frete/area/entrega', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestauranteFreteAreaEntrega.inserirRestauranteFreteAreaEntrega(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza registro da tabela restaurante_frete_area_entrega por id
+app.put('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestauranteFreteAreaEntrega = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestauranteFreteAreaEntrega.atualizarRestauranteFreteAreaEntrega(dadosBody, idRestauranteFreteAreaEntrega);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: DELETE - Exclui um registro da tabela restaurante_frete_area_entrega
+app.delete('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestauranteFreteAreaEntrega = request.params.id;
+
+    let resultDados = await controllerRestauranteFreteAreaEntrega.deletarRestauranteFreteAreaEntrega(idRestauranteFreteAreaEntrega)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela restaurante_frete_area_entrega
+app.get('/v1/saveeats/restaurante/frete/area/entrega', cors(), async function (request, response) {
+
+    let dados = await controllerRestauranteFreteAreaEntrega.getRestauranteFreteAreaEntrega();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRestauranteFreteAreaEntrega.getRestauranteFreteAreaEntregaPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+/********************************
+* Objetivo : API de controle da tabela favoritos
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela favoritos
+app.post('/v1/saveeats/restaurantes/favoritos/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFavoritos.inserirFavoritos(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+app.put('/v1/saveeats/restaurantes/favoritos/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFavoritos = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFavoritos.atualizarFavoritos(dadosBody, idFavoritos);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela favoritos
+app.get('/v1/saveeats/restaurantes/favoritos/clientes', cors(), async function (request, response) {
+
+    let dados = await controllerFavoritos.getFavoritos();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFavoritos.getFavoritosPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela favoritos
+app.delete('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFavoritos = request.params.id;
+
+    let resultDados = await controllerFavoritos.deletarFavoritos(idFavoritos)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
 app.listen(8080, function () {
     console.log('Servidor aguardando requisição na porta 8080')
-})
+});
+
+
