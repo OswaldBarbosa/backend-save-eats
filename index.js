@@ -55,6 +55,8 @@ var controllerFinanceiro = require ('./controller/controller_financeiro.js')
 var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
 var controllerRestauranteFreteAreaEntrega = require ('./controller/controller_restaurante_frete_area_entrega.js')
 var controllerFavoritos = require ('./controller/controller_favoritos.js')
+var controllerFormaPagamento = require ('./controller/controller_forma_de_pagamento.js')
+var controllerRestauranteFormaPagamento = require ('./controller/controller_restaurante_forma_pagamento.js')
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -2024,10 +2026,173 @@ app.delete('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyPa
 });
 
 
+/********************************
+* Objetivo : API de controle da tabela forma de pagamento
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela forma_pagamento
+app.post('/v1/saveeats/forma/pagamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFormaPagamento.inserirFormaPagamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//Verificar
+//EndPoint: PUT - Atualiza uma forma de pagamento pelo id
+app.put('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFormaPagamento = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFormaPagamento.atualizarFormaPagamento(dadosBody, idFormaPagamento);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
 
 
+//EndPoint: GET - Retorna todos registro da forma de pagamento
+app.get('/v1/saveeats/forma/pagamento', cors(), async function (request, response) {
+
+    let dados = await controllerFormaPagamento.getFormaPagamento();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
 
 
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFormaPagamento.getFormaPagamentoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da forma_pagamento
+app.delete('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFormaPagamento = request.params.id;
+
+    let resultDados = await controllerFormaPagamento.deletarFormaPagamento(idFormaPagamento)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Restaurante Forma Pagamento  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Restaurante Forma Pagamento
+* Data : 07/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um novo registro na tabela restaurante_forma_pagamento
+app.post('/v1/saveeats/restaurante/forma/pagamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestauranteFormaPagamento.inserirRestauranteFormaPagamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza dados da tabela restaurante_forma_pagamento pelo id
+app.put('/v1/saveeats/restaurante/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestauranteFormaPagamento = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestauranteFormaPagamento.atualizarRestauranteFormaPagamento(dadosBody,idRestauranteFormaPagamento);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela restaurante_forma_pagamento
+app.get('/v1/saveeats/restaurante/forma/pagamento', cors(), async function (request, response) {
+
+    let dados = await controllerRestauranteFormaPagamento.getRestauranteFormaPagamento();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela restaurante_forma_pagamento
+app.delete('/v1/saveeats/restaurante/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestauranteFormaPagamento = request.params.id;
+
+    let resultDados = await controllerRestauranteFormaPagamento.deletarRestauranteFormaPagamento(idRestauranteFormaPagamento)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
 
 
 
