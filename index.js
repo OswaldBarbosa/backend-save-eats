@@ -50,6 +50,8 @@ var controllerEnderecoCliente = require ('./controller/controller_endereco_clien
 var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
 var controllerFinanceiro = require ('./controller/controller_financeiro.js')
 var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
+var controllerRestauranteFreteAreaEntrega = require ('./controller/controller_restaurante_frete_area_entrega.js')
+var controllerFavoritos = require ('./controller/controller_favoritos.js')
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -1581,6 +1583,185 @@ app.delete('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, asy
     }
 });
 
+/********************************
+* Objetivo : API de controle da tabela restaurante_frete_area_entrega
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela restaurante_frete_area_entrega
+app.post('/v1/saveeats/restaurante/frete/area/entrega', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestauranteFreteAreaEntrega.inserirRestauranteFreteAreaEntrega(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza registro da tabela restaurante_frete_area_entrega por id
+app.put('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestauranteFreteAreaEntrega = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestauranteFreteAreaEntrega.atualizarRestauranteFreteAreaEntrega(dadosBody, idRestauranteFreteAreaEntrega);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: DELETE - Exclui um registro da tabela restaurante_frete_area_entrega
+app.delete('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestauranteFreteAreaEntrega = request.params.id;
+
+    let resultDados = await controllerRestauranteFreteAreaEntrega.deletarRestauranteFreteAreaEntrega(idRestauranteFreteAreaEntrega)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela restaurante_frete_area_entrega
+app.get('/v1/saveeats/restaurante/frete/area/entrega', cors(), async function (request, response) {
+
+    let dados = await controllerRestauranteFreteAreaEntrega.getRestauranteFreteAreaEntrega();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/restaurante/frete/area/entrega/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRestauranteFreteAreaEntrega.getRestauranteFreteAreaEntregaPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+/********************************
+* Objetivo : API de controle da tabela favoritos
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela favoritos
+app.post('/v1/saveeats/restaurantes/favoritos/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFavoritos.inserirFavoritos(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+app.put('/v1/saveeats/restaurantes/favoritos/cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFavoritos = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFavoritos.atualizarFavoritos(dadosBody, idFavoritos);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela favoritos
+app.get('/v1/saveeats/restaurantes/favoritos/clientes', cors(), async function (request, response) {
+
+    let dados = await controllerFavoritos.getFavoritos();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFavoritos.getFavoritosPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela favoritos
+app.delete('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFavoritos = request.params.id;
+
+    let resultDados = await controllerFavoritos.deletarFavoritos(idFavoritos)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+
+
+
+
+
 
 
 
@@ -1590,6 +1771,3 @@ app.listen(8080, function () {
 });
 
 
-app.listen(8080, function () {
-    console.log('Servidor aguardando requisição na porta 8080')
-});
