@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela manipulação de dados dos USUARIOS CLIENTES no Banco de Dados
- * Data: 06/09/2023
+ * Objetivo: Responsavel pela manipulação de dados dos status_pedido no Banco de Dados
+ * Data: 07/09/2023
  * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************///Import da biblioteca do prisma client
@@ -10,17 +10,12 @@
 
 var prisma = new PrismaClient()
 
-////////////////////////Inserts//////////////////////////
-const insertFinanceiro = async function (dadosFinanceiro) {
-    let sql = `insert into tbl_financeiro (
-        valor_diario,
-        data_financeiro,
-        id_restaurante
+const insertStatusPedido = async function (dadosStatusPedido) {
+    let sql = `insert into tbl_status_pedido(
+        status_pedido
     ) values (
-        '${dadosFinanceiro.valor_diario}',
-        '${dadosFinanceiro.data_financeiro}',
-        '${dadosFinanceiro.id_restaurante}'
-
+        '${dadosStatusPedido.status_pedido}'
+  
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -33,9 +28,9 @@ const insertFinanceiro = async function (dadosFinanceiro) {
 
 }
 
-//////////////////////Deletes///////////////////////////
-const deleteFinanceiro = async function (id) {
-    let sql = `delete from tbl_financeiro where id = ${id}`
+//////////////////////Delete///////////////////////////
+const deleteStatusPedido = async function (id) {
+    let sql = `delete from tbl_status_pedido where id = ${id};`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -47,16 +42,12 @@ const deleteFinanceiro = async function (id) {
 
 }
 
-
-///////////////////////Updates//////////////////////////
-const updateFinanceiro = async function (dadosFinanceiro) {
-    let sql = `update tbl_financeiro set
-                    valor_diario = '${dadosFinanceiro.valor_diario}',
-                    data_financeiro = '${dadosFinanceiro.data_financeiro}',
-                    id_restaurante =${dadosFinanceiro.id_restaurante}
-
-
-                where id = ${dadosFinanceiro.id}    
+///////////////////////Update//////////////////////////
+const updateStatusPedido = async function (dadosStatusPedido) {
+    let sql = `update tbl_status_pedido set
+                    status_pedido = '${dadosStatusPedido.status_pedido};'
+  
+                    where id = ${dadosStatusPedido.id}    
             `
 
     //Executa o scriptSQL no BD
@@ -70,8 +61,8 @@ const updateFinanceiro = async function (dadosFinanceiro) {
 }
 
 ///////////////////////Selects//////////////////////////
-const selectAllFinanceiro = async function () {
-    let sql = `select * from tbl_financeiro`
+const selectAllStatusPedido = async function () {
+    let sql = `select * from tbl_status_pedido`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -83,8 +74,8 @@ const selectAllFinanceiro = async function () {
     }
 }
 
-const selectFinanceiroByID = async function (id) {
-    let sql = `select * from tbl_financeiro where id = ${id}`
+const selectStatusPedidoByID = async function (id) {
+    let sql = `select * from tbl_status_pedido where id = ${id}`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -98,7 +89,7 @@ const selectFinanceiroByID = async function (id) {
 }
 
 const selectLastId = async function () {
-    let sql = `select * from tbl_financeiro order by id desc limit 1;`
+    let sql = `select * from tbl_status_pedido order by id desc limit 1;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -108,13 +99,13 @@ const selectLastId = async function () {
         return false
     }
    
-}    
+} 
 
 module.exports = {
-    insertFinanceiro,
-    deleteFinanceiro,
-    updateFinanceiro,
-    selectAllFinanceiro,
-    selectFinanceiroByID,
+    insertStatusPedido,
+    updateStatusPedido,
+    deleteStatusPedido,
+    selectAllStatusPedido,
+    selectStatusPedidoByID,
     selectLastId
 }

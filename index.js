@@ -57,6 +57,9 @@ var controllerRestauranteFreteAreaEntrega = require ('./controller/controller_re
 var controllerFavoritos = require ('./controller/controller_favoritos.js')
 var controllerFormaPagamento = require ('./controller/controller_forma_de_pagamento.js')
 var controllerRestauranteFormaPagamento = require ('./controller/controller_restaurante_forma_pagamento.js')
+var controllerStatusPedido = require ('./controller/controller_status_pedido.js')
+var controllerPedido = require ('./controller/controller_pedido.js')
+
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -2193,6 +2196,190 @@ app.delete('/v1/saveeats/restaurante/forma/pagamento/id/:id', cors(), bodyParser
         response.status(404);
     }
 });
+
+
+/////////////////////////////////////////Status  Pedido  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Status Pedido
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo status de pedido
+app.post('/v1/saveeats/status/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerStatusPedido.inserirStatusPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza dados da tabela status_pedido pelo id
+app.put('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idStatusPedido = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerStatusPedido.atualizarStatusPedido(dadosBody,idStatusPedido);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela status_pedido
+app.get('/v1/saveeats/status/pedido', cors(), async function (request, response) {
+
+    let dados = await controllerStatusPedido.getStatusPedido();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerStatusPedido.getStatusPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela status_pedido
+app.delete('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idStatusPedido = request.params.id;
+
+    let resultDados = await controllerStatusPedido.deletarStatusPedido(idStatusPedido)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Pedido  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Pedido
+* Data : 07/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um novo pedido
+app.post('/v1/saveeats/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerPedido.inserirPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza um pedido pelo id
+app.put('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idPedido = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerPedido.atualizarPedido(dadosBody,idPedido);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela pedido
+app.get('/v1/saveeats/pedido', cors(), async function (request, response) {
+
+    let dados = await controllerPedido.getPedidos();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da pedido
+app.delete('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idPedido = request.params.id;
+
+    let resultDados = await controllerPedido.deletarPedido(idPedido)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
 
 
 
