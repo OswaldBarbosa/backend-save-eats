@@ -59,6 +59,9 @@ var controllerFormaPagamento = require ('./controller/controller_forma_de_pagame
 var controllerRestauranteFormaPagamento = require ('./controller/controller_restaurante_forma_pagamento.js')
 var controllerStatusPedido = require ('./controller/controller_status_pedido.js')
 var controllerPedido = require ('./controller/controller_pedido.js')
+var controllerRecomendacao = require ('./controller/controller_recomendacao.js')
+var controllerAvaliacao = require ('./controller/controller_avaliacao.js')
+var controllerAvaliacaoRecomendacao = require ('./controller/controller_avaliacao_recomendacao.js')
 
 
 
@@ -2378,6 +2381,286 @@ app.delete('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function 
         response.status(404);
     }
 });
+
+
+///////////////////////////////////////// Recomendacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Recomendacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova recomendacao
+app.post('/v1/saveeats/recomendacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRecomendacao.inserirRecomendacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza uma recomendacao pelo id
+app.put('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRecomendacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRecomendacao.atualizarRecomendacao(dadosBody,idRecomendacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela recomendacao
+app.get('/v1/saveeats/recomendacao', cors(), async function (request, response) {
+
+    let dados = await controllerRecomendacao.getRecomendacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRecomendacao.getRecomendacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro de recomendacao
+app.delete('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRecomendacao = request.params.id;
+
+    let resultDados = await controllerRecomendacao.deletarRecomendacao(idRecomendacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Avaliacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Avaliacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova avaliacao
+app.post('/v1/saveeats/avaliacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerAvaliacao.inserirAvaliacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza uma avaliacao
+app.put('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idAvaliacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerAvaliacao.atualizarAvaliacao(dadosBody,idAvaliacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela avaliacao
+app.get('/v1/saveeats/avaliacao', cors(), async function (request, response) {
+
+    let dados = await controllerAvaliacao.getAvaliacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerAvaliacao.getAvaliacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro de avaliacao
+app.delete('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idAvaliacao = request.params.id;
+
+    let resultDados = await controllerAvaliacao.deletarAvaliacao(idAvaliacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+///////////////////////////////////////// Avaliacao_Recomendacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Avaliacao_Recomendacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um id de avaliacao e um id de recomendacao
+app.post('/v1/saveeats/avaliacao-recomendacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerAvaliacaoRecomendacao.inserirAvaliacaoRecomendacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza os id
+app.put('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idAvaliacaoRecomendacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerAvaliacaoRecomendacao.atualizarAvaliacaoRecomendacao(dadosBody,idAvaliacaoRecomendacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela avaliacao_recomendacao
+app.get('/v1/saveeats/avaliacao-recomendacao', cors(), async function (request, response) {
+
+    let dados = await controllerAvaliacaoRecomendacao.getAvaliacaoRecomendacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerAvaliacaoRecomendacao.getAvaliacaoRecomendacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: DELETE - Exclui um registro da tabela pelo id
+app.delete('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idAvaliacaoRecomendacao = request.params.id;
+
+    let resultDados = await controllerAvaliacaoRecomendacao.deletarAvaliacaoRecomendacao(idAvaliacaoRecomendacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+
+
+
+
 
 
 
