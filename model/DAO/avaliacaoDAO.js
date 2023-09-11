@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela manipulação de dados dos USUARIOS CLIENTES no Banco de Dados
- * Data: 06/09/2023
+ * Objetivo: Responsavel pela manipulação de dados de avaliacao no Banco de Dados
+ * Data: 10/09/2023
  * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************///Import da biblioteca do prisma client
@@ -11,16 +11,19 @@
 var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
-const insertFinanceiro = async function (dadosFinanceiro) {
-    let sql = `insert into tbl_financeiro (
-        valor_diario,
-        data_financeiro,
-        id_restaurante
+const insertAvaliacao = async function (dados) {
+    let sql = `insert into tbl_avaliacao (
+        quantidade_estrela,
+        descricao,
+        data_avaliacao,
+        id_restaurante,
+        id_cliente
     ) values (
-        '${dadosFinanceiro.valor_diario}',
-        '${dadosFinanceiro.data_financeiro}',
-        '${dadosFinanceiro.id_restaurante}'
-
+        '${dados.quantidade_estrela}',
+        '${dados.descricao}',
+        '${dados.data_avaliacao}',
+        ${dados.id_restaurante},
+        ${dados.id_cliente}
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -34,8 +37,8 @@ const insertFinanceiro = async function (dadosFinanceiro) {
 }
 
 //////////////////////Deletes///////////////////////////
-const deleteFinanceiro = async function (id) {
-    let sql = `delete from tbl_financeiro where id = ${id}`
+const deleteAvaliacao = async function (id) {
+    let sql = `delete from tbl_avaliacao where id = ${id}`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -47,16 +50,17 @@ const deleteFinanceiro = async function (id) {
 
 }
 
-
 ///////////////////////Updates//////////////////////////
-const updateFinanceiro = async function (dadosFinanceiro) {
-    let sql = `update tbl_financeiro set
-                    valor_diario = '${dadosFinanceiro.valor_diario}',
-                    data_financeiro = '${dadosFinanceiro.data_financeiro}',
-                    id_restaurante =${dadosFinanceiro.id_restaurante}
+const updateAvaliacao = async function (dadosAvaliacao) {
+    let sql = `update tbl_avaliacao set
+                    quantidade_estrela = '${dadosAvaliacao.quantidade_estrela}',
+                    descricao = '${dadosAvaliacao.descricao}',
+                    data_avaliacao = '${dadosAvaliacao.data_avaliacao}',
+                    id_restaurante = ${dadosAvaliacao.id_restaurante},
+                    id_cliente = ${dadosAvaliacao.id_cliente}
 
 
-                where id = ${dadosFinanceiro.id}    
+                where id = ${dadosAvaliacao.id}    
             `
 
     //Executa o scriptSQL no BD
@@ -70,8 +74,8 @@ const updateFinanceiro = async function (dadosFinanceiro) {
 }
 
 ///////////////////////Selects//////////////////////////
-const selectAllFinanceiro = async function () {
-    let sql = `select * from tbl_financeiro`
+const selectAllAvaliacao = async function () {
+    let sql = `select * from tbl_avaliacao`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -83,8 +87,8 @@ const selectAllFinanceiro = async function () {
     }
 }
 
-const selectFinanceiroByID = async function (id) {
-    let sql = `select * from tbl_financeiro where id = ${id}`
+const selectAvaliacaoByID = async function (id) {
+    let sql = `select * from tbl_avaliacao where id = ${id}`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -98,7 +102,7 @@ const selectFinanceiroByID = async function (id) {
 }
 
 const selectLastId = async function () {
-    let sql = `select * from tbl_financeiro order by id desc limit 1;`
+    let sql = `select * from tbl_avaliacao order by id desc limit 1;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -111,10 +115,10 @@ const selectLastId = async function () {
 }    
 
 module.exports = {
-    insertFinanceiro,
-    deleteFinanceiro,
-    updateFinanceiro,
-    selectAllFinanceiro,
-    selectFinanceiroByID,
-    selectLastId
+insertAvaliacao,
+updateAvaliacao,
+deleteAvaliacao,
+selectAllAvaliacao,
+selectAvaliacaoByID,
+selectLastId
 }

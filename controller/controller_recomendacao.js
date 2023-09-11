@@ -1,37 +1,37 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela regra de negocio referente ao CRUD do estado cliente
+ * Objetivo: Responsavel pela regra de negocio referente ao CRUD da tabela de recomendacao
  * (GET, POST, PUT, DELETE)
- * Data: 05/09/2023
- * Autor: Julia Soares
+ * Data: 10/09/2023
+ * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************/
 
 //Import do arquivo de configuração das variaveis, constantes e funções globais
 var message = require('./modulo/config.js')
 
-var estadoClienteDAO = require('../model/DAO/estado_clienteDAO')
+var recomendacaoDAO = require('../model/DAO/recomendacaoDAO.js')
 
 const { request } = require('express')
 
-const inserirEstadoCliente= async function (dadosEstadoCliente) {
+const inserirRecomendacao = async function (dadosRecomendacao) {
 
     if (
-        dadosEstadoCliente.nome_estado == '' || dadosEstadoCliente.nome_estado == undefined || dadosEstadoCliente.nome_estado.length > 45 
+        dadosRecomendacao.recomendacao == '' || dadosRecomendacao.recomendacao == undefined || dadosRecomendacao.recomendacao.length > 45 
 
     ){
         return message.ERROR_REQUIRED_FIELDS
     }else {
         //Envia os dados para a model inserir no banco de dados
-        let resultDados = await estadoClienteDAO.insertEstadoCliente(dadosEstadoCliente)
+        let resultDados = await recomendacaoDAO.insertRecomendacao(dadosRecomendacao)
 
         //Valida se o banco de dados inseriu corretamente os dados
         if (resultDados) {
 
-            let novoEstado = await estadoClienteDAO.selectLastId()
+            let novaRecomendacao = await recomendacaoDAO.selectLastId()
 
             let dadosJSON = {}
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
-            dadosJSON.estados = novoEstado
+            dadosJSON.recomendacao = novaRecomendacao
 
             return dadosJSON
         }
@@ -43,14 +43,14 @@ const inserirEstadoCliente= async function (dadosEstadoCliente) {
 
 }
 
-const deletarEstadoCliente = async function (idEstadoCliente) {
-    let statusId = await estadoClienteDAO.selectEstadoClienteByID(idEstadoCliente);
+const deletarRecomendacao = async function (idRecomendacao) {
+    let statusId = await recomendacaoDAO.selectRecomendacaoByID(idRecomendacao);
 
     if (statusId) {
-        if (idEstadoCliente == '' || idEstadoCliente == undefined || isNaN(idEstadoCliente)) {
+        if (idRecomendacao == '' || idRecomendacao == undefined || isNaN(idRecomendacao)) {
             return message.ERROR_INVALID_ID; //Status code 400
         } else {
-            let resultDados = await estadoClienteDAO.deleteEstadoCliente(idEstadoCliente)
+            let resultDados = await recomendacaoDAO.deleteRecomendacao(idRecomendacao)
 
             if (resultDados) {
                 return message.SUCESS_DELETED_ITEM
@@ -64,32 +64,32 @@ const deletarEstadoCliente = async function (idEstadoCliente) {
 
 }
 
-const atualizarEstadoCliente = async function (dadosEstadoCliente, idEstadoCliente) {
+const atualizarRecomendacao = async function (dadosRecomendacao, idRecomendacao) {
 
     if (
-        dadosEstadoCliente.nome_estado == '' || dadosEstadoCliente.nome_estado == undefined || dadosEstadoCliente.nome_estado.length > 45 
+        dadosRecomendacao.recomendacao == '' || dadosRecomendacao.recomendacao == undefined || dadosRecomendacao.recomendacao.length > 45 
 
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
 
-    } else if (idEstadoCliente == '' || idEstadoCliente == undefined || idEstadoCliente == isNaN(idEstadoCliente)) {
+    } else if (idRecomendacao == '' || idRecomendacao == undefined || idRecomendacao == isNaN(idRecomendacao)) {
 
         return message.message.ERROR_INVALID_ID
     } else {
-        dadosEstadoCliente.id = idEstadoCliente;
+        dadosRecomendacao.id = idRecomendacao;
 
-        let statusId = await estadoClienteDAO.selectLastId();
+        let statusId = await recomendacaoDAO.selectLastId();
 
         if (statusId) {
-            //Encaminha os dados para a model do cliente
-            let resultDados = await estadoClienteDAO.updateEstadoCliente(dadosEstadoCliente);
+            //Encaminha os dados para a model 
+            let resultDados = await recomendacaoDAO.updateRecomendacao(dadosRecomendacao);
 
             if (resultDados) {
 
                 let dadosJSON = {}
                 dadosJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosJSON.estados = dadosEstadoCliente
+                dadosJSON.recomendacao_atualizada = dadosRecomendacao
                 return dadosJSON
             } else
                 return message.ERROR_INTERNAL_SERVER
@@ -100,18 +100,18 @@ const atualizarEstadoCliente = async function (dadosEstadoCliente, idEstadoClien
     }
 }
 
-const getEstadoCliente = async function () {
+const getRecomendacao = async function () {
     let dadosJSON = {};
 
 
-    let dadosEstadoCliente = await estadoClienteDAO.selectAllEstadoCliente();
+    let dadosRecomendacao = await recomendacaoDAO.selectAllRecomendacao();
 
-    if (dadosEstadoCliente) {
+    if (dadosRecomendacao) {
 
         dadosJSON.status = message.SUCESS_REQUEST.status
         dadosJSON.message = message.SUCESS_REQUEST.message
-        dadosJSON.quantidade = dadosEstadoCliente.length;
-        dadosJSON.estados = dadosEstadoCliente
+        dadosJSON.quantidade = dadosRecomendacao.length;
+        dadosJSON.recomendacoes = dadosRecomendacao
         return dadosJSON
     } else {
         return message.ERROR_NOT_FOUND
@@ -119,19 +119,19 @@ const getEstadoCliente = async function () {
 
 }
 
-const getEstadoClientePorID = async function (id) {
+const getRecomendacaoPorID = async function (id) {
 
     if (id == '' || id == undefined || isNaN(id)) {
         return message.ERROR_INVALID_ID
     } else {
         let dadosJSON = {}
 
-        let dados = await estadoClienteDAO.selectEstadoClienteByID(id)
+        let dados = await recomendacaoDAO.selectRecomendacaoByID(id)
 
         if (dados) {
             dadosJSON.status = message.SUCESS_REQUEST.status
             dadosJSON.message = message.SUCESS_REQUEST.message
-            dadosJSON.estados = dados
+            dadosJSON.recomendacao = dados
             return dadosJSON
         } else {
             return message.ERROR_NOT_FOUND
@@ -139,11 +139,10 @@ const getEstadoClientePorID = async function (id) {
     }
 }
 
-
 module.exports = {
-    inserirEstadoCliente,
-    deletarEstadoCliente,
-    atualizarEstadoCliente,
-    getEstadoCliente,
-    getEstadoClientePorID
+    inserirRecomendacao,
+    atualizarRecomendacao,
+    getRecomendacao,
+    getRecomendacaoPorID,
+    deletarRecomendacao
 }

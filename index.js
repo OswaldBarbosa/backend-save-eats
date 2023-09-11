@@ -58,10 +58,23 @@ var controllerCidadeRestaurante = require ('./controller/controller_cidade_resta
 var controllerCidadeCliente = require ('./controller/controller_cidade_cliente.js')
 var controllerEnderecoCliente = require ('./controller/controller_endereco_cliente.js')
 var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
+var controllerCategoriaDicas = require ('./controller/controller_categoria_dicas.js')
+var controllerDicas = require ('./controller/controller_dicas.js')
+var controllerIntermedCategoriaDicas = require ('./controller/controller_intermde_categoria_dicas.js')
 var controllerFinanceiro = require ('./controller/controller_financeiro.js')
 var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
 var controllerRestauranteFreteAreaEntrega = require ('./controller/controller_restaurante_frete_area_entrega.js')
 var controllerFavoritos = require ('./controller/controller_favoritos.js')
+var controllerFormaPagamento = require ('./controller/controller_forma_de_pagamento.js')
+var controllerRestauranteFormaPagamento = require ('./controller/controller_restaurante_forma_pagamento.js')
+var controllerStatusPedido = require ('./controller/controller_status_pedido.js')
+var controllerPedido = require ('./controller/controller_pedido.js')
+var controllerRecomendacao = require ('./controller/controller_recomendacao.js')
+var controllerAvaliacao = require ('./controller/controller_avaliacao.js')
+var controllerAvaliacaoRecomendacao = require ('./controller/controller_avaliacao_recomendacao.js')
+var controllerRestaurantePedidoCliente = require ('./controller/controller_restaurante_pedido_cliente.js')
+var controllerPedidoProduto = require ('./controller/controller_pedido_produto.js')
+
 
 >>>>>>> ef7d219da4273b45aadd3b86940a9d4d1ac4b9f0
 
@@ -1322,6 +1335,270 @@ app.get('/v1/saveeats/intermed-endereco-cliente/id/:id', cors(), bodyParserJSON,
     response.json(dados)
 });
 
+///////////////////////////////////////// Categoria das Dicas //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle das Categorias das Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma nova CATEGORIA 
+app.post('/v1/saveeats/categoria/dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerCategoriaDicas.inserirCategoriaDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma CATEGORIA pelo id
+app.delete('/v1/saveeats/categoria/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCategoria = request.params.id;
+
+    let resultDados = await controllerCategoriaDicas.deletarCategoriaDicas(idCategoria)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza categoria pelo id
+app.put('/v1/saveeats/categoria/dicas/:id', cors(), bodyParserJSON, async function (request, response) {
+    //reccebe o content-type da requisicao
+    let contentType = request.headers['content-type'];
+
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCategoriaDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerCategoriaDicas.atualizarCategoriaDicas(dadosBody, idCategoriaDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas categorias
+app.get('/v1/saveeats/categoria/dicas', cors(), async function (request, response) {
+
+    let dados = await controllerCategoriaDicas.getCategoriaDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna a categoria pelo id
+app.get('/v1/saveeats/categoria/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCategoriaDicas.getCategoriaDicasPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Dicas //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle das Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma nova DICA 
+app.post('/v1/saveeats/dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerDicas.inserirDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui uma DICA pelo id
+app.delete('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idDicas = request.params.id;
+
+    let resultDados = await controllerDicas.deletarDicas(idDicas)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza DICA pelo id
+app.put('/v1/saveeats/dicas/:id', cors(), bodyParserJSON, async function (request, response) {
+    //reccebe o content-type da requisicao
+    let contentType = request.headers['content-type'];
+
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerDicas.atualizarDicas(dadosBody, idDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas DICAS
+app.get('/v1/saveeats/dicas', cors(), async function (request, response) {
+
+    let dados = await controllerDicas.getDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna a DICA pelo id
+app.get('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerDicas.getDicasPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+///////////////////////////////////////// Intermed Categoria Dicas  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da intermediária entre Categoria Dicas
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo registro de categoria das dicas
+app.post('/v1/saveeats/intermed-categoria-dicas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerIntermedCategoriaDicas.inserirIntermedCategoriaDicas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: DELETE - Exclui registro da categoria das dicas pelo id
+app.delete('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idIntermedCategoriaDicas = request.params.id;
+
+    let resultDados = await controllerIntermedCategoriaDicas.deletarIntermedCategoriaDicas(idIntermedCategoriaDicas)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro da categoria das dicas pelo id
+app.put('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idIntermedCategoriaDicas = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerIntermedCategoriaDicas.atualizarIntermedCategoriaDicas(dadosBody, idIntermedCategoriaDicas);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registros
+app.get('/v1/saveeats/intermed-categoria-dicas', cors(), async function (request, response) {
+
+    let dados = await controllerIntermedCategoriaDicas.getIntermedCategoriaDicas();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna registro pelo id
+app.get('/v1/saveeats/intermed-categoria-dicas/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerIntermedCategoriaDicas.getIntermedCategoriaDicasID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
 
 ///////////////////////////////////////// Cidade Cliente  //////////////////////////////////////////////
 
@@ -1771,6 +2048,796 @@ app.delete('/v1/saveeats/restaurantes/favoritos/clientes/id/:id', cors(), bodyPa
 });
 
 
+/********************************
+* Objetivo : API de controle da tabela forma de pagamento
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela forma_pagamento
+app.post('/v1/saveeats/forma/pagamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerFormaPagamento.inserirFormaPagamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//Verificar
+//EndPoint: PUT - Atualiza uma forma de pagamento pelo id
+app.put('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idFormaPagamento = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerFormaPagamento.atualizarFormaPagamento(dadosBody, idFormaPagamento);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da forma de pagamento
+app.get('/v1/saveeats/forma/pagamento', cors(), async function (request, response) {
+
+    let dados = await controllerFormaPagamento.getFormaPagamento();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerFormaPagamento.getFormaPagamentoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da forma_pagamento
+app.delete('/v1/saveeats/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idFormaPagamento = request.params.id;
+
+    let resultDados = await controllerFormaPagamento.deletarFormaPagamento(idFormaPagamento)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Restaurante Forma Pagamento  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Restaurante Forma Pagamento
+* Data : 07/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um novo registro na tabela restaurante_forma_pagamento
+app.post('/v1/saveeats/restaurante/forma/pagamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestauranteFormaPagamento.inserirRestauranteFormaPagamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza dados da tabela restaurante_forma_pagamento pelo id
+app.put('/v1/saveeats/restaurante/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestauranteFormaPagamento = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestauranteFormaPagamento.atualizarRestauranteFormaPagamento(dadosBody,idRestauranteFormaPagamento);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela restaurante_forma_pagamento
+app.get('/v1/saveeats/restaurante/forma/pagamento', cors(), async function (request, response) {
+
+    let dados = await controllerRestauranteFormaPagamento.getRestauranteFormaPagamento();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela restaurante_forma_pagamento
+app.delete('/v1/saveeats/restaurante/forma/pagamento/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestauranteFormaPagamento = request.params.id;
+
+    let resultDados = await controllerRestauranteFormaPagamento.deletarRestauranteFormaPagamento(idRestauranteFormaPagamento)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+/////////////////////////////////////////Status  Pedido  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Status Pedido
+* Data : 07/09/2023
+********************************/
+
+//EndPoint: POST - Insere um novo status de pedido
+app.post('/v1/saveeats/status/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerStatusPedido.inserirStatusPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza dados da tabela status_pedido pelo id
+app.put('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idStatusPedido = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerStatusPedido.atualizarStatusPedido(dadosBody,idStatusPedido);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela status_pedido
+app.get('/v1/saveeats/status/pedido', cors(), async function (request, response) {
+
+    let dados = await controllerStatusPedido.getStatusPedido();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerStatusPedido.getStatusPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da tabela status_pedido
+app.delete('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idStatusPedido = request.params.id;
+
+    let resultDados = await controllerStatusPedido.deletarStatusPedido(idStatusPedido)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Pedido  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Pedido
+* Data : 07/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um novo pedido
+app.post('/v1/saveeats/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerPedido.inserirPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza um pedido pelo id
+app.put('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idPedido = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerPedido.atualizarPedido(dadosBody,idPedido);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela pedido
+app.get('/v1/saveeats/pedido', cors(), async function (request, response) {
+
+    let dados = await controllerPedido.getPedidos();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro da pedido
+app.delete('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idPedido = request.params.id;
+
+    let resultDados = await controllerPedido.deletarPedido(idPedido)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Recomendacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Recomendacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova recomendacao
+app.post('/v1/saveeats/recomendacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRecomendacao.inserirRecomendacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza uma recomendacao pelo id
+app.put('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRecomendacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRecomendacao.atualizarRecomendacao(dadosBody,idRecomendacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela recomendacao
+app.get('/v1/saveeats/recomendacao', cors(), async function (request, response) {
+
+    let dados = await controllerRecomendacao.getRecomendacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRecomendacao.getRecomendacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro de recomendacao
+app.delete('/v1/saveeats/recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRecomendacao = request.params.id;
+
+    let resultDados = await controllerRecomendacao.deletarRecomendacao(idRecomendacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Avaliacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Avaliacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere uma nova avaliacao
+app.post('/v1/saveeats/avaliacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerAvaliacao.inserirAvaliacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza uma avaliacao
+app.put('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idAvaliacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerAvaliacao.atualizarAvaliacao(dadosBody,idAvaliacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela avaliacao
+app.get('/v1/saveeats/avaliacao', cors(), async function (request, response) {
+
+    let dados = await controllerAvaliacao.getAvaliacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerAvaliacao.getAvaliacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: DELETE - Exclui um registro de avaliacao
+app.delete('/v1/saveeats/avaliacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idAvaliacao = request.params.id;
+
+    let resultDados = await controllerAvaliacao.deletarAvaliacao(idAvaliacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+///////////////////////////////////////// Avaliacao_Recomendacao  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Avaliacao_Recomendacao
+* Data : 10/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um id de avaliacao e um id de recomendacao
+app.post('/v1/saveeats/avaliacao-recomendacao', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerAvaliacaoRecomendacao.inserirAvaliacaoRecomendacao(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza os id
+app.put('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idAvaliacaoRecomendacao = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerAvaliacaoRecomendacao.atualizarAvaliacaoRecomendacao(dadosBody,idAvaliacaoRecomendacao);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela avaliacao_recomendacao
+app.get('/v1/saveeats/avaliacao-recomendacao', cors(), async function (request, response) {
+
+    let dados = await controllerAvaliacaoRecomendacao.getAvaliacaoRecomendacao();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerAvaliacaoRecomendacao.getAvaliacaoRecomendacaoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: DELETE - Exclui um registro da tabela pelo id
+app.delete('/v1/saveeats/avaliacao-recomendacao/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idAvaliacaoRecomendacao = request.params.id;
+
+    let resultDados = await controllerAvaliacaoRecomendacao.deletarAvaliacaoRecomendacao(idAvaliacaoRecomendacao)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Restaurante_Pedido_Cliente  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle de Restaurante_Pedido_Cliente
+* Data : 11/09/2023
+********************************/
+
+
+//EndPoint: POST - Insere um id do restaurante,do pedido e do cliente 
+app.post('/v1/saveeats/restaurante-pedido-cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerRestaurantePedidoCliente.inserirRestaurantePedidoCliente(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: PUT - Atualiza os id
+app.put('/v1/saveeats/restaurante-pedido-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idRestaurantePedidoCliente = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerRestaurantePedidoCliente.atualizarRestaurantePedidoCliente(dadosBody,idRestaurantePedidoCliente);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todos registro da tabela restaurante_pedido_cliente
+app.get('/v1/saveeats/restaurante-pedido-cliente', cors(), async function (request, response) {
+
+    let dados = await controllerRestaurantePedidoCliente.getRestaurantePedidoCliente();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/restaurante-pedido-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerRestaurantePedidoCliente.getRestaurantePedidoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: DELETE - Exclui um registro da tabela pelo id
+app.delete('/v1/saveeats/restaurante-pedido-cliente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idRestaurantePedidoCliente = request.params.id;
+
+    let resultDados = await controllerRestaurantePedidoCliente.deletarRestaurantePedidoCliente(idRestaurantePedidoCliente)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+///////////////////////////////////////// Pedido_Produto  //////////////////////////////////////////////
+
+////////////////////////////////AINDA IREI TESTAR OS ENDPOINTS DESSA TABELA /////////////////////////////
+
+/********************************
+* Objetivo : API de controle de Pedido_Produto
+* Data : 11/09/2023
+********************************/
+
+//EndPoint: POST - Insere um id do pedido e do produto
+app.post('/v1/saveeats/pedido-produto', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerPedidoProduto.inserirPedidoProduto(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: PUT - Atualiza os id
+app.put('/v1/saveeats/pedido-produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idPedidoProduto = request.params.id;
+
+        let dadosBody = request.body;
+
+        //Encaminha os dados para a controller
+        let resultDados = await controllerPedidoProduto.atualizarPedidoProduto(dadosBody,idPedidoProduto);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+//EndPoint: GET - Retorna todos registro da tabela pedido_produto
+app.get('/v1/saveeats/pedido-produto', cors(), async function (request, response) {
+
+    let dados = await controllerPedidoProduto.getPedidoProduto();
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
+//EndPoint: GET - Retorna  pelo id
+app.get('/v1/saveeats/pedido-produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedidoProduto.getPedidoProdutoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
 
 
 

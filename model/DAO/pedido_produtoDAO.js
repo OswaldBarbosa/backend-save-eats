@@ -1,6 +1,6 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela manipulação de dados dos USUARIOS CLIENTES no Banco de Dados
- * Data: 06/09/2023
+ * Objetivo: Responsavel pela manipulação de dados da tabela intermediaria pedido_produto  no Banco de Dados
+ * Data: 11/09/2023
  * Autor: Caroline Portela
  * Versão: 1.0
  ***************************************************************************************************************************************************///Import da biblioteca do prisma client
@@ -10,18 +10,15 @@
 
 var prisma = new PrismaClient()
 
-////////////////////////Inserts//////////////////////////
-const insertFinanceiro = async function (dadosFinanceiro) {
-    let sql = `insert into tbl_financeiro (
-        valor_diario,
-        data_financeiro,
-        id_restaurante
+const insertPedidoProduto = async function (dados) {
+    let sql = `insert into tbl_pedido_produto (
+        id_pedido,
+        id_produto
     ) values (
-        '${dadosFinanceiro.valor_diario}',
-        '${dadosFinanceiro.data_financeiro}',
-        '${dadosFinanceiro.id_restaurante}'
+        ${dados.id_pedido},
+        ${dados.id_produto}
 
-    )`
+    )`;
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
@@ -34,12 +31,12 @@ const insertFinanceiro = async function (dadosFinanceiro) {
 }
 
 //////////////////////Deletes///////////////////////////
-const deleteFinanceiro = async function (id) {
-    let sql = `delete from tbl_financeiro where id = ${id}`
+const deletePedidoProduto = async function (id) {
+    let sql = `delete from tbl_pedido_produto where id = ${id}`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
-    if (resultStatus){
+    if(resultStatus){
         return true
     } else {
         return false
@@ -47,16 +44,13 @@ const deleteFinanceiro = async function (id) {
 
 }
 
+const updatePedidoProduto = async function (dados) {
+    let sql = `update tbl_pedido_produto set
 
-///////////////////////Updates//////////////////////////
-const updateFinanceiro = async function (dadosFinanceiro) {
-    let sql = `update tbl_financeiro set
-                    valor_diario = '${dadosFinanceiro.valor_diario}',
-                    data_financeiro = '${dadosFinanceiro.data_financeiro}',
-                    id_restaurante =${dadosFinanceiro.id_restaurante}
+                    id_pedido = ${dados.id_pedido},
+                    id_produto = ${dados.id_produto}
 
-
-                where id = ${dadosFinanceiro.id}    
+                where id = ${dados.id}    
             `
 
     //Executa o scriptSQL no BD
@@ -70,8 +64,9 @@ const updateFinanceiro = async function (dadosFinanceiro) {
 }
 
 ///////////////////////Selects//////////////////////////
-const selectAllFinanceiro = async function () {
-    let sql = `select * from tbl_financeiro`
+
+const selectAllPedidoProduto = async function () {
+    let sql = `select * from tbl_pedido_produto`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -83,22 +78,21 @@ const selectAllFinanceiro = async function () {
     }
 }
 
-const selectFinanceiroByID = async function (id) {
-    let sql = `select * from tbl_financeiro where id = ${id}`
+const selectPedidoProdutoByID = async function (id) {
+    let sql = `select * from tbl_pedido_produto where id = ${id}`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
     if (rs.length > 0){
         return rs
-    }{
+    } else{
         return false
     }
-    
         
 }
 
 const selectLastId = async function () {
-    let sql = `select * from tbl_financeiro order by id desc limit 1;`
+    let sql = `select * from tbl_pedido_produto order by id desc limit 1;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -108,13 +102,13 @@ const selectLastId = async function () {
         return false
     }
    
-}    
+} 
 
 module.exports = {
-    insertFinanceiro,
-    deleteFinanceiro,
-    updateFinanceiro,
-    selectAllFinanceiro,
-    selectFinanceiroByID,
+    insertPedidoProduto,
+    updatePedidoProduto,
+    deletePedidoProduto,
+    selectAllPedidoProduto,
+    selectPedidoProdutoByID,
     selectLastId
 }
