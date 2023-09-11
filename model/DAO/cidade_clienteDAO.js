@@ -6,7 +6,7 @@
  ***************************************************************************************************************************************************///Import da biblioteca do prisma client
 
 
- var { PrismaClient } = require('@prisma/client')
+var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 

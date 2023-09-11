@@ -34,23 +34,24 @@ const bodyParserJSON = bodyParser.json();
 
 
 //Import das controllers
-var controllerCliente = require ('./controller/controller_cliente.js');
-var controllerRestaurante = require ('./controller/controller_restautante.js');
-var controllerTelefoneDoRestaurante = require ('./controller/controller_telefone_restaurante.js')
-var controllerCategoriaRestaurante = require ('./controller/controller_categoria_restaurante.js')
-var controllerDiaSemana = require ('./controller/controller_dia_semana.js')
-var controllerHorarioFuncionamento = require ('./controller/controller_horario_funcionamento.js')
-var controllerRestauranteFuncionamentoDiaSemana = require ('./controller/controller_restaurante_funcionamento_dia_semana.js')
-var controllerEnderecoRestaurante = require ('./controller/controller_endereco_restaurante.js')
-var controllerEstadoRestaurante = require ('./controller/controller_estado_restaurante.js')
+var controllerCliente = require('./controller/controller_cliente.js');
+var controllerRestaurante = require('./controller/controller_restautante.js');
+var controllerTelefoneDoRestaurante = require('./controller/controller_telefone_restaurante.js')
+var controllerCategoriaRestaurante = require('./controller/controller_categoria_restaurante.js')
+var controllerDiaSemana = require('./controller/controller_dia_semana.js')
+var controllerHorarioFuncionamento = require('./controller/controller_horario_funcionamento.js')
+var controllerRestauranteFuncionamentoDiaSemana = require('./controller/controller_restaurante_funcionamento_dia_semana.js')
+var controllerEnderecoRestaurante = require('./controller/controller_endereco_restaurante.js')
+var controllerEstadoRestaurante = require('./controller/controller_estado_restaurante.js')
 var controllerEstadoCliente = require('./controller/controller_estado_cliente')
-var controllerCidadeRestaurante = require ('./controller/controller_cidade_restaurante.js')
-var controllerCidadeCliente = require ('./controller/controller_cidade_cliente.js')
-var controllerEnderecoCliente = require ('./controller/controller_endereco_cliente.js')
-var controllerIntermedEnderecoCliente = require ('./controller/controller_intermed_endereco_cliente.js')
-var controllerFinanceiro = require ('./controller/controller_financeiro.js')
-var controllerFreteAreaEntrega = require ('./controller/controller_frete_area_entrega.js')
-
+var controllerCidadeRestaurante = require('./controller/controller_cidade_restaurante.js')
+var controllerCidadeCliente = require('./controller/controller_cidade_cliente.js')
+var controllerEnderecoCliente = require('./controller/controller_endereco_cliente.js')
+var controllerIntermedEnderecoCliente = require('./controller/controller_intermed_endereco_cliente.js')
+var controllerFinanceiro = require('./controller/controller_financeiro.js')
+var controllerFreteAreaEntrega = require('./controller/controller_frete_area_entrega.js')
+var controllerProduto = require('./controller/controller_produto.js')
+var controllerStatusProduto = require('./controller/controller_status_produto.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -222,7 +223,7 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 });
 
 //EndPoint: GET - Retorna o restaurante pelo email e senha
-app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function(request, response) {
+app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function (request, response) {
     let email = request.params.email
     let senha = request.params.senha
 
@@ -1581,15 +1582,184 @@ app.delete('/v1/saveeats/frete/area/entrega/id/:id', cors(), bodyParserJSON, asy
     }
 });
 
+///////////////////////////////////////// Produto  //////////////////////////////////////////////
 
+/********************************
+* Objetivo : API de controle do Produto
+* Data : 06/09/2023
+********************************/
 
+//EndPoint: GET - Retorna todos registro da tabela produto
+app.get('/v1/saveeats/produto', cors(), async function (request, response) {
 
+    let dadosProduto = await controllerProduto.getAllProdutos()
+
+    response.status(dadosProduto.status)
+    response.json(dadosProduto)
+
+})
+
+//EndPoint: GET - Retorna um registro da tabela produto pelo id
+app.get('/v1/saveeats/produto/id/:id', cors(), async function (request, response) {
+
+    let idProduto = request.params.id
+
+    let dadosProduto = await controllerProduto.getProdutosById(idProduto)
+
+    response.status(dadosProduto.status)
+    response.json(dadosProduto)
+
+})
+
+//EndPoint: POST - Insere uma novo registro na tabela produto
+app.post('/v1/saveeats/produto', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body
+
+        let resulDados = await controllerProduto.inserirProduto(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+})
+
+//EndPoint: PUT - Atualiza registro da tabela produto pelo id
+app.put('/v1/saveeats/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idProduto = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerProduto.atualizarProduto(dadosBody, idProduto);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+})
+
+//EndPoint: DELETE - Deleta um registro da tabela produto pelo id
+app.delete('/v1/saveeats/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idProduto = request.params.id;
+
+    let resultDados = await controllerProduto.deletarProduto(idProduto)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+})
+
+///////////////////////////////////////// Status Produto  //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle do Status do Produto
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: GET - Retorna todos registro da tabela status produto
+app.get('/v1/saveeats/status/produto', cors(), async function (request, response) {
+
+    let dadosStatusProduto = await controllerStatusProduto.getAllStatusProduto()
+
+    response.status(dadosStatusProduto.status)
+    response.json(dadosStatusProduto)
+
+})
+
+//EndPoint: GET - Retorna um registro da tabela status produto pelo id
+app.get('/v1/saveeats/status/produto/id/:id', cors(), async function (request, response) {
+
+    let idStatusProduto = request.params.id
+
+    let dadosStatusProduto = await controllerStatusProduto.getStatusProdutoById(idStatusProduto)
+
+    response.status(dadosStatusProduto.status)
+    response.json(dadosStatusProduto)
+
+})
+
+//EndPoint: POST - Insere uma novo registro na tabela status produto
+app.post('/v1/saveeats/status/produto', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body
+
+        let resulDados = await controllerStatusProduto.inserirProduto(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+})
+
+//EndPoint: PUT - Atualiza registro da tabela status produto pelo id
+app.put('/v1/saveeats/status/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idStatusProduto = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerStatusProduto.atualizarStatusProduto(dadosBody, idStatusProduto)
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+})
+
+//EndPoint: DELETE - Deleta um registro da tabela produto pelo id
+app.delete('/v1/saveeats/status/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idStatusProduto = request.params.id;
+
+    let resultDados = await controllerStatusProduto.deletarStatusProduto(idStatusProduto)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+})
 
 app.listen(8080, function () {
     console.log('Servidor aguardando requisição na porta 8080')
-});
-
-
-app.listen(8080, function () {
-    console.log('Servidor aguardando requisição na porta 8080')
-});
+})
