@@ -52,6 +52,7 @@ var controllerFinanceiro = require('./controller/controller_financeiro.js')
 var controllerFreteAreaEntrega = require('./controller/controller_frete_area_entrega.js')
 var controllerProduto = require('./controller/controller_produto.js')
 var controllerStatusProduto = require('./controller/controller_status_produto.js')
+var controllerCategoriaProduto = require('./controller/controller_categoria_produto.js')
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
 
@@ -1973,7 +1974,7 @@ app.post('/v1/saveeats/status/produto', cors(), bodyParserJSON, async function (
 
         let dadosBody = request.body
 
-        let resulDados = await controllerStatusProduto.inserirProduto(dadosBody)
+        let resulDados = await controllerStatusProduto.inserirStatusProduto(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)
@@ -2012,12 +2013,101 @@ app.put('/v1/saveeats/status/produto/id/:id', cors(), bodyParserJSON, async func
 
 })
 
-//EndPoint: DELETE - Deleta um registro da tabela produto pelo id
+//EndPoint: DELETE - Deleta um registro da tabela staus produto pelo id
 app.delete('/v1/saveeats/status/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let idStatusProduto = request.params.id;
 
     let resultDados = await controllerStatusProduto.deletarStatusProduto(idStatusProduto)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+})
+
+///////////////////////////////////////// Categoria Produto  //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle da Categoria do Produto
+* Data : 06/09/2023
+********************************/
+
+//EndPoint: GET - Retorna todos registro da tabela categoria produto
+app.get('/v1/saveeats/categoria/produto', cors(), async function (request, response) {
+
+    let dadosCategoriaProduto = await controllerCategoriaProduto.getAllCategoriaProduto()
+
+    response.status(dadosCategoriaProduto.status)
+    response.json(dadosCategoriaProduto)
+
+})
+
+//EndPoint: GET - Retorna um registro da tabela categoria produto pelo id
+app.get('/v1/saveeats/categoria/produto/id/:id', cors(), async function (request, response) {
+
+    let idCategoriaProduto = request.params.id
+
+    let dadosCategoriaProduto = await controllerCategoriaProduto.getCategoriaProdutoById(idCategoriaProduto)
+
+    response.status(dadosCategoriaProduto.status)
+    response.json(dadosCategoriaProduto)
+
+})
+
+//EndPoint: POST - Insere uma novo registro na tabela categoria produto
+app.post('/v1/saveeats/categoria/produto', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body
+
+        let resulDados = await controllerCategoriaProduto.inserirCategoriaProduto(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+})
+
+//EndPoint: PUT - Atualiza registro da tabela categoria produto pelo id
+app.put('/v1/saveeats/categoria/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idCategoriaProduto = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerCategoriaProduto.atualizarCategoriaProduto(dadosBody, idCategoriaProduto)
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+})
+
+//EndPoint: DELETE - Deleta um registro da tabela categoria produto pelo id
+app.delete('/v1/saveeats/categoria/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idCategoriaProduto = request.params.id;
+
+    let resultDados = await controllerCategoriaProduto.deletarCategoriaProduto(idCategoriaProduto)
 
     response.status(resultDados.status)
     response.json(resultDados)

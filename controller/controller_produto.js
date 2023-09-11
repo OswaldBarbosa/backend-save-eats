@@ -1,5 +1,5 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela regra de negocio referente ao CRUD da CATEGORIA do produto
+ * Objetivo: Responsavel pela regra de negocio referente ao CRUD dO PRODUTO
  * Data: 06/09/2023
  * Autor: Oswaldo Barbosa
  * Versão: 1.0

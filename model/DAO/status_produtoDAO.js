@@ -1,5 +1,5 @@
 /***************************************************************************************************************************************************
- * Objetivo: Responsavel pela manipulação de dados da cidade do cliente no Banco de Dados
+ * Objetivo: Responsavel pela manipulação de dados do status do produto no Banco de Dados
  * Data: 06/09/2023
  * Autor: Oswaldo Barbosa
  * Versão: 1.0
@@ -53,7 +53,6 @@ const selectLastId = async () => {
     }
 
 }
-
 
 //inserir um status produto
 const insertStatusProduto = async (dadosStatusProdutos) => {
