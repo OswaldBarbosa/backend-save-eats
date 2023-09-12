@@ -145,6 +145,10 @@ const getRestauranteByEmailSenha = async function (email, password) {
         let dadosRestaurante = await restauranteDAO.selectRestauranteByEmailPassword(email, password)
 
         if (dadosRestaurante != null && dadosRestaurante != undefined && isNaN(dadosRestaurante)) {
+
+            let tokenUser = await jwt.createJWT(dadosRestaurante[0].id)
+
+            RestauranteJsonEmailpassword.token = tokenUser
             RestauranteJsonEmailpassword.status = message.SUCESS_REQUEST.status
             RestauranteJsonEmailpassword.Restaurante = dadosRestaurante;
 
@@ -177,11 +181,35 @@ const getRestaurantePorID = async function (id) {
     }
 }
 
+const autenciarRestaurante = async function (email,senha) {
+    const restaurante = require ('../model/DAO/restauranteDAO.js')
+
+    //import da biblioteca que gera e valida a autenticidade do JWT
+    const jwt = require ('../middleware/middlewareJWT.js')
+
+    const dadosRestaurante = await restaurante.selectRestauranteByEmailPassword(email,senha);
+
+    if (dadosRestaurante){
+        //Gera o token pelo JWT
+        let tokenUser = await jwt.createJWT(dadosRestaurante.id);
+
+        //Adiciona uma chave no JSON com o token do usuario
+        dadosRestaurante.token = tokenUser;
+
+        return dadosRestaurante;
+    }else {
+        return false;
+    }
+
+
+}
+
 module.exports = {
     inserirRestaurante,
     deletarRestaurante,
     atualizarRestaurante,
     getRestaurantes,
     getRestaurantePorID,
-    getRestauranteByEmailSenha
+    getRestauranteByEmailSenha,
+    autenciarRestaurante
 }

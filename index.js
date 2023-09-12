@@ -170,6 +170,26 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
 * Data : 31/08/2023
 ********************************/
 
+ //Receber o token encaminhando nas requisicoes e solicitar validacao
+const verifyJWT = async function (request,response,next) {
+    
+    //import da biblioteca para validacao do token
+    const jwt = require ('./middleware/middlewareJWT.js')
+
+    //recebe o token encaminhando no header da requisicao
+    let token = request.headers['x-access-token'];
+
+    //Valida a autencidade do Token
+    const autenticidadeToken = await jwt.validadeJWT(token);
+
+    //Verifica se a requisiccao podera continuar ou sera encerrada
+    if(autenticidadeToken)
+        next();
+    else 
+        return response.status(401).end();
+
+
+};
 
 //EndPoint: POST - Insere um Restaurante
 app.post('/v1/saveeats/restaurante', cors(), bodyParserJSON, async function (request, response) {
@@ -242,7 +262,7 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 });
 
 //EndPoint: GET - Retorna o restaurante pelo email e senha
-app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(), async function(request, response) {
+app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(),async function(request, response) {
     let email = request.params.email
     let senha = request.params.senha
 
