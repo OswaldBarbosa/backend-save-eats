@@ -190,8 +190,10 @@ const verifyJWT = async function (request,response,next) {
 };
 
 
+
+
 //EndPoint: POST - Insere um Restaurante
-app.post('/v1/saveeats/restaurante', cors(), bodyParserJSON, async function (request, response) {
+app.post('/v1/saveeats/restaurante',cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
 
@@ -251,7 +253,7 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
 });
 
 //EndPoint: GET - Retorna todos restaurantes
-app.get('/v1/saveeats/restaurantes', cors(),verifyJWT, async function (request, response) {
+app.get('/v1/saveeats/restaurantes',verifyJWT, cors(), async function (request, response) {
 
     let dados = await controllerRestaurante.getRestaurantes();
 
@@ -261,7 +263,7 @@ app.get('/v1/saveeats/restaurantes', cors(),verifyJWT, async function (request, 
 });
 
 //EndPoint: GET - Retorna o restaurante existente no banco pelo email e senha
-app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(),async function(request, response) {
+app.get('/v1/saveeats/restaurante/email/:email/senha/:senha',cors(),async function(request, response) {
     let email = request.params.email
     let senha = request.params.senha
 

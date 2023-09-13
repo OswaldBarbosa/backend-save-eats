@@ -13,7 +13,7 @@ const jwt = require ('jsonwebtoken');
 const SECRET = 'alb2c3'
 
 //Tempo para validar o token do JWT (segundos)
-const EXPIRES = 60;
+const EXPIRES = 600;
 
 
 //Criacao do JWT (retorna um TOKEN)
@@ -37,16 +37,16 @@ const validadeJWT = async function (token){
 
     //Valida a autenticidade do token
     jwt.verify(token,SECRET,async function (err,decode){
-        console.log(token);
-
+     
+        console.log(err);
         if (err) 
             status = false;
         else
             status = true;
-        return status;
-       
+     
 
     });
+    return status;
 }
 
 module.exports = {
