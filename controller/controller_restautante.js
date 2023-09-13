@@ -21,7 +21,10 @@ const inserirRestaurante = async function (dadosRestaurante) {
         dadosRestaurante.email == '' || dadosRestaurante.email == undefined || dadosRestaurante.email > 255 ||
         dadosRestaurante.senha == '' || dadosRestaurante.senha == undefined || dadosRestaurante.senha > 150 ||
         dadosRestaurante.id_categoria_restaurante == '' || dadosRestaurante.id_categoria_restaurante == undefined || isNaN(dadosRestaurante.id_categoria_restaurante) ||
-        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined || isNaN(dadosRestaurante.id_endereco_restaurante) 
+        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined || isNaN(dadosRestaurante.id_endereco_restaurante) ||
+        dadosRestaurante.cnpj == '' || dadosRestaurante.cnpj == undefined ||
+        dadosRestaurante.token == '' || dadosRestaurante.token == undefined ||
+        dadosRestaurante.tempo_expiracao == '' || dadosRestaurante.tempo_expiracao == undefined  
 
     ){
         return message.ERROR_REQUIRED_FIELDS
@@ -29,13 +32,20 @@ const inserirRestaurante = async function (dadosRestaurante) {
         //Envia os dados para a model inserir no banco de dados
         let resultDados = await restauranteDAO.insertRestaurante(dadosRestaurante)
 
+        //Import do JWT
+         const jwt = require("../middleware/middlewareJWT.js");
+
         //Valida se o banco de dados inseriu corretamente os dados
         if (resultDados) {
+
+            //let tokenUser = await jwt.createJWT(dadosRestaurante[0].id)
 
             let novoRestaurante = await restauranteDAO.selectLastId()
 
             let dadosRestauranteJSON = {}
+
             dadosRestauranteJSON.status = message.SUCESS_CREATED_ITEM.status
+           // dadosRestauranteJSON.token = tokenUser
             dadosRestauranteJSON.restaurantes = novoRestaurante
 
             return dadosRestauranteJSON
@@ -77,8 +87,11 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
         dadosRestaurante.razao_social == '' || dadosRestaurante.razao_social == undefined || dadosRestaurante.razao_social > 150 ||
         dadosRestaurante.email == '' || dadosRestaurante.email == undefined || dadosRestaurante.email > 255 ||
         dadosRestaurante.senha == '' || dadosRestaurante.senha == undefined || dadosRestaurante.senha > 150 ||
-        dadosRestaurante.id_categoria_restaurante == '' || dadosRestaurante.id_categoria_restaurante == undefined ||
-        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined 
+        dadosRestaurante.id_categoria_restaurante == '' || dadosRestaurante.id_categoria_restaurante == undefined || isNaN(dadosRestaurante.id_categoria_restaurante) ||
+        dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined || isNaN(dadosRestaurante.id_endereco_restaurante) ||
+        dadosRestaurante.cnpj == '' || dadosRestaurante.cnpj == undefined ||
+        dadosRestaurante.token == '' || dadosRestaurante.token == undefined ||
+        dadosRestaurante.tempo_expiracao == '' || dadosRestaurante.tempo_expiracao == undefined  
 
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
@@ -140,15 +153,20 @@ const getRestauranteByEmailSenha = async function (email, password) {
 
     } else {
 
+        // Import do JWT
+        const jwt = require("../middleware/middlewareJWT.js");
+
         let RestauranteJsonEmailpassword = {}
 
         let dadosRestaurante = await restauranteDAO.selectRestauranteByEmailPassword(email, password)
 
-        if (dadosRestaurante != null && dadosRestaurante != undefined && isNaN(dadosRestaurante)) {
+        if (dadosRestaurante != null && dadosRestaurante != undefined) {
 
-            let tokenUser = await jwt.createJWT(dadosRestaurante[0].id)
+            let tokenUser = await jwt.createJWT(dadosRestaurante[0].id);
+            
+            // Inclua o token no objeto dadosRestaurante
+            dadosRestaurante[0].token = tokenUser;
 
-            RestauranteJsonEmailpassword.token = tokenUser
             RestauranteJsonEmailpassword.status = message.SUCESS_REQUEST.status
             RestauranteJsonEmailpassword.Restaurante = dadosRestaurante;
 
@@ -158,8 +176,8 @@ const getRestauranteByEmailSenha = async function (email, password) {
             return message.ERROR_INVALID_EMAIL_PASSWORD
         }
     }
-
 }
+
 
 const getRestaurantePorID = async function (id) {
 
@@ -193,7 +211,7 @@ const autenciarRestaurante = async function (email,senha) {
         //Gera o token pelo JWT
         let tokenUser = await jwt.createJWT(dadosRestaurante.id);
 
-        //Adiciona uma chave no JSON com o token do usuario
+        //Adiciona uma chave no JSON com o token do restaurante
         dadosRestaurante.token = tokenUser;
 
         return dadosRestaurante;

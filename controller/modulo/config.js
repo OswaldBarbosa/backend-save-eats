@@ -16,6 +16,8 @@ const ERROR_NOT_FOUND_ID = {status: 400, message: 'O ID informado na requisiçã
 
 const ERROR_NOT_FOUND = {status: 404, message: 'Nenhum item foi encontrado na requisição'}
 
+const ERROR_INVALID_EMAIL_PASSWORD = {status: 404, message: 'Email ou senha inválidos.'}
+
 const ERROR_INVALID_CONTENT_TYPE = {status: 415, message: 'O tipo de mídia Content-Type da solicitação não é compativel com o servidor. Tipo Aceito: [application/json]'}
 
 //Mensagens de Sucesso
@@ -38,5 +40,6 @@ module.exports = {
     SUCESS_CREATED_ITEM,
     SUCESS_UPDATED_ITEM,
     SUCESS_DELETED_ITEM,
-    SUCESS_REQUEST
+    SUCESS_REQUEST,
+    ERROR_INVALID_EMAIL_PASSWORD
 }

@@ -1,9 +1,8 @@
 /***************************************************************************************************************************************************
  * Objetivo: Implementacao do JWT do projeto
- * * Data: 12/10/2023
+ *  Data:  12/10/2023
  * Autor: Caroline Portela
  * Versão: 1.0
-
  ***************************************************************************************************************************************************/
 
 
@@ -34,15 +33,18 @@ const createJWT = async function (payLoad){
 //Validacao de autencididade do JWT (recebe o TOKEN para validacao)
 const validadeJWT = async function (token){
 
-    let status = false;
+    let status;
 
     //Valida a autenticidade do token
     jwt.verify(token,SECRET,async function (err,decode){
+        console.log(token);
 
-        if (!err) 
-        status = true;
-
+        if (err) 
+            status = false;
+        else
+            status = true;
         return status;
+       
 
     });
 }

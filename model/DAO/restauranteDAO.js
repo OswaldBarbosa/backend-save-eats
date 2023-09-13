@@ -20,7 +20,10 @@ const insertRestaurante = async function (dadosRestaurante) {
         senha,
         foto,
         id_categoria_restaurante,
-        id_endereco_restaurante
+        id_endereco_restaurante,
+        cnpj,
+        token,
+        tempo_expiracao
     ) values (
         '${dadosRestaurante.nome_proprietario}',
         '${dadosRestaurante.nome_fantasia}',
@@ -29,7 +32,10 @@ const insertRestaurante = async function (dadosRestaurante) {
         '${dadosRestaurante.senha}',
         '${dadosRestaurante.foto}',
         ${dadosRestaurante.id_categoria_restaurante},
-        ${dadosRestaurante.id_endereco_restaurante}
+        ${dadosRestaurante.id_endereco_restaurante},
+        '${dadosRestaurante.cnpj}',
+        '${dadosRestaurante.token}',
+        '${dadosRestaurante.tempo_expiracao}'
     )`;
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -66,7 +72,10 @@ const updateRestaurante = async function (dadosRestaurante) {
                     senha = '${dadosRestaurante.senha}',
                     foto = '${dadosRestaurante.foto}',
                     id_categoria_restaurante = ${dadosRestaurante.id_categoria_restaurante},
-                    id_endereco_restaurante = ${dadosRestaurante.id_endereco_restaurante}
+                    id_endereco_restaurante = ${dadosRestaurante.id_endereco_restaurante},
+                    cnpj = '${dadosRestaurante.cnpj}',
+                    token = '${dadosRestaurante.token}',
+                    tempo_expiracao = '${dadosRestaurante.tempo_expiracao}'
 
                 where id = ${dadosRestaurante.id}    
             `

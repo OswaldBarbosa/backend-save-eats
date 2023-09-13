@@ -182,14 +182,13 @@ const verifyJWT = async function (request,response,next) {
     //Valida a autencidade do Token
     const autenticidadeToken = await jwt.validadeJWT(token);
 
-    //Verifica se a requisiccao podera continuar ou sera encerrada
+    //Verifica se a requisicao podera continuar ou sera encerrada
     if(autenticidadeToken)
         next();
     else 
         return response.status(401).end();
-
-
 };
+
 
 //EndPoint: POST - Insere um Restaurante
 app.post('/v1/saveeats/restaurante', cors(), bodyParserJSON, async function (request, response) {
@@ -252,7 +251,7 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
 });
 
 //EndPoint: GET - Retorna todos restaurantes
-app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) {
+app.get('/v1/saveeats/restaurantes', cors(),verifyJWT, async function (request, response) {
 
     let dados = await controllerRestaurante.getRestaurantes();
 
@@ -261,7 +260,7 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 
 });
 
-//EndPoint: GET - Retorna o restaurante pelo email e senha
+//EndPoint: GET - Retorna o restaurante existente no banco pelo email e senha
 app.get('/v1/saveeats/restaurante/email/:email/senha/:senha', cors(),async function(request, response) {
     let email = request.params.email
     let senha = request.params.senha
