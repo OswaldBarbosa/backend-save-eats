@@ -22,7 +22,7 @@ const insertRestaurante = async function (dadosRestaurante) {
         id_categoria_restaurante,
         id_endereco_restaurante,
         cnpj,
-        token,
+        token_recuperar_senha,
         tempo_expiracao
     ) values (
         '${dadosRestaurante.nome_proprietario}',
@@ -34,7 +34,7 @@ const insertRestaurante = async function (dadosRestaurante) {
         ${dadosRestaurante.id_categoria_restaurante},
         ${dadosRestaurante.id_endereco_restaurante},
         '${dadosRestaurante.cnpj}',
-        '${dadosRestaurante.token}',
+        '${dadosRestaurante.token_recuperar_senha}',
         '${dadosRestaurante.tempo_expiracao}'
     )`;
 
@@ -74,7 +74,7 @@ const updateRestaurante = async function (dadosRestaurante) {
                     id_categoria_restaurante = ${dadosRestaurante.id_categoria_restaurante},
                     id_endereco_restaurante = ${dadosRestaurante.id_endereco_restaurante},
                     cnpj = '${dadosRestaurante.cnpj}',
-                    token = '${dadosRestaurante.token}',
+                    token_recuperacao_senha = '${dadosRestaurante.token_recuperacao_senha}',
                     tempo_expiracao = '${dadosRestaurante.tempo_expiracao}'
 
                 where id = ${dadosRestaurante.id}    

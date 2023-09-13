@@ -23,7 +23,7 @@ const inserirRestaurante = async function (dadosRestaurante) {
         dadosRestaurante.id_categoria_restaurante == '' || dadosRestaurante.id_categoria_restaurante == undefined || isNaN(dadosRestaurante.id_categoria_restaurante) ||
         dadosRestaurante.id_endereco_restaurante == '' || dadosRestaurante.id_endereco_restaurante == undefined || isNaN(dadosRestaurante.id_endereco_restaurante) ||
         dadosRestaurante.cnpj == '' || dadosRestaurante.cnpj == undefined ||
-        dadosRestaurante.token == '' || dadosRestaurante.token == undefined ||
+        dadosRestaurante.token_recuperar_senha == '' || dadosRestaurante.token_recuperar_senha == undefined ||
         dadosRestaurante.tempo_expiracao == '' || dadosRestaurante.tempo_expiracao == undefined  
 
     ){
