@@ -19,14 +19,18 @@ const insertCliente = async function (dadosCliente) {
         senha,
         cpf,
         foto,
-        telefone
+        telefone,
+        token_recuperar_senha,
+        tempo_expiracao
     ) values (
         '${dadosCliente.nome}',
         '${dadosCliente.email}',
         '${dadosCliente.senha}',
         '${dadosCliente.cpf}',
         '${dadosCliente.foto}',
-        '${dadosCliente.telefone}'
+        '${dadosCliente.telefone}',
+        '${dadosCliente.token_recuperar_senha}',
+        '${dadosCliente.tempo_expiracao}'
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)

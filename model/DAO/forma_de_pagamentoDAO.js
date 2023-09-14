@@ -50,9 +50,9 @@ const deleteFormaPagamento = async function (id) {
 const updateFormaPagamento = async function (dados) {
     let sql = `update tbl_forma_pagamento set
 
-                    'foto_bandeira = ${dados.foto_bandeira}',
-                    'nome_forma_pagamento = ${dados.nome_forma_pagamento}',
-                    'tipo_forma_pagamento = ${dados.nome_forma_pagamento}'
+                    foto_bandeira = '${dados.foto_bandeira}',
+                    nome_forma_pagamento = '${dados.nome_forma_pagamento}',
+                    tipo_forma_pagamento = '${dados.nome_forma_pagamento}'
 
                 where id = ${dados.id}    
             `

@@ -20,7 +20,11 @@ const inserirCliente = async function (dadosCliente) {
         dadosCliente.email == '' || dadosCliente.email == undefined || dadosCliente.email.length > 255 ||
         dadosCliente.senha == '' || dadosCliente.senha == undefined ||
         dadosCliente.cpf == '' || dadosCliente.cpf == undefined || 
-        dadosCliente.telefone == '' || dadosCliente.telefone == undefined || dadosCliente.telefone.length > 15
+        dadosCliente.foto == '' || dadosCliente.foto == undefined ||
+        dadosCliente.telefone == '' || dadosCliente.telefone == undefined || dadosCliente.telefone.length > 15||
+        dadosCliente.token_recuperar_senha == '' || dadosCliente.token_recuperar_senha == undefined || 
+        dadosCliente.tempo_expiracao == '' || dadosCliente.tempo_expiracao == undefined 
+
 
     ){
         return message.ERROR_REQUIRED_FIELDS
@@ -74,7 +78,11 @@ const atualizarCliente = async function (dadosCliente, idCliente) {
         dadosCliente.email == '' || dadosCliente.email == undefined || dadosCliente.email.length > 255 ||
         dadosCliente.senha == '' || dadosCliente.senha == undefined ||
         dadosCliente.cpf == '' || dadosCliente.cpf == undefined || 
-        dadosCliente.telefone == '' || dadosCliente.telefone == undefined || dadosCliente.telefone.length > 15
+        dadosCliente.foto == '' || dadosCliente.foto == undefined ||
+        dadosCliente.telefone == '' || dadosCliente.telefone == undefined || dadosCliente.telefone.length > 15||
+        dadosCliente.token_recuperar_senha == '' || dadosCliente.token_recuperar_senha == undefined || 
+        dadosCliente.tempo_expiracao == '' || dadosCliente.tempo_expiracao == undefined 
+
 
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS

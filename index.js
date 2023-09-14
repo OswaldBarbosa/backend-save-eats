@@ -70,6 +70,7 @@ var controllerCategoriaProduto = require ('./controller/controller_categoria_pro
 var controllerCategoriaReceitas = require ('./controller/controller_categoria_receitas.js')
 var controllerTempoPreparo = require ('./controller/controller_tempo_preparo.js')
 var controllerNivelDificuldade = require ('./controller/controller_nivel_dificuldade.js')
+var controllerProcedure = require ('./controller/controller_procedures.js')
 
 
 ///////////////////////////////////////// JWT VERIFICAÇÃO //////////////////////////////////////////////
@@ -164,7 +165,7 @@ app.put('/v1/saveeats/cliente/:id', cors(), bodyParserJSON, async function (requ
 });
 
 //EndPoint: GET - Retorna todos clientes
-app.get('/v1/saveeats/clientes', cors(), verifyJWT, async function (request, response) {
+app.get('/v1/saveeats/clientes', cors(),  async function (request, response) {
 
     let dados = await controllerCliente.getClientes();
 
@@ -223,6 +224,27 @@ app.post('/v1/saveeats/restaurante',cors(), bodyParserJSON, async function (requ
     }
 
 });
+
+
+//EndPoint: POST - Insere um Restaurante (PROCEDORE)
+app.post('/v1/saveeats/restaurante/procedore',cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.inserirCadastroProcedure(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
 
 //EndPoint: DELETE - Exclui restaurante pelo id
 app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
