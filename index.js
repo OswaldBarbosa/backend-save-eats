@@ -1,5 +1,5 @@
 /* ***************************************************************************************************************************************************
- * Objetivo : API para integração entre back e banco de dados (GET,POST,PUT,DELETE)
+ * Objetivo : API para integração entre back e banco de dados (GET,POST,PUT,DELETE,ETC.)
  * Autor : Caroline Portela
  * Data 30/08/2023
  * Versão : 1.0 
@@ -69,7 +69,30 @@ var controllerStatusProduto = require ('./controller/controller_status_produto.j
 var controllerCategoriaProduto = require ('./controller/controller_categoria_produto.js')
 var controllerCategoriaReceitas = require ('./controller/controller_categoria_receitas.js')
 var controllerTempoPreparo = require ('./controller/controller_tempo_preparo.js')
+var controllerNivelDificuldade = require ('./controller/controller_nivel_dificuldade.js')
 
+
+///////////////////////////////////////// JWT VERIFICAÇÃO //////////////////////////////////////////////
+
+ //Receber o token encaminhando nas requisicoes e solicitar validacao
+ const verifyJWT = async function (request,response,next) {
+    
+    //import da biblioteca para validacao do token
+    const jwt = require ('./middleware/middlewareJWT.js')
+
+    //recebe o token encaminhando no header da requisicao
+    let token = request.headers['x-access-token'];
+
+    //Valida a autencidade do Token
+    const autenticidadeToken = await jwt.validadeJWT(token);
+
+    //Verifica se a requisicao podera continuar ou sera encerrada
+    if(autenticidadeToken)
+        next();
+    else 
+        return response.status(message.ERROR_INVALID_TOKEN.status).end();
+        
+};
 
 
 ///////////////////////////////////////// Cliente //////////////////////////////////////////////
@@ -141,7 +164,7 @@ app.put('/v1/saveeats/cliente/:id', cors(), bodyParserJSON, async function (requ
 });
 
 //EndPoint: GET - Retorna todos clientes
-app.get('/v1/saveeats/clientes', cors(), async function (request, response) {
+app.get('/v1/saveeats/clientes', cors(), verifyJWT, async function (request, response) {
 
     let dados = await controllerCliente.getClientes();
 
@@ -162,6 +185,17 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
 });
 
 
+//EndPoint: GET - Retorna o cliente existente no banco pelo email e senha
+app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(request, response) {
+    let email = request.params.email
+    let senha = request.params.senha
+
+    let dados = await controllerCliente.getClienteByEmailSenha(email, senha)
+
+    response.status(dados.status)
+    response.json(dados)
+})
+
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////
 
 
@@ -169,27 +203,6 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
 * Objetivo : API de controle do Restaurante
 * Data : 31/08/2023
 ********************************/
-
- //Receber o token encaminhando nas requisicoes e solicitar validacao
-const verifyJWT = async function (request,response,next) {
-    
-    //import da biblioteca para validacao do token
-    const jwt = require ('./middleware/middlewareJWT.js')
-
-    //recebe o token encaminhando no header da requisicao
-    let token = request.headers['x-access-token'];
-
-    //Valida a autencidade do Token
-    const autenticidadeToken = await jwt.validadeJWT(token);
-
-    //Verifica se a requisicao podera continuar ou sera encerrada
-    if(autenticidadeToken)
-        next();
-    else 
-        return response.status(401).end();
-};
-
-
 
 
 //EndPoint: POST - Insere um Restaurante
@@ -3242,10 +3255,37 @@ app.post('/v1/saveeats/tempo-preparo', cors(), bodyParserJSON, async function (r
 
     }
 
+});
+
+///////////////////////////////////////// Nivel Dificuldade  //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de nivel_dificuldade
+* Data : 14/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela nivel_dificuldade
+app.post('/v1/saveeats/nivel-dificuldade', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body
+
+        let resulDados = await controllerNivelDificuldade.inserirNivelDificuldade(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
 })
-
-
-
 
 
 

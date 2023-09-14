@@ -20,6 +20,8 @@ const ERROR_INVALID_EMAIL_PASSWORD = {status: 404, message: 'Email ou senha inv�
 
 const ERROR_INVALID_CONTENT_TYPE = {status: 415, message: 'O tipo de mídia Content-Type da solicitação não é compativel com o servidor. Tipo Aceito: [application/json]'}
 
+const ERROR_INVALID_TOKEN = {status: 401, message: 'Token não autorizado,verifique o tempo de expiração.'}
+
 //Mensagens de Sucesso
 const SUCESS_CREATED_ITEM = {status: 201, message: 'Item criado com sucesso'}
 
@@ -41,5 +43,6 @@ module.exports = {
     SUCESS_UPDATED_ITEM,
     SUCESS_DELETED_ITEM,
     SUCESS_REQUEST,
-    ERROR_INVALID_EMAIL_PASSWORD
+    ERROR_INVALID_EMAIL_PASSWORD,
+    ERROR_INVALID_TOKEN
 }
