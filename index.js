@@ -71,6 +71,7 @@ var controllerCategoriaReceitas = require ('./controller/controller_categoria_re
 var controllerTempoPreparo = require ('./controller/controller_tempo_preparo.js')
 var controllerNivelDificuldade = require ('./controller/controller_nivel_dificuldade.js')
 var controllerProcedure = require ('./controller/controller_procedures.js')
+var controllerViews = require ('./controller/controller_views.js')
 
 
 ///////////////////////////////////////// JWT VERIFICAÇÃO //////////////////////////////////////////////
@@ -226,7 +227,7 @@ app.post('/v1/saveeats/restaurante',cors(), bodyParserJSON, async function (requ
 });
 
 
-//EndPoint: POST - Insere um Restaurante (PROCEDORE)
+//EndPoint: POST - Insere um Restaurante (PROCEDURE)
 app.post('/v1/saveeats/restaurante/procedore',cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -3310,7 +3311,22 @@ app.post('/v1/saveeats/nivel-dificuldade', cors(), bodyParserJSON, async functio
 })
 
 
+///////////////////////////////////////// VIEWS  //////////////////////////////////////////////
 
+/********************************
+* Objetivo : API de controle das views do banco de dados
+* Data : 15/09/2023
+********************************/
+
+// PEDIDO - PRODUTO
+app.get('/v1/saveeats/pedido-produtos', cors(), async function (request, response) {
+
+    let dadosPedidosProdutos = await controllerViews.getViewsPedidoProduto();
+
+    response.status(dadosPedidosProdutos.status)
+    response.json(dadosPedidosProdutos)
+
+})
 
 
 

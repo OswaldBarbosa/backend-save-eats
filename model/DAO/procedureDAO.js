@@ -13,7 +13,7 @@ var prisma = new PrismaClient()
 const proceduresRestauranteCadastro = async function (dadosProcedures) {
     let call = `
     CALL procInsertRestaurante(
-        '${dadosProcedures.nome}',
+        '${dadosProcedures.nome_categoria}',
         '${dadosProcedures.nome_estado}',
         '${dadosProcedures.nome_cidade}',
         '${dadosProcedures.rua}',
@@ -34,6 +34,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
 `
 
     let resultStatus = await prisma.$executeRawUnsafe(call)
+    console.log(resultStatus);
 
     if(resultStatus){
         return true

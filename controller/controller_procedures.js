@@ -11,7 +11,7 @@ var proceduresDAO = require('../model/DAO/procedureDAO.js')
 
 const inserirCadastroProcedure = async (dadosCadastro) => {
 
-    if  (dadosCadastro.nome == '' || dadosCadastro.nome == undefined  
+    if  (dadosCadastro.nome_categoria == '' || dadosCadastro.nome_categoria == undefined  
     ) {
 
         return message.ERROR_REQUIRED_FIELDS
