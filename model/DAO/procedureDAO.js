@@ -28,7 +28,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
         '${dadosProcedures.senha}',
         '${dadosProcedures.foto}',
         '${dadosProcedures.cnpj}',
-        '${dadosProcedures.numero}'
+        '${dadosProcedures.numero_telefone}'
     );
     
 `

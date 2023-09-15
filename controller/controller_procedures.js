@@ -24,11 +24,11 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 
         if (resultadoDados) {
 
-            let novoCadastro = await proceduresDAO()
+            
 
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
             dadosJSON.message = message.SUCESS_CREATED_ITEM.message
-            dadosJSON.cadastro = novoCadastro
+            
 
             return dadosJSON
 
