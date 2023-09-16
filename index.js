@@ -198,23 +198,7 @@ app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(r
     response.json(dados)
 })
 
-app.post('/v1/saveeats/cliente/autenticar', cors(), bodyParserJSON, async function(request, response){
-    let contentType = request.headers['content-type']
-    
-    if(String(contentType).toLowerCase() == 'application/json'){
-        let dadosBody = request.body
-        let resultDadosCliente = await controllerCliente.autenticarCliente(dadosBody)
 
-        response.status(200)
-        response.json(resultDadosCliente)
-
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.message(message.ERROR_INVALID_CONTENT_TYPE.message)
-
-    }
-
-})
 
 
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////

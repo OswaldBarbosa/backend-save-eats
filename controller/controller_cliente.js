@@ -188,22 +188,6 @@ const getClienteByEmailSenha = async function (email, password) {
     }
 }
 
-const autenticarCliente = async function(dadosCliente){
-
-    const dados = await clienteDAO.selectClienteByEmailPassword(dadosCliente)
-   
-    const jwt = require('../middleware/middlewareJWT.js')
-
-    if(dados){
-        let tokenUser = await jwt.createJWT(dados.id)
-        dados[0].token = tokenUser
-
-        return dados[0]
-
-    } else {
-        return message.ERROR_UNAUTHORIZED   
-    }
-}
 
 
 module.exports = {
