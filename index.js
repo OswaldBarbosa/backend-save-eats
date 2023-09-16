@@ -198,6 +198,25 @@ app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(r
     response.json(dados)
 })
 
+app.post('/v1/saveeats/cliente/autenticar', cors(), bodyParserJSON, async function(request, response){
+    let contentType = request.headers['content-type']
+    
+    if(String(contentType).toLowerCase() == 'application/json'){
+        let dadosBody = request.body
+        let resultDadosCliente = await controllerCliente.autenticarCliente(dadosBody)
+
+        response.status(200)
+        response.json(resultDadosCliente)
+
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.message(message.ERROR_INVALID_CONTENT_TYPE.message)
+
+    }
+
+})
+
+
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////
 
 
@@ -1217,6 +1236,26 @@ app.get('/v1/saveeats/cidade/cliente/id/:id', cors(), bodyParserJSON, async func
 * Objetivo : API de controle de Endereco Cliente
 * Data : 06/09/2023
 ********************************/
+
+//EndPoint: PROCEDURE - ENDERECO CLIENTE
+app.post('/v1/saveeats/endereco/cliente/procedure', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.inserirEnderecoClienteCadastro(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
 
 //EndPoint: POST - Insere um novo registro de endereco do cliente
 app.post('/v1/saveeats/endereco/cliente', cors(), bodyParserJSON, async function (request, response) {

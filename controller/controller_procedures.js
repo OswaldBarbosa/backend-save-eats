@@ -42,6 +42,40 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 
 }
 
+const inserirEnderecoClienteCadastro = async (dadosEndereco) => {
+
+    if  (dadosEndereco.rua == '' || dadosEndereco.rua == undefined  
+    ) {
+
+        return message.ERROR_REQUIRED_FIELDS
+
+    } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureInsertEnderecoCliente(dadosEndereco)
+
+        if (resultadoDados) {
+
+            
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            
+
+            return dadosJSON
+
+        } else {
+
+            return message.ERROR_INTERNAL_SERVER
+
+        }
+
+    }
+
+}
+
+
 module.exports = {
-    inserirCadastroProcedure
+    inserirCadastroProcedure,
+    inserirEnderecoClienteCadastro
 }

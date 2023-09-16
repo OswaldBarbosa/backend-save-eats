@@ -19,8 +19,7 @@ const inserirCliente = async function (dadosCliente) {
     if (dadosCliente.nome == '' || dadosCliente.nome == undefined || dadosCliente.nome.length > 150 ||
         dadosCliente.email == '' || dadosCliente.email == undefined || dadosCliente.email.length > 255 ||
         dadosCliente.senha == '' || dadosCliente.senha == undefined ||
-        dadosCliente.cpf == '' || dadosCliente.cpf == undefined || 
-        dadosCliente.foto == '' || dadosCliente.foto == undefined ||
+        dadosCliente.cpf == '' || dadosCliente.cpf == undefined || '' ||
         dadosCliente.telefone == '' || dadosCliente.telefone == undefined || dadosCliente.telefone.length > 15||
         dadosCliente.token_recuperar_senha == '' || dadosCliente.token_recuperar_senha == undefined || 
         dadosCliente.tempo_expiracao == '' || dadosCliente.tempo_expiracao == undefined 
@@ -189,6 +188,23 @@ const getClienteByEmailSenha = async function (email, password) {
     }
 }
 
+const autenticarCliente = async function(dadosCliente){
+
+    const dados = await clienteDAO.selectClienteByEmailPassword(dadosCliente)
+   
+    const jwt = require('../middleware/middlewareJWT.js')
+
+    if(dados){
+        let tokenUser = await jwt.createJWT(dados.id)
+        dados[0].token = tokenUser
+
+        return dados[0]
+
+    } else {
+        return message.ERROR_UNAUTHORIZED   
+    }
+}
+
 
 module.exports = {
     inserirCliente,
@@ -196,5 +212,6 @@ module.exports = {
     atualizarCliente,
     getClientes,
     getClientePorID,
-    getClienteByEmailSenha
+    getClienteByEmailSenha,
+    autenticarCliente
 }
