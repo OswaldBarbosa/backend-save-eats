@@ -186,7 +186,6 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
     response.json(dados)
 });
 
-
 //EndPoint: GET - Retorna o cliente existente no banco pelo email e senha
 app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(request, response) {
     let email = request.params.email
@@ -196,9 +195,27 @@ app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(r
 
     response.status(dados.status)
     response.json(dados)
-})
+});
 
+//EndPoint: POST - Passar dados do login no body 
+app.post('/v1/saveeats/cliente/login/autenticar', cors(), bodyParserJSON, async function (request, response) {
 
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let body = request.body
+
+        let resulDados = await controllerCliente.autenticarLoginClienteEmailSenha(body.email,body.senha)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
 
 
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////
