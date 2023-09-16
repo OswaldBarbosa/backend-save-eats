@@ -340,6 +340,27 @@ app.get('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
     response.json(dados)
 });
 
+//EndPoint: POST - Passar dados do login no body 
+app.post('/v1/saveeats/restaurante/login/autenticar', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let body = request.body
+
+        let resulDados = await controllerRestaurante.autenticarLoginRestauranteEmailSenha(body.email,body.senha)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
 

@@ -199,31 +199,40 @@ const getRestaurantePorID = async function (id) {
     }
 }
 
- const autenticarRestaurante = async function (email,senha) {
-//     const restaurante = require ('../model/DAO/restauranteDAO.js')
+const autenticarLoginRestauranteEmailSenha = async function (email, password) {
+    
+    if (
+        email == '' || email == undefined || email.length > 255 ||
+        password == '' || password == undefined || password.length > 150
+    ) {
+        return message.ERROR_REQUIRED_FIELDS
 
-//     //import da biblioteca que gera e valida a autenticidade do JWT
-//     const jwt = require ('../middleware/middlewareJWT.js')
+    } else {
 
-//     const dadosRestaurante = await restaurante.selectRestauranteByEmailPassword(email,senha);
+        // Import do JWT
+        const jwt = require("../middleware/middlewareJWT.js");
 
-//     if (dadosRestaurante){
-//         //Gera o token pelo JWT
-//         let tokenUser = await jwt.createJWT(dadosRestaurante[0].id);
+        let restauranteJSONEmailpassword = {}
 
-//         //Adiciona uma chave no JSON com o token do restaurante
-//         dadosRestaurante[0].token = tokenUser;
-        
+        let dadosRestaurante = await restauranteDAO.selectRestauranteByEmailPassword(email, password)
 
+        if (dadosRestaurante != null && dadosRestaurante != undefined) {
 
-//         return dadosRestaurante;
-       
-//     }else {
-//         return false;
-//     }
+            let tokenUser = await jwt.createJWT(dadosRestaurante[0].id);
+            
+            // Inclua o token no objeto dadosRestaurante
+            dadosRestaurante[0].token = tokenUser;
 
+            restauranteJSONEmailpassword.status = message.SUCESS_REQUEST.status
+            restauranteJSONEmailpassword.restaurante = dadosRestaurante;
 
- }
+            return restauranteJSONEmailpassword
+
+        } else {
+            return message.ERROR_INVALID_EMAIL_PASSWORD
+        }
+    }
+}
 
 module.exports = {
     inserirRestaurante,
@@ -231,6 +240,7 @@ module.exports = {
     atualizarRestaurante,
     getRestaurantes,
     getRestaurantePorID,
-    getRestauranteByEmailSenha
+    getRestauranteByEmailSenha,
+    autenticarLoginRestauranteEmailSenha
 
 }
