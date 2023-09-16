@@ -197,7 +197,7 @@ app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(r
     response.json(dados)
 });
 
-//EndPoint: POST - Passar dados do login no body 
+//EndPoint: POST - Passar dados do login no body e retorna os dados se existir o usuario no banco
 app.post('/v1/saveeats/cliente/login/autenticar', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -207,6 +207,25 @@ app.post('/v1/saveeats/cliente/login/autenticar', cors(), bodyParserJSON, async 
         let body = request.body
 
         let resulDados = await controllerCliente.autenticarLoginClienteEmailSenha(body.email,body.senha)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: POST -Cadastro do cliente com a procedure
+app.post('/v1/saveeats/cadastro/cliente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.inserirCadastroCliente(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)

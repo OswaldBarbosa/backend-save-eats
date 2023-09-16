@@ -43,7 +43,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
     }
 }
 
-
+//vou deixar aqui caso eu precise,mas nao iremos mais utilizar
 const procedureInsertEnderecoCliente = async function (dadosProcedures) {
     let call = `
     CALL procEnderecoCliente(
@@ -69,8 +69,39 @@ const procedureInsertEnderecoCliente = async function (dadosProcedures) {
 }
 
 
+const procedureInsertCadastroCliente = async function (dadosProcedures) {
+
+    let call = `
+    CALL procIntermedEnderecoCliente(
+        '${dadosProcedures.nome}',
+        '${dadosProcedures.email}',
+        '${dadosProcedures.senha}',
+        '${dadosProcedures.cpf}',
+        '${dadosProcedures.foto}',
+        '${dadosProcedures.telefone}',
+        '${dadosProcedures.nome_estado}',
+        '${dadosProcedures.nome_cidade}',
+        '${dadosProcedures.cep}',
+        '${dadosProcedures.rua}',
+        '${dadosProcedures.bairro}',
+        '${dadosProcedures.numero}',
+        '${dadosProcedures.complemento}'
+        
+    );
+    
+`
+
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
 
 module.exports = {
     proceduresRestauranteCadastro,
-    procedureInsertEnderecoCliente
+    procedureInsertCadastroCliente
+    
 }
