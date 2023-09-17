@@ -12,8 +12,8 @@ const jwt = require ('jsonwebtoken');
 //Chave secreta pra criacao do JWT
 const SECRET = 'alb2c3'
 
-//Tempo para validar o token do JWT (segundos)
-const EXPIRES = 600;
+//Tempo para validar o token do JWT 
+const EXPIRES = 14400;
 
 
 //Criacao do JWT (retorna um TOKEN)
