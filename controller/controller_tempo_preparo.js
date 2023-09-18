@@ -55,7 +55,7 @@ const atualizarTempoPreparo = async function (dadosTempoPreparo, idTempoPreparo)
         let statusId = await tempoPreparoDAO.selectLastId();
 
         if (statusId) {
-            //Encaminha os dados para a model do cliente
+            //Encaminha os dados para a model 
             let resultDados = await tempoPreparoDAO.updateTempoPreparo(dadosTempoPreparo);
 
             if (resultDados) {
@@ -109,7 +109,7 @@ const getTempoPreparo = async function () {
         dadosTempoPreparoJSON.message = message.SUCESS_REQUEST.message
         dadosTempoPreparoJSON.quantidade = dadosTempoPreparo.length;
         dadosTempoPreparoJSON.tempo_preparo =  dadosTempoPreparo
-        return  dadosCategoriasJSON
+        return  dadosTempoPreparoJSON
     } else {
         return message.ERROR_NOT_FOUND
     }

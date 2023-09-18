@@ -72,6 +72,8 @@ var controllerTempoPreparo = require ('./controller/controller_tempo_preparo.js'
 var controllerNivelDificuldade = require ('./controller/controller_nivel_dificuldade.js')
 var controllerProcedure = require ('./controller/controller_procedures.js')
 var controllerViews = require ('./controller/controller_views.js')
+var controllerIngrediente = require ('./controller/controller_ingrediente.js')
+
 
 
 ///////////////////////////////////////// JWT VERIFICAÇÃO //////////////////////////////////////////////
@@ -3328,7 +3330,7 @@ app.get('/v1/saveeats/categoria/receitas/id/:id', cors(), async function (reques
     response.status(dadosCategoriaReceitas.status)
     response.json(dadosCategoriaReceitas)
 
-})
+});
 
 ///////////////////////////////////////// Tempo Preparo  //////////////////////////////////////////////
 
@@ -3360,6 +3362,30 @@ app.post('/v1/saveeats/tempo-preparo', cors(), bodyParserJSON, async function (r
 
 });
 
+//EndPoint: GET - Retorna todos tempo_preparo registrados
+app.get('/v1/saveeats/tempo-preparo', cors(), async function (request, response) {
+
+    let dadosTempoPreparo = await controllerTempoPreparo.getTempoPreparo();
+
+    response.status(dadosTempoPreparo.status)
+    response.json(dadosTempoPreparo)
+
+});
+
+//EndPoint: DELETE - Deleta um registro da tabela tempo_preparo
+app.delete('/v1/saveeats/tempo-preparo/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idTempoPreparo = request.params.id;
+
+    let resultDados = await controllerTempoPreparo.deletarTempoPreparo(idTempoPreparo)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+});
+
+
+
 ///////////////////////////////////////// Nivel Dificuldade  //////////////////////////////////////////////
 
 /********************************
@@ -3369,27 +3395,144 @@ app.post('/v1/saveeats/tempo-preparo', cors(), bodyParserJSON, async function (r
 
 //EndPoint: POST - Insere uma novo registro na tabela nivel_dificuldade
 app.post('/v1/saveeats/nivel-dificuldade', cors(), bodyParserJSON, async function (request, response) {
+    let contentType = request.headers['content-type'];
 
-    let contentType = request.headers['content-type']
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body;
+
+        // Agora, você chama a função corretamente
+        let resultDados = await controllerNivelDificuldade.inserirNivelDificuldade(dadosBody);
+
+        response.status(resultDados.status);
+        response.json(resultDados);
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status);
+        response.json(message.ERROR_INVALID_CONTENT_TYPE);
+    }
+});
+
+//EndPoint: PUT - Atualiza registro da tabela nivel_dificuldade
+app.put('/v1/saveeats/nivel-dificuldade/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
 
     if (String(contentType).toLowerCase() == 'application/json') {
 
-        let dadosBody = request.body
+        let idNivelDificuldade = request.params.id;
 
-        let resulDados = await controllerNivelDificuldade.inserirNivelDificuldade(dadosBody)
+        let dadosBody = request.body;
 
-        response.status(resulDados.status)
-        response.json(resulDados)
+        let resultDados = await controllerNivelDificuldade.atualizarNivelDificuldade(dadosBody, idNivelDificuldade)
+
+        response.status(resultDados.status)
+        response.json(resultDados)
 
     } else {
 
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
-
+        
     }
+
+});
+
+//EndPoint: GET - Retorna todos niveis de dificuldade registrados
+app.get('/v1/saveeats/nivel-dificuldade', cors(), async function (request, response) {
+
+    let dadosNivelDificuldade = await controllerNivelDificuldade.getNivelDificuldade();
+
+    response.status(dadosNivelDificuldade.status)
+    response.json(dadosNivelDificuldade)
+
+});
+
+//EndPoint: DELETE - Deleta um registro da tabela nivel_dificuldade
+app.delete('/v1/saveeats/nivel-dificuldade/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idNivelDificuldade = request.params.id;
+
+    let resultDados = await controllerNivelDificuldade.deletarNivelDificuldade(idNivelDificuldade)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+});
+
+
+
+///////////////////////////////////////// Ingrediente  //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle de tbl_ingrediente
+* Data : 18/09/2023
+********************************/
+
+//EndPoint: POST - Insere uma novo registro na tabela nivel_dificuldade
+app.post('/v1/saveeats/ingrediente', cors(), bodyParserJSON, async function (request, response) {
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body;
+
+ 
+        let resultDados = await controllerIngrediente.inserirIngrediente(dadosBody);
+
+        response.status(resultDados.status);
+        response.json(resultDados);
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status);
+        response.json(message.ERROR_INVALID_CONTENT_TYPE);
+    }
+});
+
+// EndPoint : GET - Retorna todos ingredientes 
+app.get('/v1/saveeats/ingredientes', cors(), async function (request, response) {
+
+    let dadosIngrediente = await controllerIngrediente.getIngrediente();
+
+    response.status(dadosIngrediente.status)
+    response.json(dadosIngrediente)
 
 })
 
+
+//EndPoint: DELETE - Deleta um ingrediente
+app.delete('/v1/saveeats/ingrediente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idIngrediente = request.params.id;
+
+    let resultDados = await controllerIngrediente.deletarIngrediente(idIngrediente)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+});
+
+
+//EndPoint: PUT - Atualiza um ingrediente
+app.put('/v1/saveeats/ingrediente/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idIngrediente = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerIngrediente.atualizarIngrediente(dadosBody, idIngrediente)
+
+        //response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+});
 
 /////////////////////////////////////////  VIEWS  //////////////////////////////////////////////
 
@@ -3407,6 +3550,17 @@ app.get('/v1/saveeats/pedido-produtos', cors(), async function (request, respons
     response.json(dadosPedidosProdutos)
 
 })
+
+
+
+
+
+
+
+
+
+
+
 
 
 

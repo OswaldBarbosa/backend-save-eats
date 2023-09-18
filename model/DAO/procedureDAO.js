@@ -19,7 +19,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
         '${dadosProcedures.rua}',
         '${dadosProcedures.cep}',
         '${dadosProcedures.bairro}',
-         '${dadosProcedures.numero}',
+        '${dadosProcedures.numero}',
         '${dadosProcedures.complemento}',
         '${dadosProcedures.nome_proprietario}',
         '${dadosProcedures.nome_fantasia}',

@@ -9,24 +9,26 @@ var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
-//inserir um nivel dificuldade
-const insertNivelDificuldade = async (dadosNivelDificuldade) => {
+
+const insertNivelDificuldade = async function (dados) {
 
     let sql = `insert into tbl_nivel_dificuldade (
         nivel_dificuldade
     )   values (
-        '${dadosNivelDificuldade.nivel_dificuldade}'
+        '${dados.nivel_dificuldade}'
     )`
 
-    let resultNivelDificuldade = await prisma.$executeRawUnsafe(sql)
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
 
-    if (resultNivelDificuldade) {
+    if(resultStatus){
         return true
     } else {
         return false
     }
 
 }
+
+
 
 /////////////////////////// Update /////////////////////////////
 
@@ -36,7 +38,7 @@ const updateNivelDificuldade = async (dadosNivelDificuldade) => {
     let sql = `update tbl_nivel_dificuldade set
                 nivel_dificuldade = '${dadosNivelDificuldade.nivel_dificuldade}'
 
-               where id = ${dadosTempoPreparo.id}
+               where id = ${dadosNivelDificuldade.id}
                `
 
     let resultNivelDificuldade = await prisma.$executeRawUnsafe(sql)
@@ -110,7 +112,7 @@ const selectLastId = async function () {
     }
 }   
 
-module = {
+module.exports = {
     insertNivelDificuldade,
     updateNivelDificuldade,
     deleteNivelDificuldade,

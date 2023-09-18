@@ -9,6 +9,7 @@ var message = require('./modulo/config.js')
 
 var proceduresDAO = require('../model/DAO/procedureDAO.js')
 
+//funcao pra inserir cadastro do restaurante
 const inserirCadastroProcedure = async (dadosCadastro) => {
 
     if  (dadosCadastro.nome_categoria == '' || dadosCadastro.nome_categoria == undefined  

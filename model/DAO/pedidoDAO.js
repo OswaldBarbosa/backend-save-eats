@@ -8,7 +8,7 @@
 
  var { PrismaClient } = require('@prisma/client')
 
-var prisma = new PrismaClient()
+ var prisma = new PrismaClient()
 
 ////////////////////////Inserts//////////////////////////
 const insertPedido = async function (dados) {
