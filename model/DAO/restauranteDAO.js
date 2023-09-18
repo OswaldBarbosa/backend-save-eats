@@ -131,6 +131,20 @@ const selectRestauranteByEmailPassword = async function(email, password){
     }
 }
 
+//Funcao pra verificar se o email que for inserido no cadastro ja existe no banco
+const verificarEmailExistenteRestaurante = async function (email) {
+    let sql = `SELECT  * FROM tbl_restaurante WHERE email = '${email}';`
+
+    let rsEmailRestaurante = await prisma.$queryRawUnsafe(sql)
+
+    if (rsEmailRestaurante.length > 0) {
+        return rsEmailRestaurante;
+    }
+    else {
+        return false;
+    }
+}
+
 
 const selectLastId = async function () {
     let sql = `select * from tbl_restaurante order by id desc limit 1;`
@@ -153,5 +167,6 @@ module.exports = {
     updateRestaurante,
     selectAllRestaurante,
     selectRestauranteByEmailPassword,
+    verificarEmailExistenteRestaurante,
     selectLastId
 }

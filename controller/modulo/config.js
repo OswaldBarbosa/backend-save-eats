@@ -22,6 +22,8 @@ const ERROR_INVALID_CONTENT_TYPE = {status: 415, message: 'O tipo de mídia Cont
 
 const ERROR_INVALID_TOKEN = {status: 401, message: 'Token não autorizado,verifique o tempo de expiração.'}
 
+const ERROR_EMAIL_ALREADY_EXISTS = {status: 401, message: 'Esse e-mail já está vinculado a uma conta.'}
+
 //Mensagens de Sucesso
 const SUCESS_CREATED_ITEM = {status: 201, message: 'Item criado com sucesso'}
 
@@ -44,5 +46,6 @@ module.exports = {
     SUCESS_DELETED_ITEM,
     SUCESS_REQUEST,
     ERROR_INVALID_EMAIL_PASSWORD,
-    ERROR_INVALID_TOKEN
+    ERROR_INVALID_TOKEN,
+    ERROR_EMAIL_ALREADY_EXISTS
 }

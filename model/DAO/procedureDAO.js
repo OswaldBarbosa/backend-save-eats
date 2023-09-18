@@ -9,7 +9,7 @@ var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
-
+//Funcao pra cadastrar um restaurante - PROCEDURE
 const proceduresRestauranteCadastro = async function (dadosProcedures) {
     let call = `
     CALL procInsertRestaurante(
@@ -34,32 +34,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
 `
 
     let resultStatus = await prisma.$executeRawUnsafe(call)
-    console.log(resultStatus);
 
-    if(resultStatus){
-        return true
-    } else {
-        return false
-    }
-}
-
-//vou deixar aqui caso eu precise,mas nao iremos mais utilizar
-const procedureInsertEnderecoCliente = async function (dadosProcedures) {
-    let call = `
-    CALL procEnderecoCliente(
-        '${dadosProcedures.nome_estado}',
-        '${dadosProcedures.nome_cidade}',
-        '${dadosProcedures.rua}',
-        '${dadosProcedures.cep}',
-        '${dadosProcedures.bairro}',
-        '${dadosProcedures.numero}',
-        '${dadosProcedures.complemento}'
-    );
-    
-`
-
-    let resultStatus = await prisma.$executeRawUnsafe(call)
-    console.log(resultStatus);
 
     if(resultStatus){
         return true
