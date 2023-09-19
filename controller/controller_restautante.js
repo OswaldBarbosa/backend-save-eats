@@ -216,7 +216,7 @@ const autenticarLoginRestauranteEmailSenha = async function (email, password) {
 
         let dadosRestaurante = await restauranteDAO.selectRestauranteByEmailPassword(email, password)
 
-        if (dadosRestaurante != null && dadosRestaurante != undefined) {
+        if (dadosRestaurante) {
 
             let tokenUser = await jwt.createJWT(dadosRestaurante[0].id);
             
@@ -234,13 +234,30 @@ const autenticarLoginRestauranteEmailSenha = async function (email, password) {
     }
 }
 
+const getFiltrarRestauranteNome = async function (nome) {
+
+    let nomeRestaurante = nome
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectByNameRestaurante(nomeRestaurante)
+
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.restaurante = dadosRestaurante
+        return dadosRestauranteJSON
+    } else {
+        return false;
+    }
+}
+
+
 module.exports = {
-    inserirRestaurante,
     deletarRestaurante,
     atualizarRestaurante,
     getRestaurantes,
     getRestaurantePorID,
     getRestauranteByEmailSenha,
-    autenticarLoginRestauranteEmailSenha
+    autenticarLoginRestauranteEmailSenha,
+    getFiltrarRestauranteNome
 
 }

@@ -361,7 +361,7 @@ app.get('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
     response.json(dados)
 });
 
-//EndPoint: POST - Passar dados do login no body 
+//EndPoint: POST - Passar dados do login no body para autenticacao
 app.post('/v1/saveeats/restaurante/login/autenticar', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -380,6 +380,23 @@ app.post('/v1/saveeats/restaurante/login/autenticar', cors(), bodyParserJSON, as
     }
 
 });
+
+//EndPoint: GET - Retorna o restaurante filtrando pelo nome
+app.get('/v1/saveeats/restaurante/nome-fantasia/:nome', cors(), async function (request, response) {
+
+    let nome = request.params.nome;
+
+    let dadosRestaurante = await controllerRestaurante.getFiltrarRestauranteNome(nome);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
 
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////

@@ -145,7 +145,6 @@ const verificarEmailExistenteRestaurante = async function (email) {
     }
 }
 
-
 const selectLastId = async function () {
     let sql = `select * from tbl_restaurante order by id desc limit 1;`
 
@@ -157,7 +156,26 @@ const selectLastId = async function () {
         return false
     }
    
-}    
+}  
+
+
+const selectByNameRestaurante = async function (name) {
+
+    let nameRestaurante = name
+
+    //Script para buscar um restaurante filtrando pelo nome
+    let sql = `select * from tbl_restaurante where nome_fantasia like '%${nameRestaurante}%'`;
+
+    let rsRestaurante = await prisma.$queryRawUnsafe(sql)
+    if (rsRestaurante.length > 0) {
+        return rsRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+  
 
 
 module.exports = {
@@ -168,5 +186,6 @@ module.exports = {
     selectAllRestaurante,
     selectRestauranteByEmailPassword,
     verificarEmailExistenteRestaurante,
-    selectLastId
+    selectLastId,
+    selectByNameRestaurante
 }
