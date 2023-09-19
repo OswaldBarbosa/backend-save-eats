@@ -3034,7 +3034,7 @@ app.get('/v1/saveeats/produto/id/:id', cors(), async function (request, response
 
 })
 
-//EndPoint: POST - Insere uma novo registro na tabela produto
+//EndPoint: POST - Insere uma novo registro na tabela produto - PROCEDURE
 app.post('/v1/saveeats/produto', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -3043,7 +3043,7 @@ app.post('/v1/saveeats/produto', cors(), bodyParserJSON, async function (request
 
         let dadosBody = request.body
 
-        let resulDados = await controllerProduto.inserirProduto(dadosBody)
+        let resulDados = await controllerProcedure.inserirProdutoNoCardapio(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)
@@ -3183,7 +3183,23 @@ app.delete('/v1/saveeats/status/produto/id/:id', cors(), bodyParserJSON, async f
 
 })
 
+///////////////////////////////////////// Categoria Produto  //////////////////////////////////////////////
 
+/********************************
+* Objetivo : API de controle de Categoria Produto
+* Data : 06/09/2023
+********************************/
+
+
+//EndPoint: GET - Retorna todos registro da tabela status produto
+app.get('/v1/saveeats/categoria/produto', cors(), async function (request, response) {
+
+    let dadosCategoriaProduto = await controllerCategoriaProduto.getAllCategoriaProduto()
+
+    response.status(dadosCategoriaProduto.status)
+    response.json(dadosCategoriaProduto)
+
+})
 
 //EndPoint: GET - Retorna um registro da tabela categoria produto pelo id
 app.get('/v1/saveeats/categoria/produto/id/:id', cors(), async function (request, response) {

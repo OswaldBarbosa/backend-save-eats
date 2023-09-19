@@ -9,7 +9,7 @@ var { PrismaClient } = require('@prisma/client')
 
 var prisma = new PrismaClient()
 
-//Funcao pra cadastrar um restaurante - PROCEDURE
+//Funcao pra cadastrar um restaurante (WEB) - PROCEDURE
 const proceduresRestauranteCadastro = async function (dadosProcedures) {
     let call = `
     CALL procInsertRestaurante(
@@ -43,7 +43,7 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
     }
 }
 
-
+//Funcao para cadastro um cliente (MOBILE) - PROCEDURE
 const procedureInsertCadastroCliente = async function (dadosProcedures) {
 
     let call = `
@@ -75,8 +75,35 @@ const procedureInsertCadastroCliente = async function (dadosProcedures) {
     }
 }
 
+//Funcao para cadastrar um produto (na tela de cardapio do restaurante) - PROCEDURE
+const procedureInsertProduto = async function (dadosProcedures) {
+
+    let call = `
+    CALL InsertProduto(
+        '${dadosProcedures.nome}',
+        '${dadosProcedures.descricao}',
+        '${dadosProcedures.imagem}',
+        '${dadosProcedures.preco}',
+        '${dadosProcedures.status_produto}',
+        '${dadosProcedures.categoria_produto}',
+        '${dadosProcedures.nome_fantasia}'     
+    );
+    
+`
+
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
+
+
 module.exports = {
     proceduresRestauranteCadastro,
-    procedureInsertCadastroCliente
+    procedureInsertCadastroCliente,
+    procedureInsertProduto
     
 }

@@ -108,7 +108,44 @@ const inserirCadastroCliente = async (dadosCliente) => {
 }
 
 
+const inserirProdutoNoCardapio = async (dadosProduto) => {
+
+    if  (
+        dadosProduto.nome == '' || dadosProduto.nome == undefined  ||
+        dadosProduto.descricao == '' || dadosProduto.descricao == undefined  
+
+
+    ) {
+        console.log('e pra dar erro');
+        return message.ERROR_REQUIRED_FIELDS
+
+    } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureInsertProduto(dadosProduto)
+
+        if (resultadoDados) {
+         
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            
+            return dadosJSON
+
+        } else {
+
+            return message.ERROR_INTERNAL_SERVER
+
+        }
+
+    }
+
+}
+
+
+
 module.exports = {
     inserirCadastroProcedure,
-    inserirCadastroCliente
+    inserirCadastroCliente,
+    inserirProdutoNoCardapio
 }
