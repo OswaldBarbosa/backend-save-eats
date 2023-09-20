@@ -250,6 +250,40 @@ const getFiltrarRestauranteNome = async function (nome) {
     }
 }
 
+const getCategoriasRestaurantePeloNomeFantasia = async function (nome) {
+
+    let nomeRestaurante = nome
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectCategoriasDoRestaurantePeloNomeFantasia(nomeRestaurante)
+
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.restaurante = dadosRestaurante
+        return dadosRestauranteJSON
+    } else {
+        return false;
+    }
+}
+
+const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
+
+    let nomeRestaurante = nome
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectProdutosDoRestaurantePeloNomeFantasia (nomeRestaurante)
+
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.restaurante = dadosRestaurante
+        return dadosRestauranteJSON
+    } else {
+        return false;
+    }
+}
+
+
+
 
 module.exports = {
     deletarRestaurante,
@@ -258,6 +292,8 @@ module.exports = {
     getRestaurantePorID,
     getRestauranteByEmailSenha,
     autenticarLoginRestauranteEmailSenha,
-    getFiltrarRestauranteNome
+    getFiltrarRestauranteNome,
+    getCategoriasRestaurantePeloNomeFantasia,
+    getProdutosRestaurantePeloNomeFantasia
 
 }

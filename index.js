@@ -248,24 +248,6 @@ app.post('/v1/saveeats/cadastro/cliente', cors(), bodyParserJSON, async function
 ********************************/
 
 
-//EndPoint: POST - Insere um Restaurante
-app.post('/v1/saveeats/restaurante',cors(), bodyParserJSON, async function (request, response) {
-
-    let contentType = request.headers['content-type']
-
-    if (String(contentType).toLowerCase() == 'application/json') {
-        let dadosBody = request.body
-
-        let resulDados = await controllerRestaurante.inserirRestaurante(dadosBody)
-
-        response.status(resulDados.status)
-        response.json(resulDados)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
-
-});
 
 
 //EndPoint: POST - Insere um Restaurante (PROCEDURE)
@@ -330,7 +312,7 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
 });
 
 //EndPoint: GET - Retorna todos restaurantes
-app.get('/v1/saveeats/restaurantes',verifyJWT, cors(), async function (request, response) {
+app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) {
 
     let dados = await controllerRestaurante.getRestaurantes();
 
@@ -397,7 +379,39 @@ app.get('/v1/saveeats/restaurante/nome-fantasia/:nome', cors(), async function (
     }
 });
 
+//EndPoint: GET - Retorna as CATEGORIAS de um restaurante específico pelo nome fantasia
+app.get('/v1/saveeats/restaurante/categorias/nome-fantasia/:nomefantasia', cors(), async function (request, response) {
 
+    let nomefantasia = request.params.nomefantasia; // Correção aqui
+
+    let dadosRestaurante = await controllerRestaurante.getCategoriasRestaurantePeloNomeFantasia(nomefantasia);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {    
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+//EndPoint: GET - Retorna os PRODUTOS de um restaurante específico pelo nome fantasia
+app.get('/v1/saveeats/restaurante/produtos/nome-fantasia/:nomefantasia', cors(), async function (request, response) {
+
+    let nomefantasia = request.params.nomefantasia; 
+
+    let dadosRestaurante = await controllerRestaurante.getProdutosRestaurantePeloNomeFantasia(nomefantasia);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 

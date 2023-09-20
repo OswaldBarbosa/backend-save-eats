@@ -189,6 +189,43 @@ const verificarNomeFantasiaRestauranteExistente = async function (nomeRestaurant
     }
 }
   
+const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
+    let nameRestaurante = name;
+
+    // Script para buscar as CATEGORIAS de um restaurante filtrando pelo nome fantasia
+    let sql = `SELECT DISTINCT cp.categoria_produto
+    FROM tbl_produto AS p
+    INNER JOIN tbl_categoria_produto AS cp ON p.id_categoria_produto = cp.id
+    INNER JOIN tbl_restaurante AS r ON p.id_restaurante = r.id
+    WHERE r.nome_fantasia = '${nameRestaurante}'`; 
+    let rsCategoriasRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsCategoriasRestaurante.length > 0) {
+        return rsCategoriasRestaurante;
+    } else {
+        return false;
+    }
+}
+
+
+const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) 
+{
+    let nameRestaurante = name;
+
+    // Script para buscar os PRODUTOS de um restaurante filtrando pelo nome fantasia
+    let sql = `SELECT produto.*
+    FROM tbl_produto AS produto
+    INNER JOIN tbl_restaurante AS restaurante ON produto.id_restaurante = restaurante.id
+    WHERE restaurante.nome_fantasia = '${nameRestaurante}'`; 
+
+    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsCProdutosRestaurante.length > 0) {
+        return rsCProdutosRestaurante
+    } else {
+        return false;
+    }
+}
 
 
 module.exports = {
@@ -201,5 +238,7 @@ module.exports = {
     verificarEmailExistenteRestaurante,
     selectLastId,
     selectByNameRestaurante,
-    verificarNomeFantasiaRestauranteExistente
+    verificarNomeFantasiaRestauranteExistente,
+    selectCategoriasDoRestaurantePeloNomeFantasia,
+    selectProdutosDoRestaurantePeloNomeFantasia
 }
