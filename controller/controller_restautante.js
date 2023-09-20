@@ -251,20 +251,14 @@ const getFiltrarRestauranteNome = async function (nome) {
 }
 
 const getCategoriasRestaurantePeloNomeFantasia = async function (nome) {
+    let nomeRestaurante = nome;
 
-    let nomeRestaurante = nome
+    let dadosRestaurante = await restauranteDAO.selectCategoriasDoRestaurantePeloNomeFantasia(nomeRestaurante);
 
-    let dadosRestauranteJSON = {}
-
-    let dadosRestaurante = await restauranteDAO.selectCategoriasDoRestaurantePeloNomeFantasia(nomeRestaurante)
-
-    if (dadosRestaurante) {
-        dadosRestauranteJSON.restaurante = dadosRestaurante
-        return dadosRestauranteJSON
-    } else {
-        return false;
-    }
+    return { categorias_do_restaurante : dadosRestaurante || [] }; // Retorna um objeto JSON com a chave "categorias"
 }
+
+
 
 const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
 

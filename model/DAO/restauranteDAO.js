@@ -193,19 +193,22 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
     let nameRestaurante = name;
 
     // Script para buscar as CATEGORIAS de um restaurante filtrando pelo nome fantasia
-    let sql = `SELECT DISTINCT cp.categoria_produto
+    let sql = `SELECT r.nome_fantasia, GROUP_CONCAT(DISTINCT cp.categoria_produto) as categorias
     FROM tbl_produto AS p
     INNER JOIN tbl_categoria_produto AS cp ON p.id_categoria_produto = cp.id
     INNER JOIN tbl_restaurante AS r ON p.id_restaurante = r.id
-    WHERE r.nome_fantasia = '${nameRestaurante}'`; 
+    WHERE r.nome_fantasia = '${nameRestaurante}'
+    GROUP BY r.nome_fantasia;`; 
     let rsCategoriasRestaurante = await prisma.$queryRawUnsafe(sql);
 
     if (rsCategoriasRestaurante.length > 0) {
-        return rsCategoriasRestaurante;
+        const categorias = rsCategoriasRestaurante[0].categorias.split(','); 
+        return categorias;
     } else {
         return false;
     }
 }
+
 
 
 const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) 
