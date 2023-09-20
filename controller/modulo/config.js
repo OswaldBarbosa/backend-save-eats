@@ -24,6 +24,12 @@ const ERROR_INVALID_TOKEN = {status: 401, message: 'Token não autorizado,verifi
 
 const ERROR_EMAIL_ALREADY_EXISTS = {status: 401, message: 'Esse e-mail já está vinculado a uma conta.'}
 
+const ERROR_STATUS_PRODUCT_NOT_FOUND = {status: 401, message: 'O status do produto inserido não existe em nosso banco de dados.'}
+
+const ERROR_CATEGORY_PRODUCT_NOT_FOUND = {status: 401, message: 'A categoria-produto inserida não existe em nosso banco de dados.'}
+
+const ERROR_RESTAURANT_NOT_FOUND = {status: 401, message: 'O nome fantasia inserido não existe no banco de dados.'}
+
 //Mensagens de Sucesso
 const SUCESS_CREATED_ITEM = {status: 201, message: 'Item criado com sucesso'}
 
@@ -47,5 +53,8 @@ module.exports = {
     SUCESS_REQUEST,
     ERROR_INVALID_EMAIL_PASSWORD,
     ERROR_INVALID_TOKEN,
-    ERROR_EMAIL_ALREADY_EXISTS
+    ERROR_EMAIL_ALREADY_EXISTS,
+    ERROR_STATUS_PRODUCT_NOT_FOUND,
+    ERROR_CATEGORY_PRODUCT_NOT_FOUND,
+    ERROR_RESTAURANT_NOT_FOUND
 }

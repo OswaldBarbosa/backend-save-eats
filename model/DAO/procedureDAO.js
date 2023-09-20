@@ -87,10 +87,8 @@ const procedureInsertProduto = async function (dadosProcedures) {
         '${dadosProcedures.status_produto}',
         '${dadosProcedures.categoria_produto}',
         '${dadosProcedures.nome_fantasia}'     
-    );
-    
+    );   
 `
-
     let resultStatus = await prisma.$executeRawUnsafe(call)
 
     if(resultStatus){
@@ -100,10 +98,36 @@ const procedureInsertProduto = async function (dadosProcedures) {
     }
 }
 
+//Funcao para atualizar um produto (na tela de cardapio do restaurante) - PROCEDURE
+const procedureUpdateProduto = async function (dadosProcedures) {
+    let call = `
+    CALL UpdateProduto(
+        '${dadosProcedures.id}', 
+        '${dadosProcedures.nome}',
+        '${dadosProcedures.descricao}',
+        '${dadosProcedures.imagem}',
+        '${dadosProcedures.preco}',
+        '${dadosProcedures.status_produto}',
+        '${dadosProcedures.categoria_produto}',
+        '${dadosProcedures.nome_fantasia}'
+    );
+    `
+    
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 
 module.exports = {
     proceduresRestauranteCadastro,
     procedureInsertCadastroCliente,
-    procedureInsertProduto
+    procedureInsertProduto,
+    procedureUpdateProduto
     
 }

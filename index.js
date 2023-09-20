@@ -3057,7 +3057,7 @@ app.post('/v1/saveeats/produto', cors(), bodyParserJSON, async function (request
 
 })
 
-//EndPoint: PUT - Atualiza registro da tabela produto pelo id
+//EndPoint: PUT - Atualiza um produto pelo id
 app.put('/v1/saveeats/produto/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type'];
@@ -3068,7 +3068,7 @@ app.put('/v1/saveeats/produto/id/:id', cors(), bodyParserJSON, async function (r
 
         let dadosBody = request.body;
 
-        let resultDados = await controllerProduto.atualizarProduto(dadosBody, idProduto);
+        let resultDados = await controllerProcedure.atualizarProdutoNoCardapio(dadosBody, idProduto);
 
         response.status(resultDados.status)
         response.json(resultDados)

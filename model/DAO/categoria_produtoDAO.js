@@ -107,11 +107,30 @@ const deleteCategoriaProduto = async (idCategoriaProduto) => {
 
 }
 
+
+//verifica se a categirua produto inserida existe no banco de dados
+const verificarCategoriaProdutoExistente = async function (categoriaProduto){
+
+    let sql = `SELECT  * FROM tbl_categoria_produto WHERE categoria_produto = '${categoriaProduto}';`
+
+    let rsCategoriaProduto = await prisma.$queryRawUnsafe(sql)
+
+    if (rsCategoriaProduto.length > 0) {
+        return rsCategoriaProduto;
+    }
+    else {
+        return false;
+    }
+}
+
+
+
 module.exports = {
     selectAllCategoriasProduto,
     selectCategoriaProdutoById,
     selectLastId,
     insertCategoriaProduto,
     updateCategoriaProduto,
-    deleteCategoriaProduto
+    deleteCategoriaProduto,
+    verificarCategoriaProdutoExistente
 }

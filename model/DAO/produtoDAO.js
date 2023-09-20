@@ -110,14 +110,14 @@ const insertProduto = async (dadosProdutos) => {
 //atualizaer um produto
 const updateProduto = async (dadosProdutos) => {
     
-    let sql = `update tbl_produto set
+    let sql = `update CALL InsertProduto set
                nome = '${dadosProdutos.nome}',
                descricao = '${dadosProdutos.descricao}',
                imagem = '${dadosProdutos.imagem}',
                preco = '${dadosProdutos.preco}',
-               id_status_produto = ${dadosProdutos.id_status_produto},
-               id_categoria_produto = ${dadosProdutos.id_categoria_produto},
-               id_restaurante = ${dadosProdutos.id_restaurante}
+               status_produto = '${dadosProdutos.status_produto}',
+               categoria_produto = '${dadosProdutos.categoria_produto}',
+               nome_fantasia = '${dadosProdutos.nome_fantasia}'
 
                where id = ${dadosProdutos.id}
                `
@@ -150,7 +150,6 @@ module.exports = {
     selectAllProdutos,
     selectProdutoByID,
     selectLastId,
-    insertProduto,
     updateProduto,
     deleteProduto
 }

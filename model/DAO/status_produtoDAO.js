@@ -107,11 +107,29 @@ const deleteStatusProduto = async (idStatusProduto) => {
 
 }
 
+//verifica se o status produto inserido existe no banco de dados
+const verificarStatusProdutoExistente = async function (statusProduto){
+
+    let sql = `SELECT  * FROM tbl_status_produto WHERE status_produto = '${statusProduto}';`
+
+    let rsStatusProduto = await prisma.$queryRawUnsafe(sql)
+
+    if (rsStatusProduto.length > 0) {
+        return rsStatusProduto;
+    }
+    else {
+        return false;
+    }
+}
+
+
+
 module.exports = {
     selectAllStatusProduto,
     selectStatusProdutoByID,
     selectLastId,
     insertStatusProduto,
     updateStatusProduto,
-    deleteStatusProduto
+    deleteStatusProduto,
+    verificarStatusProdutoExistente
 }

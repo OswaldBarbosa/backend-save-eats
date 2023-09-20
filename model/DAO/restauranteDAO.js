@@ -174,7 +174,20 @@ const selectByNameRestaurante = async function (name) {
     }
 }
 
+//verifica se o nome fantasia do restaurante inserido existe no banco de dados
+const verificarNomeFantasiaRestauranteExistente = async function (nomeRestaurante){
 
+    let sql = `SELECT  * FROM tbl_restaurante WHERE nome_fantasia = '${nomeRestaurante}';`
+
+    let rsNomeRestaurante = await prisma.$queryRawUnsafe(sql)
+
+    if (rsNomeRestaurante.length > 0) {
+        return rsNomeRestaurante;
+    }
+    else {
+        return false;
+    }
+}
   
 
 
@@ -187,5 +200,6 @@ module.exports = {
     selectRestauranteByEmailPassword,
     verificarEmailExistenteRestaurante,
     selectLastId,
-    selectByNameRestaurante
+    selectByNameRestaurante,
+    verificarNomeFantasiaRestauranteExistente
 }

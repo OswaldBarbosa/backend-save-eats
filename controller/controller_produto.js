@@ -104,14 +104,14 @@ const inserirProduto = async (dadosProduto) => {
 
 const atualizarProduto = async (dadosProduto, idProduto) => {
 
-    if (dadosProduto.nome == ''                 || dadosProduto.nome == undefined                   || !isNaN(dadosProduto.nome)                || dadosProduto.nome.length > 100 ||
-        dadosProduto.descricao == undefined     || !isNaN(dadosProduto.descricao)                   ||
-        dadosProduto.imagem == ''               || dadosProduto.imagem == undefined                 || !isNaN(dadosProduto.imagem)              || dadosProduto.imagem.length > 300 ||
-        dadosProduto.preco == ''                || dadosProduto.preco == undefined                  || isNaN(dadosProduto.preco)                ||
-        dadosProduto.id_status_produto == ''    || dadosProduto.id_status_produto == undefined      || isNaN(dadosProduto.id_status_produto)    ||
-        dadosProduto.id_categoria_produto == '' || dadosProduto.id_categoria_produto == undefined   || isNaN(dadosProduto.id_categoria_produto) ||
-        dadosProduto.id_restaurante == ''       || dadosProduto.id_restaurante == undefined         || isNaN(dadosProduto.id_restaurante)
-
+    if (
+        dadosProduto.nome == '' || dadosProduto.nome == undefined ||
+        dadosProduto.descricao == '' || dadosProduto.descricao == undefined ||
+        dadosProduto.imagem == '' || dadosProduto.imagem == undefined ||
+        dadosProduto.preco == '' || dadosProduto.preco == undefined ||
+        dadosProduto.status_produto == '' || dadosProduto.status_produto == undefined || dadosProduto.status_produto == false || dadosProduto.status_produto == null ||
+        dadosProduto.categoria_produto == '' || dadosProduto.categoria_produto == undefined || dadosProduto.categoria_produto == false || dadosProduto.categoria_produto == null ||
+        dadosProduto.nome_fantasia == '' || dadosProduto.nome_fantasia == undefined || dadosProduto.nome_fantasia == false || dadosProduto.nome_fantasia == null
     ) {
 
         return message.ERROR_REQUIRED_FIELDS
@@ -193,7 +193,6 @@ const deletarProduto = async (idProduto) => {
 module.exports = {
     getAllProdutos,
     getProdutosById,
-    inserirProduto,
     atualizarProduto,
     deletarProduto
 }
