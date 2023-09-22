@@ -110,7 +110,7 @@ const insertProduto = async (dadosProdutos) => {
 //atualizaer um produto
 const updateProduto = async (dadosProdutos) => {
     
-    let sql = `update CALL InsertProduto set
+    let sql = `update tbl_produto set
                nome = '${dadosProdutos.nome}',
                descricao = '${dadosProdutos.descricao}',
                imagem = '${dadosProdutos.imagem}',
