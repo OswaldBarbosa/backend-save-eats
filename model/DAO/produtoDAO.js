@@ -146,6 +146,10 @@ const deleteProduto = async (idProduto) => {
 
 }
 
+
+
+
+
 module.exports = {
     selectAllProdutos,
     selectProdutoByID,

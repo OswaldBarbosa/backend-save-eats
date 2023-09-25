@@ -211,8 +211,7 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
 
 
 
-const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) 
-{
+const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
     let nameRestaurante = name;
 
     // Script para buscar os PRODUTOS de um restaurante filtrando pelo nome fantasia
@@ -231,6 +230,30 @@ const selectProdutosDoRestaurantePeloNomeFantasia = async function (name)
 }
 
 
+const selectProdutoByIDRestaurante = async function (nomeProduto,idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let nomeDoProduto = nomeProduto
+
+    // Script para Filtrar/Buscar os produtos do restaurante especifico pelo id do restaurante
+    let sql = ` SELECT produto.*
+                FROM tbl_produto AS produto
+                WHERE produto.id_restaurante = '${idDoRestaurante}'
+                AND produto.nome LIKE '%${nomeDoProduto}%'`
+
+
+    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsCProdutosRestaurante.length > 0) {
+        return rsCProdutosRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+
 module.exports = {
     insertRestaurante,
     deleteRestaurante,
@@ -243,5 +266,6 @@ module.exports = {
     selectByNameRestaurante,
     verificarNomeFantasiaRestauranteExistente,
     selectCategoriasDoRestaurantePeloNomeFantasia,
-    selectProdutosDoRestaurantePeloNomeFantasia
+    selectProdutosDoRestaurantePeloNomeFantasia,
+    selectProdutoByIDRestaurante
 }

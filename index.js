@@ -413,6 +413,27 @@ app.get('/v1/saveeats/restaurante/produtos/nome-fantasia/:nomefantasia', cors(),
     }
 });
 
+//EndPoint: GET - Retorna os PRODUTOS de um restaurante específico pelo id do restaurante
+app.get('/v1/saveeats/restaurante/produtos/id-restaurante/:idRestaurante/nome-produto/:nomeProduto', cors(), async function (request, response) {
+
+    let nomeProduto = request.params.nomeProduto; 
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dados = await controllerRestaurante.getProdutosRestaurantePeloIdRestaurante(nomeProduto,idRestaurante);
+
+    if (dados) {
+        response.json(dados);
+        response.status(200);
+    } else {
+        console.log(dados);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
 

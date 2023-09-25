@@ -276,7 +276,23 @@ const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
     }
 }
 
+const getProdutosRestaurantePeloIdRestaurante = async function (idRestaurante,produtoRestaurante) {
 
+    let idDoRestaurante = idRestaurante
+
+    let produtoDoRestaurante = produtoRestaurante
+
+    let dadosJSON = {}
+
+    let dadosProdutoRestaurante = await restauranteDAO.selectProdutoByIDRestaurante(idDoRestaurante,produtoDoRestaurante)
+
+    if (dadosProdutoRestaurante) {
+        dadosJSON.produtos_do_restaurante = dadosProdutoRestaurante
+        return dadosJSON
+    } else {
+        return false;
+    }
+}
 
 
 module.exports = {
@@ -288,6 +304,7 @@ module.exports = {
     autenticarLoginRestauranteEmailSenha,
     getFiltrarRestauranteNome,
     getCategoriasRestaurantePeloNomeFantasia,
-    getProdutosRestaurantePeloNomeFantasia
+    getProdutosRestaurantePeloNomeFantasia,
+    getProdutosRestaurantePeloIdRestaurante
 
 }
