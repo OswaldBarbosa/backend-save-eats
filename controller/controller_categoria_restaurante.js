@@ -135,10 +135,29 @@ const getCategoriaRestaurantePorID = async function (id) {
     }
 }
 
+
+const getRestaurantePelaCategoria = async function (categoria) {
+
+    let nomeCategoria = categoria
+
+    let dadosJSON = {}
+
+    let dadosCategoriaRestaurante = await categoriaDAO.selectRestauranteByCategoria(nomeCategoria)
+    if (dadosCategoriaRestaurante) {
+        dadosJSON.restaurantes_da_categoria_escolhida = dadosCategoriaRestaurante
+        return dadosJSON
+    } else {
+        return false;
+    }
+}
+
+
+
 module.exports = {
     inserirCategoriaRestaurante,
     deletarCategoriaRestaurante,
     atualizarCategoriaRestaurante,
     getCategoriaRestaurante,
-    getCategoriaRestaurantePorID
+    getCategoriaRestaurantePorID,
+    getRestaurantePelaCategoria
 }

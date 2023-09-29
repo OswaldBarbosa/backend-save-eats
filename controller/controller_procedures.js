@@ -159,7 +159,7 @@ const inserirProdutoNoCardapio = async (dadosProduto) => {
 }
 
 //funcao para atualizar um produto no cardapio
-const atualizarProdutoNoCardapio = async (dadosProduto) => {
+const atualizarProdutoNoCardapio = async (dadosProduto) => {     
     if (
         dadosProduto.id === undefined || dadosProduto.id === null || dadosProduto.id === '' ||
         dadosProduto.nome === '' || dadosProduto.nome === undefined ||

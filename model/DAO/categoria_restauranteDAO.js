@@ -99,7 +99,30 @@ const selectLastId = async function () {
         return false
     }
    
-}          
+}     
+
+//Parei aqui bora arrumar
+const selectRestauranteByCategoria = async function (categoria) {
+
+    let nameCategoria = categoria;
+    console.log("Valor da categoria:", categoria);
+
+    // Script para buscar os RESTAURANTES de uma categoria especifica
+    let sql = `SELECT restaurante.*
+    FROM tbl_restaurante restaurante
+    INNER JOIN tbl_categoria_restaurante categoria_restaurante ON restaurante.id_categoria_restaurante = categoria_restaurante.id
+    WHERE categoria_restaurante.nome_categoria = '${nameCategoria}'`; 
+
+    let rsRestaurantesDaCategoria = await prisma.$queryRawUnsafe(sql);
+
+    if (rsRestaurantesDaCategoria.length > 0) {
+        return rsRestaurantesDaCategoria;
+    }
+    else {
+        return false;
+    }
+}
+
 
 module.exports = {
     insertCategoriaRestaurante,
@@ -107,5 +130,6 @@ module.exports = {
     updateCategoriaRestaurante,
     selectAllCategoriaRestaurante,
     selectCategoriaRestauranteByID,
-    selectLastId
+    selectLastId,
+    selectRestauranteByCategoria
 }

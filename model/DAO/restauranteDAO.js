@@ -220,10 +220,10 @@ const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
     INNER JOIN tbl_restaurante AS restaurante ON produto.id_restaurante = restaurante.id
     WHERE restaurante.nome_fantasia = '${nameRestaurante}'`; 
 
-    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+    let rsProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCProdutosRestaurante.length > 0) {
-        return rsCProdutosRestaurante
+    if (rsProdutosRestaurante.length > 0) {
+        return rsProdutosRestaurante
     } else {
         return false;
     }
