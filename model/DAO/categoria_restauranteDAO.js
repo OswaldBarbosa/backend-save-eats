@@ -12,9 +12,11 @@
  ////////////////////////Inserts//////////////////////////
 const insertCategoriaRestaurante = async function (dadosCategoria) {
     let sql = `insert into tbl_categoria_restaurante (
-        nome_categoria
+        nome_categoria,
+        img_categoria
     ) values (
-        '${dadosCategoria.nome_categoria}'
+        '${dadosCategoria.nome_categoria}',
+        '${dadosCategoria.img_categoria}'
     )`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
@@ -45,7 +47,8 @@ const deleteCategoriaRestaurante = async function (id) {
 const updateCategoriaRestaurante = async function (dadosCategoria) {
     let sql = `update tbl_categoria_restaurante set  
 
-                    nome_categoria = '${dadosCategoria.nome_categoria}'
+                    nome_categoria = '${dadosCategoria.nome_categoria}',
+                    img_categoria = '${dadosCategoria.img_categoria}'
 
                     where id = ${dadosCategoria.id}    
             `
@@ -111,7 +114,7 @@ const selectRestauranteByCategoria = async function (categoria) {
     let sql = `SELECT restaurante.*
     FROM tbl_restaurante restaurante
     INNER JOIN tbl_categoria_restaurante categoria_restaurante ON restaurante.id_categoria_restaurante = categoria_restaurante.id
-    WHERE categoria_restaurante.nome_categoria = '${nameCategoria}'`; 
+    WHERE categoria_restaurante.nome_categoria = '${categoria}'`; 
 
     let rsRestaurantesDaCategoria = await prisma.$queryRawUnsafe(sql);
 

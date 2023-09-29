@@ -615,9 +615,9 @@ app.get('/v1/saveeats/categoria/restaurante/id/:id', cors(), bodyParserJSON, asy
 
 
 // Endpoint: GET - Retorna os restaurantes de uma categoria específica pelo nome da categoria
-app.get('/v1/saveeats/teste/:nome-categoria', cors(), bodyParserJSON, async function (request, response) {
+app.get('/v1/saveeats/restaurante/:categoria', cors(), bodyParserJSON, async function (request, response) {
 
-    let nomeCategoria = request.params.nomeCategoria; 
+    let nomeCategoria = request.params.categoria; 
 
     let dados = await controllerCategoriaRestaurante.getRestaurantePelaCategoria(nomeCategoria);
 
@@ -625,8 +625,6 @@ app.get('/v1/saveeats/teste/:nome-categoria', cors(), bodyParserJSON, async func
         response.json(dados);
         response.status(200);
     } else {
-        console.log(dados);
-        console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
     }

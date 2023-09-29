@@ -14,7 +14,8 @@ const { request } = require('express')
 
 const inserirCategoriaRestaurante = async function (dadosCategoria) {
 
-    if (dadosCategoria.nome_categoria == '' ||dadosCategoria.nome_categoria == undefined || dadosCategoria.nome_categoria.length > 45
+    if (dadosCategoria.nome_categoria == '' ||dadosCategoria.nome_categoria == undefined || dadosCategoria.nome_categoria.length > 45 ||
+        dadosCategoria.img_categoria == '' ||dadosCategoria.img_categoria == undefined || dadosCategoria.img_categoria.length > 255
     ){
         return message.ERROR_REQUIRED_FIELDS
     }else {
@@ -63,7 +64,8 @@ const deletarCategoriaRestaurante = async function (idCategoria) {
 
 const atualizarCategoriaRestaurante = async function (dadosCategoria, idCategoria) {
 
-    if (dadosCategoria.nome_categoria == '' ||dadosCategoria.nome_categoria == undefined || dadosCategoria.nome_categoria.length > 45
+    if (dadosCategoria.nome_categoria == '' ||dadosCategoria.nome_categoria == undefined || dadosCategoria.nome_categoria.length > 45 ||
+        dadosCategoria.img_categoria == '' ||dadosCategoria.img_categoria == undefined || dadosCategoria.img_categoria.length > 255
     ){
         return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
 
