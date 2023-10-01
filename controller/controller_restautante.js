@@ -269,7 +269,7 @@ const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
     let dadosRestaurante = await restauranteDAO.selectProdutosDoRestaurantePeloNomeFantasia (nomeRestaurante)
 
     if (dadosRestaurante) {
-        dadosRestauranteJSON.restaurante = dadosRestaurante
+        dadosRestauranteJSON.produtos_do_restaurante = dadosRestaurante
         return dadosRestauranteJSON
     } else {
         return false;
