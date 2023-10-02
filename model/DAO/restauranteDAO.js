@@ -94,8 +94,27 @@ const updateRestaurante = async function (dadosRestaurante) {
 ///////////////////////Selects//////////////////////////
 
 const selectAllRestaurante = async function () {
-    let sql = `select * from tbl_restaurante`
+    let sql = `
+    SELECT 
+    r.id,
+    r.nome_proprietario,
+    r.nome_fantasia,
+    r.razao_social,
+    r.email,
+    r.senha,
+    r.foto,
+    r.cnpj,
+    r.token_recuperar_senha,
+    r.tempo_expiracao,
+    r.id_categoria_restaurante,
+    c.nome_categoria AS nome_categoria_restaurante,
+    r.id_endereco_restaurante
+    FROM
+        tbl_restaurante r
+    JOIN
+    tbl_categoria_restaurante c ON r.id_categoria_restaurante = c.id;
 
+    `
     let rsRestaurante = await prisma.$queryRawUnsafe(sql)
 
     if (rsRestaurante.length > 0) {

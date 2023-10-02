@@ -113,7 +113,7 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
                 let dadosRestauranteJSON = {}
                 dadosRestauranteJSON.status = message.SUCESS_UPDATED_ITEM.status
                 dadosRestauranteJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosRestauranteJSON.cliente = dadosRestaurante
+                dadosRestauranteJSON.restaurante = dadosRestaurante
 
                 return dadosRestauranteJSON
             } else

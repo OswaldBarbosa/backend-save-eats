@@ -299,10 +299,10 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
         let dadosBody = request.body;
 
         //Encaminha os dados para a controller
-        let resultDadosRestaurante = await controllerRestaurante.atualizarRestaurante(dadosBody, idRestaurante);
+        let resultDadosCliente = await controllerCliente.atualizarCliente(dadosBody, idCliente);
 
-        response.status(resultDadosRestaurante.status)
-        response.json(resultDadosRestaurante)
+        response.status(resultDadosCliente.status)
+        response.json(resultDadosCliente)
 
     } else {
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
