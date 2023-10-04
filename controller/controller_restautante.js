@@ -93,37 +93,36 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
         dadosRestaurante.token == '' || dadosRestaurante.token == undefined ||
         dadosRestaurante.tempo_expiracao == '' || dadosRestaurante.tempo_expiracao == undefined  
 
-    ){
-        return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
-
-    } else if (idRestaurante == '' || idRestaurante == undefined || idRestaurante == isNaN(idRestaurante)) {
-
-        return message.message.ERROR_INVALID_ID
-    } else {
-        dadosRestaurante.id = idRestaurante;
-
-        let statusId = await restauranteDAO.selectLastId();
-
-        if (statusId) {
-      
-            let resultDados = await restauranteDAO.updateRestaurante(dadosRestaurante);
-
-            if (resultDados) {
-
-                let dadosRestauranteJSON = {}
-                dadosRestauranteJSON.status = message.SUCESS_UPDATED_ITEM.status
-                dadosRestauranteJSON.message = message.SUCESS_UPDATED_ITEM.message
-                dadosRestauranteJSON.restaurante = dadosRestaurante
-
-                return dadosRestauranteJSON
-            } else
-                return message.ERROR_INTERNAL_SERVER
-
+        ){
+            return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
+    
+        } else if (idRestaurante == '' || idRestaurante == undefined || idRestaurante == isNaN(idRestaurante)) {
+    
+            return message.message.ERROR_INVALID_ID
         } else {
-            return message.ERROR_NOT_FOUND
+            dadosRestaurante.id = idRestaurante;
+    
+            let statusId = await restauranteDAO.selectRestauranteByID(idRestaurante);
+    
+            if (statusId) {
+                //Encaminha os dados para a model 
+                let resultDadosRestaurante = await restauranteDAO.updateRestaurante(dadosRestaurante);
+    
+                if (resultDadosRestaurante) {
+    
+                    let dadosJSON = {}
+                    dadosJSON.status = message.SUCESS_UPDATED_ITEM.status
+                    dadosJSON.message = message.SUCESS_UPDATED_ITEM.message
+                    dadosJSON.restaurante = dadosRestaurante
+                    return dadosJSON
+                } else
+                    return message.ERROR_INTERNAL_SERVER
+    
+            } else {
+                return message.ERROR_NOT_FOUND
+            }
         }
     }
-}
 
 const getRestaurantes = async function () {
     let dadosRestaurantesJSON = {};
@@ -258,15 +257,14 @@ const getCategoriasRestaurantePeloNomeFantasia = async function (nome) {
     return { categorias_do_restaurante : dadosRestaurante || [] }; // Retorna um objeto JSON com a chave "categorias"
 }
 
-
-
+//inspi
 const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
 
     let nomeRestaurante = nome
 
     let dadosRestauranteJSON = {}
 
-    let dadosRestaurante = await restauranteDAO.selectProdutosDoRestaurantePeloNomeFantasia (nomeRestaurante)
+    let dadosRestaurante = await restauranteDAO.selectProdutosDoRestaurantePeloNomeFantasia(nomeRestaurante)
 
     if (dadosRestaurante) {
         dadosRestauranteJSON.produtos_do_restaurante = dadosRestaurante
@@ -294,6 +292,51 @@ const getProdutosRestaurantePeloIdRestaurante = async function (idRestaurante,pr
     }
 }
 
+//Home
+const getProdutosPausadosDoRestaurantePeloIdDoRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectProdutosPausadosDeUmRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.produtos_pausado_do_restaurante = dadosRestaurante
+        return dadosRestauranteJSON
+    } else {
+        return false;
+    }
+}
+
+//Home
+const getPedidosCanceladosPeloIdDoRestaurante = async function (idRestaurante) {
+    try {
+        let idDoRestaurante = idRestaurante;
+        let dadosRestauranteJSON = {};
+
+        // detalhes dos pedidos cancelados do restaurante
+        let dadosRestaurante = await restauranteDAO.selectPedidosCanceladosDeUmRestaurante(idDoRestaurante);
+
+        if (dadosRestaurante) {
+    
+            let quantidadePedidosCancelados = dadosRestaurante.length;
+            dadosRestauranteJSON.quantidade_pedidos_cancelados = quantidadePedidosCancelados;
+
+            dadosRestauranteJSON.pedidos_cancelados_do_restaurante = dadosRestaurante;
+            
+
+            return dadosRestauranteJSON;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.error("Erro ao obter pedidos cancelados:", error);
+        return false;
+    }
+};
+
+
 
 module.exports = {
     deletarRestaurante,
@@ -305,6 +348,8 @@ module.exports = {
     getFiltrarRestauranteNome,
     getCategoriasRestaurantePeloNomeFantasia,
     getProdutosRestaurantePeloNomeFantasia,
-    getProdutosRestaurantePeloIdRestaurante
+    getProdutosRestaurantePeloIdRestaurante,
+    getProdutosPausadosDoRestaurantePeloIdDoRestaurante,
+    getPedidosCanceladosPeloIdDoRestaurante
 
 }

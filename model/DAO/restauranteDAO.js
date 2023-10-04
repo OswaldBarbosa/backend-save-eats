@@ -272,6 +272,80 @@ const selectProdutoByIDRestaurante = async function (nomeProduto,idRestaurante) 
 }
 
 
+const selectProdutosPausadosDeUmRestaurante = async function (restaurante) {
+
+        let idRestaurante = restaurante
+
+        //Script para trazer os produtos pausados de um restaurante especifico
+        let sql = `
+        SELECT
+        p.id AS produto_id,
+        p.nome AS nome_produto,
+        p.descricao AS descricao_produto,
+        c.categoria_produto AS categoria,
+        s.status_produto AS status
+            FROM
+        tbl_produto AS p
+            INNER JOIN
+        tbl_status_produto AS s ON p.id_status_produto = s.id
+        INNER JOIN
+        tbl_categoria_produto AS c ON p.id_categoria_produto = c.id
+        INNER JOIN
+        tbl_restaurante AS r ON p.id_restaurante = r.id
+
+        WHERE
+        s.status_produto = 'pausado'
+        AND r.id = '${idRestaurante}';
+    `
+
+    let rsRestaurante = await prisma.$queryRawUnsafe(sql)
+
+    if (rsRestaurante.length > 0) {
+        return rsRestaurante;
+    }
+    else {
+        return false;
+    }
+}
+
+
+const selectPedidosCanceladosDeUmRestaurante = async function (restaurante) {
+
+    let idRestaurante = restaurante
+
+    //Script para trazer os produtos pausados de um restaurante especifico
+    let sql = `
+    SELECT
+    p.id AS pedido_id,
+    p.numero_pedido,
+    p.horario,
+    p.data_pedido,
+    p.previsao_entrega,
+    p.valor_total,
+    s.status_pedido,
+    r.nome_fantasia AS nome_restaurante
+    FROM
+    tbl_pedido AS p
+    INNER JOIN
+    tbl_status_pedido AS s ON p.id_status_pedido = s.id
+    INNER JOIN
+    tbl_restaurante AS r ON p.id_restaurante = r.id
+    WHERE
+    s.status_pedido = 'cancelado'
+    AND r.id = '${idRestaurante}';
+
+`
+
+let rsRestaurante = await prisma.$queryRawUnsafe(sql)
+
+if (rsRestaurante.length > 0) {
+    return rsRestaurante;
+}
+else {
+    return false;
+}
+}
+
 
 module.exports = {
     insertRestaurante,
@@ -286,5 +360,7 @@ module.exports = {
     verificarNomeFantasiaRestauranteExistente,
     selectCategoriasDoRestaurantePeloNomeFantasia,
     selectProdutosDoRestaurantePeloNomeFantasia,
-    selectProdutoByIDRestaurante
+    selectProdutoByIDRestaurante,
+    selectProdutosPausadosDeUmRestaurante,
+    selectPedidosCanceladosDeUmRestaurante
 }

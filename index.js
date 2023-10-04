@@ -286,7 +286,7 @@ app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async func
     }
 });
 
-//EndPoint: PUT - Atualiza restaurante pelo id
+//EndPoint: PUT - Atualiza telefone  pelo id
 app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
     //reccebe o content-type da requisicao
     let contentType = request.headers['content-type'];
@@ -299,10 +299,12 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
         let dadosBody = request.body;
 
         //Encaminha os dados para a controller
-        let resultDadosCliente = await controllerCliente.atualizarCliente(dadosBody, idCliente);
+        let resultDados = await controllerRestaurante.atualizarRestaurante(dadosBody, idRestaurante);
 
-        response.status(resultDadosCliente.status)
-        response.json(resultDadosCliente)
+        console.log(dadosBody);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
 
     } else {
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
@@ -427,6 +429,44 @@ app.get('/v1/saveeats/restaurante/produtos/id-restaurante/:idRestaurante/nome-pr
         response.status(200);
     } else {
         console.log(dados);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+//Home - produtos pausados
+//EndPoint: GET - Retorna os PRODUTOS com o STATUS PAUSADO de um restaurante específico pelo id do restaurante
+app.get('/v1/saveeats/restaurante/produtos-pausados/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getProdutosPausadosDoRestaurantePeloIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+//Home - pedidos cancelados
+//EndPoint: GET - Retorna os PEDIDOS cancelados de um restaurante específico pelo id do restaurante
+app.get('/v1/saveeats/restaurante/pedidos-cancelados/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getPedidosCanceladosPeloIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
         console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
