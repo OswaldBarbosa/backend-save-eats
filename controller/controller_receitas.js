@@ -21,7 +21,7 @@ const inserirReceitas = async function (dados) {
         dados.numero_porcoes == '' || dados.numero_porcoes == undefined|| 
         dados.modo_preparo == '' || dados.modo_preparo == undefined || 
         dados.id_nivel_dificuldade == '' || dados.id_nivel_dificuldade == undefined ||
-        dados.id_tempo_preparo == '' || dados.id_tempo_preparo == undefine
+        dados.id_tempo_preparo == '' || dados.id_tempo_preparo == undefined
 
     ) {
         return message.ERROR_REQUIRED_FIELDS
@@ -32,7 +32,7 @@ const inserirReceitas = async function (dados) {
         //Valida se o banco de dados inseriu corretamente os dados
         if (resultDados) {
 
-            let novoRegistro = await receitasIngredienteDAO.selectLastId()
+            let novoRegistro = await receitasDAO.selectLastId()
 
             let dadosJSON = {}
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status

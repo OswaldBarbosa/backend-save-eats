@@ -40,6 +40,23 @@ const insertReceita = async function (dados) {
 
 }
 
+
+
+const selectLastId = async function () {
+    let sql = `select * from tbl_receitas order by id desc limit 1;`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0){
+        return rs
+    } else{
+        return false
+    }
+   
+}    
+
+
 module.exports = {
-    insertReceita
+    insertReceita,
+    selectLastId
 }

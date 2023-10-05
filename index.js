@@ -74,6 +74,7 @@ var controllerProcedure = require ('./controller/controller_procedures.js')
 var controllerViews = require ('./controller/controller_views.js')
 var controllerIngrediente = require ('./controller/controller_ingrediente.js')
 var controllerReceitasIngredientes = require ('./controller/controller_receitas_ingredientes.js')
+var controllerReceitas = require ('./controller/controller_receitas.js')
 
 
 
@@ -3711,10 +3712,32 @@ app.post('/v1/saveeats/receita/ingrediente', cors(), bodyParserJSON, async funct
 
 
 
+/////////////////////////////////////////  Receitas  //////////////////////////////////////////////
+
+/********************************
+* Objetivo : API de controle da tbl_receitas_
+* Data : 05/10/2023
+********************************/
 
 
+//EndPoint: POST - Adicionar uma receita
+app.post('/v1/saveeats/receita', cors(), bodyParserJSON, async function (request, response) {
 
+    let contentType = request.headers['content-type']
 
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerReceitas.inserirReceitas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
 
 
 
