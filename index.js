@@ -73,6 +73,7 @@ var controllerNivelDificuldade = require ('./controller/controller_nivel_dificul
 var controllerProcedure = require ('./controller/controller_procedures.js')
 var controllerViews = require ('./controller/controller_views.js')
 var controllerIngrediente = require ('./controller/controller_ingrediente.js')
+var controllerReceitasIngredientes = require ('./controller/controller_receitas_ingredientes.js')
 
 
 
@@ -3681,7 +3682,32 @@ app.get('/v1/saveeats/pedido-produtos', cors(), async function (request, respons
 })
 
 
+/////////////////////////////////////////  Receitas Ingredientes  //////////////////////////////////////////////
 
+/********************************
+* Objetivo : API de controle da tbl_receitas_ingrediente
+* Data : 05/10/2023
+********************************/
+
+//so fiz o post da tbl_receitas_ingrediente
+//EndPoint: POST - IDS Das Receitas e dos Ingredientes
+app.post('/v1/saveeats/receita/ingrediente', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerReceitasIngredientes.inserirReceitasIngredientes(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
 
 
 
