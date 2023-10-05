@@ -302,7 +302,11 @@ const getProdutosPausadosDoRestaurantePeloIdDoRestaurante = async function (idRe
     let dadosRestaurante = await restauranteDAO.selectProdutosPausadosDeUmRestaurante(idDoRestaurante)
 
     if (dadosRestaurante) {
-        dadosRestauranteJSON.produtos_pausado_do_restaurante = dadosRestaurante
+        let quantidadePedidosPausados = dadosRestaurante.length;
+        dadosRestauranteJSON.produtos_pausado_do_restaurante = quantidadePedidosPausados
+
+        dadosRestauranteJSON.pedidos_pausados_do_restaurante = dadosRestaurante;
+
         return dadosRestauranteJSON
     } else {
         return false;
