@@ -75,6 +75,7 @@ var controllerViews = require ('./controller/controller_views.js')
 var controllerIngrediente = require ('./controller/controller_ingrediente.js')
 var controllerReceitasIngredientes = require ('./controller/controller_receitas_ingredientes.js')
 var controllerReceitas = require ('./controller/controller_receitas.js')
+var controllerIntermedCategoriaReceitas = require ('./controller/controller_intermed_categoria_receitas.js')
 
 
 
@@ -3515,7 +3516,30 @@ app.delete('/v1/saveeats/tempo-preparo/id/:id', cors(), bodyParserJSON, async fu
 
 });
 
+//EndPoint: PUT - Atualiza um tempo_preparo
+app.put('/v1/saveeats/tempo-preparo/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idTempoPreparo = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerTempoPreparo.atualizarTempoPreparo(dadosBody, idTempoPreparo)
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+});
 
 ///////////////////////////////////////// Nivel Dificuldade  //////////////////////////////////////////////
 
@@ -3738,6 +3762,74 @@ app.post('/v1/saveeats/receita', cors(), bodyParserJSON, async function (request
     }
 
 });
+
+//EndPoint: GET - Retorna os detalhes de uma receita pelo id
+app.get('/v1/saveeats/detalhes/receitas/id/:id', cors(), async function (request, response) {
+
+    let idReceita = request.params.id
+    console.log('porra');
+    let dadosReceitas = await controllerReceitas.getDetalhesReceitaPorId(idReceita)
+
+    response.status(dadosReceitas.status)
+    response.json(dadosReceitas)
+
+});
+
+//EndPoint: GET - Retorna os detalhes de uma receita filtrando pela categoria
+app.get('/v1/saveeats/receita/categoria/nome-categoria/:categoria', cors(), async function (request, response) {
+
+    let nomeCategoria = request.params.categoria
+    console.log('porra');
+    let dadosReceitas = await controllerReceitas.getFiltrarReceitaPelaCategoria(nomeCategoria)
+
+    response.status(dadosReceitas.status)
+    response.json(dadosReceitas)
+
+});
+
+
+
+
+///////////////////////////////////////// Intermed_Categoria_Receitas  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da tbl_intermed_categoria_receitas
+* Data : 06/10/2023
+********************************/
+
+
+//EndPoint: POST - Adicionar os id de uma receita e de uma categoria_receita na tabela intermediaria
+app.post('/v1/saveeats/intermed-categoria-receitas', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerIntermedCategoriaReceitas.inserirIntermedCategoriReceitas(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

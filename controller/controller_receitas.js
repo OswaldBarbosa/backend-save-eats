@@ -48,6 +48,56 @@ const inserirReceitas = async function (dados) {
 
 }
 
+const getDetalhesReceitaPorId = async function (receita) {
+
+
+    let idReceita = receita
+
+    let dadosJSON = {}
+
+    let dadosReceita = await receitasDAO.selectDetalhesReceitasByIdReceita(idReceita)
+
+    if (dadosReceita) {
+        dadosJSON.status = 200;  
+        dadosJSON.detalhes_receita = dadosReceita
+       
+        return dadosJSON;
+    } else {
+        return {
+            status: 404,  
+            message: 'Receita não encontrada'
+        };
+    }
+
+}
+
+const getFiltrarReceitaPelaCategoria = async function (categoria) {
+
+
+    let nomeCategoria = categoria
+
+    let dadosJSON = {}
+
+    let dadosReceita = await receitasDAO.selectDetalhesReceitasByNameCategoria(nomeCategoria)
+
+    if (dadosReceita) {
+        dadosJSON.status = 200;  
+        dadosJSON.receita_da_categoria_escolhida = dadosReceita
+       
+        return dadosJSON;
+    } else {
+        return {
+            status: 404,  
+            message: 'Receita não encontrada'
+        };
+    }
+
+}
+
+
+
 module.exports = {
-    inserirReceitas
+    inserirReceitas,
+    getDetalhesReceitaPorId,
+    getFiltrarReceitaPelaCategoria
 }
