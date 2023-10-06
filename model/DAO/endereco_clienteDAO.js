@@ -91,7 +91,12 @@ const selectAllEnderecoCliente = async function () {
 }
 
 const selectEnderecoClienteByID = async function (id) {
-    let sql = `select * from tbl_endereco_cliente where id = ${id}`
+    let sql = `select   tbl_endereco_cliente.rua, tbl_endereco_cliente.cep, tbl_endereco_cliente.bairro, tbl_endereco_cliente.numero, tbl_endereco_cliente.complemento,
+                        tbl_cidade_cliente.nome_cidade
+
+                        from tbl_endereco_cliente
+                            inner join tbl_cidade_cliente
+                                on tbl_cidade_cliente.id = tbl_endereco_cliente.id_cidade_cliente where tbl_endereco_cliente.id = ${id}`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 

@@ -217,9 +217,8 @@ const autenticarLoginClienteEmailSenha = async function (email, password) {
             // Inclua o token no objeto dadosRestaurante
             dadosCliente[0].token = tokenUser;
            
-
             clienteJSONEmailpassword.status = message.SUCESS_REQUEST.status
-            clienteJSONEmailpassword.clientes = dadosCliente;
+            clienteJSONEmailpassword.clientes = dadosCliente[0];
 
             return clienteJSONEmailpassword
             
