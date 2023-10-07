@@ -3788,6 +3788,48 @@ app.get('/v1/saveeats/receita/categoria/nome-categoria/:categoria', cors(), asyn
 });
 
 
+//EndPoint: DELETE - Deleta uma receita pelo id
+app.delete('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idReceita = request.params.id;
+
+    let resultDados = await controllerReceitas.deletarReceita(idReceita)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+})
+
+
+//EndPoint: PUT - Atualiza um produto pelo id
+app.put('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idReceita = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerReceitas.atualizarReceita(dadosBody, idReceita);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+})
+
+
+
+
+
 
 
 ///////////////////////////////////////// Intermed_Categoria_Receitas  //////////////////////////////////////////////
