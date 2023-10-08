@@ -209,6 +209,7 @@ const verificarNomeFantasiaRestauranteExistente = async function (nomeRestaurant
 }
   
 const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
+
     let nameRestaurante = name;
 
     // Script para buscar as CATEGORIAS de um restaurante filtrando pelo nome fantasia
@@ -218,16 +219,21 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
     INNER JOIN tbl_restaurante AS r ON p.id_restaurante = r.id
     WHERE r.nome_fantasia = '${nameRestaurante}'
     GROUP BY r.nome_fantasia;`; 
+
     let rsCategoriasRestaurante = await prisma.$queryRawUnsafe(sql);
 
     if (rsCategoriasRestaurante.length > 0) {
+
         const categorias = rsCategoriasRestaurante[0].categorias.split(','); 
+
         return categorias;
+
     } else {
+
         return false;
+
     }
 }
-
 
 
 const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
@@ -288,9 +294,9 @@ const selectProdutosPausadosDeUmRestaurante = async function (restaurante) {
         tbl_produto AS p
             INNER JOIN
         tbl_status_produto AS s ON p.id_status_produto = s.id
-        INNER JOIN
+            INNER JOIN
         tbl_categoria_produto AS c ON p.id_categoria_produto = c.id
-        INNER JOIN
+            INNER JOIN
         tbl_restaurante AS r ON p.id_restaurante = r.id
 
         WHERE
@@ -346,6 +352,35 @@ else {
 }
 }
 
+//traz as formas de pagamento de um restaurante
+const selectFormaPagamentoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para Filtrar/Buscar as formas de pagamento do restaurante especifico pelo id do restaurante
+    let sql = `
+
+    SELECT forma_pagamento.*
+
+    FROM tbl_forma_pagamento AS forma_pagamento
+
+    INNER JOIN tbl_restaurante_forma_pagamento AS restaurante_forma_pagamento ON forma_pagamento.id = restaurante_forma_pagamento.id_forma_pagamento
+
+    WHERE restaurante_forma_pagamento.id_restaurante = '${idDoRestaurante}';
+
+    `
+
+
+    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsCProdutosRestaurante.length > 0) {
+        return rsCProdutosRestaurante
+    } else {
+        return false;
+    }
+}
+
+
 
 module.exports = {
     insertRestaurante,
@@ -362,5 +397,6 @@ module.exports = {
     selectProdutosDoRestaurantePeloNomeFantasia,
     selectProdutoByIDRestaurante,
     selectProdutosPausadosDeUmRestaurante,
-    selectPedidosCanceladosDeUmRestaurante
+    selectPedidosCanceladosDeUmRestaurante,
+    selectFormaPagamentoByIDRestaurante
 }

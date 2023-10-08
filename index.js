@@ -431,8 +431,6 @@ app.get('/v1/saveeats/restaurante/produtos/id-restaurante/:idRestaurante/nome-pr
         response.json(dados);
         response.status(200);
     } else {
-        console.log(dados);
-        console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
     }
@@ -475,6 +473,46 @@ app.get('/v1/saveeats/restaurante/pedidos-cancelados/idRestaurante/:idRestaurant
         response.json(message.ERROR_NOT_FOUND)
     }
 });
+
+
+//EndPoint: GET - Retorna os as formas de pagamento de um restaurante
+app.get('/v1/saveeats/restaurante/forma-pagamento/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getFormaPagamentoPeloIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
+//EndPoint: POST - Restaurante aceitar formas de pagamentos existentes no banco (PROCEDURE)
+app.post('/v1/saveeats/restaurante/aceitar/formas-pagamentos',cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.inserirFormaPagamentoRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
 
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////

@@ -13,6 +13,7 @@ var restauranteDAO = require('../model/DAO/restauranteDAO.js')
 var clienteDAO = require('../model/DAO/clienteDAO.js')
 var statusProdutoDAO = require('../model/DAO/status_produtoDAO.js')
 var categoriaProdutoDAO = require('../model/DAO/categoria_produtoDAO.js')
+var formaPagamentoDAO = require('../model/DAO/forma_de_pagamentoDAO.js')
 
 //funcao para fazer o cadastro do restaurante 
 const inserirCadastroProcedure = async (dadosCadastro) => {
@@ -206,10 +207,42 @@ const atualizarProdutoNoCardapio = async (dadosProduto) => {
 
 
 
+const inserirFormaPagamentoRestaurante = async (dados) => {
+
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.forma_pagamento_id == '' || dados.forma_pagamento_id == undefined 
+    ) {
+        
+        return message.ERROR_REQUIRED_FIELDS;
+
+    } else {
+
+        // Verifica se a forma de pagamento existe no banco de dados
+        const formaPagamentoExistente = await formaPagamentoDAO.verificarFormaPagamentoExistente(dados.forma_pagamento_id);
+
+        if (!formaPagamentoExistente) {
+            return message.ERROR_FORMA_PAGAMENTO_NOT_FOUND;
+        }
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureInsertRestauranteFormaPagamento(dados)
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
 
 module.exports = {
     inserirCadastroProcedure,
     inserirCadastroCliente,
     inserirProdutoNoCardapio,
-    atualizarProdutoNoCardapio
+    atualizarProdutoNoCardapio,
+    inserirFormaPagamentoRestaurante
 }

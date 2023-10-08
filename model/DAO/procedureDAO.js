@@ -122,7 +122,25 @@ const procedureUpdateProduto = async function (dadosProcedures) {
     }
 }
 
+//Funcao para o restaurante aceitar formas de pagamento existentes no banco de dados e
+//salvar na tabela intermediaria - PROCEDURE
+const procedureInsertRestauranteFormaPagamento = async function (dadosProcedures) {
 
+    let call = `
+    CALL AdicionarFormaPagamentoRestaurante(
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.forma_pagamento_id}    
+    );    
+`
+
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
 
 
 
@@ -130,6 +148,7 @@ module.exports = {
     proceduresRestauranteCadastro,
     procedureInsertCadastroCliente,
     procedureInsertProduto,
-    procedureUpdateProduto
+    procedureUpdateProduto,
+    procedureInsertRestauranteFormaPagamento
     
 }

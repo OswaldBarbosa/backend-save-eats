@@ -107,12 +107,30 @@ const selectLastId = async function () {
     }
    
 }  
+
+//verifica se a forma de pagamento inserida existe no banco de dados
+const verificarFormaPagamentoExistente = async function (idFormaPagamento){
+
+    let sql = `SELECT  * FROM tbl_forma_pagamento WHERE id = '${idFormaPagamento}';`
+
+    let rsFormaPagamento = await prisma.$queryRawUnsafe(sql)
+
+    if (rsFormaPagamento.length > 0) {
+        return rsFormaPagamento;
+    }
+    else {
+        return false;
+    }
+}
+
+
 module.exports = {
     insertFormaPagamento,
     deleteFormaPagamento,
     updateFormaPagamento,
     selectAllFormaPagamento,
     selectFormaPagamentoByID,
+    verificarFormaPagamentoExistente,
     selectLastId
 
 }
