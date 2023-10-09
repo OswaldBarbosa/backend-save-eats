@@ -3934,11 +3934,34 @@ app.post('/v1/saveeats/intermed-categoria-receitas', cors(), bodyParserJSON, asy
 
 
 
+/* ***************************************************************************************************************************************************
+ * Objetivo : API para integração da API de pagamento do mercado pago somente o get.
+ * Autor : Caroline Portela
+ * Data 05/09/2023
+ * Versão : 1.0 
+ *************************************************************************************************************************************************** */
 
+// const mercadoPago = require('mercadopago');
+const axios = require('axios');
+const mercadopagoAccessToken = 'TEST-4600314104156538-100512-94d8d18c090395b88b69c7aab3f71baa-1501647086';
 
+// Rota para obter dados da API do Mercado Pago
+app.get('/v1/saveeats/obter-dados-do-mercado-pago', async (req, res) => {
+  try {
+    // Fazer uma chamada à API do Mercado Pago
+    const response = await axios.get('https://api.mercadopago.com/v1/payment_methods', {
+      headers: {
+        'Authorization': `Bearer ${mercadopagoAccessToken}`,
+      },
+    });
 
-
-
+    // Retornar os dados da API do Mercado Pago para o frontend
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao obter dados do Mercado Pago:', error);
+    return res.status(500).json({ error: 'Erro ao obter dados do Mercado Pago' });
+  }
+});
 
 
 
