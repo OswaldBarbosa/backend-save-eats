@@ -209,6 +209,7 @@ const verificarNomeFantasiaRestauranteExistente = async function (nomeRestaurant
 }
   
 const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
+
     let nameRestaurante = name;
 
     // Script para buscar as CATEGORIAS de um restaurante filtrando pelo nome fantasia
@@ -218,16 +219,21 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
     INNER JOIN tbl_restaurante AS r ON p.id_restaurante = r.id
     WHERE r.nome_fantasia = '${nameRestaurante}'
     GROUP BY r.nome_fantasia;`; 
+
     let rsCategoriasRestaurante = await prisma.$queryRawUnsafe(sql);
 
     if (rsCategoriasRestaurante.length > 0) {
+
         const categorias = rsCategoriasRestaurante[0].categorias.split(','); 
+
         return categorias;
+
     } else {
+
         return false;
+
     }
 }
-
 
 
 const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
@@ -288,9 +294,9 @@ const selectProdutosPausadosDeUmRestaurante = async function (restaurante) {
         tbl_produto AS p
             INNER JOIN
         tbl_status_produto AS s ON p.id_status_produto = s.id
-        INNER JOIN
+            INNER JOIN
         tbl_categoria_produto AS c ON p.id_categoria_produto = c.id
-        INNER JOIN
+            INNER JOIN
         tbl_restaurante AS r ON p.id_restaurante = r.id
 
         WHERE
@@ -346,6 +352,67 @@ else {
 }
 }
 
+//traz as formas de pagamento de um restaurante pelo id
+const selectFormaPagamentoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para Filtrar/Buscar as formas de pagamento do restaurante especifico pelo id do restaurante
+    let sql = `
+
+    SELECT forma_pagamento.*
+
+    FROM tbl_forma_pagamento AS forma_pagamento
+
+    INNER JOIN tbl_restaurante_forma_pagamento AS restaurante_forma_pagamento ON forma_pagamento.id = restaurante_forma_pagamento.id_forma_pagamento
+
+    WHERE restaurante_forma_pagamento.id_restaurante = '${idDoRestaurante}';
+
+    `
+
+
+    let rsFormaPagamento = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFormaPagamento.length > 0) {
+        return rsFormaPagamento
+    } else {
+        return false;
+    }
+}
+
+//traz as areas entrega/frete  de um restaurante pelo id
+const selectFreteAreaEntregaByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para Filtrar/Buscar as areas de entrega/frete do restaurante especifico pelo id do restaurante
+    let sql = `
+
+    SELECT restaurante.id AS restaurante_id, frete_area_entrega.id AS area_entrega_id, frete_area_entrega.km, frete_area_entrega.valor_entrega, frete_area_entrega.tempo_entrega, frete_area_entrega.raio_entrega
+
+    FROM tbl_restaurante restaurante
+
+    INNER JOIN tbl_restaurante_frete_area_entrega restaurante_frete ON restaurante.id = restaurante_frete.id_restaurante
+
+    INNER JOIN tbl_frete_area_entrega frete_area_entrega ON restaurante_frete.id_frete_area_entrega = frete_area_entrega.id
+
+    WHERE restaurante.id ='${idDoRestaurante}';
+
+    `
+
+
+    let rsFreteAreaEntregaRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFreteAreaEntregaRestaurante.length > 0) {
+        return rsFreteAreaEntregaRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+
+
 
 module.exports = {
     insertRestaurante,
@@ -362,5 +429,7 @@ module.exports = {
     selectProdutosDoRestaurantePeloNomeFantasia,
     selectProdutoByIDRestaurante,
     selectProdutosPausadosDeUmRestaurante,
-    selectPedidosCanceladosDeUmRestaurante
+    selectPedidosCanceladosDeUmRestaurante,
+    selectFormaPagamentoByIDRestaurante,
+    selectFreteAreaEntregaByIDRestaurante
 }

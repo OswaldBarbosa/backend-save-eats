@@ -122,14 +122,105 @@ const procedureUpdateProduto = async function (dadosProcedures) {
     }
 }
 
+//Funcao para o restaurante aceitar formas de pagamento existentes no banco de dados e
+//salvar na tabela intermediaria - PROCEDURE
+const procedureInsertRestauranteFormaPagamento = async function (dadosProcedures) {
+
+    let call = `
+    CALL AdicionarFormaPagamentoRestaurante(
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.forma_pagamento_id}    
+    );    
+`
+
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
+
+//Funcao para o restaurante adicionar suas areas de entregas - PROCEDURE
+const procedureInsertRestauranteAreaEntrega = async function (dadosProcedures) {
+
+    let call = `
+    CALL AdicionarAreaEntregaRestaurante(
+
+        ${dadosProcedures.restaurante_id},
+        '${dadosProcedures.km}',
+        '${dadosProcedures.valor_entrega}',
+        '${dadosProcedures.tempo_entrega}',
+        '${dadosProcedures.raio_entrega}'     
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+
+        return true
+    } else {
+        return false
+    }
+}
 
 
+//Funcao para o restaurante editar suas areas de entregas - PROCEDURE
+const procedureUpdateRestauranteAreaEntrega = async function (dadosProcedures) {
+
+    let call = `
+    CALL EditarAreaEntregaRestaurante(
+
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.area_entrega_id},
+        '${dadosProcedures.novo_km}',
+        '${dadosProcedures.novo_valor_entrega}',
+        '${dadosProcedures.novo_tempo_entrega}',
+        '${dadosProcedures.novo_raio_entrega}'     
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+
+        return true
+    } else {
+        return false
+    }
+}
+
+//Funcao para o restaurante excluir suas areas de entregas - PROCEDURE
+const procedureDeleteRestauranteAreaEntrega = async function (dadosProcedures) {
+
+    let call = `
+    CALL ExcluirAreaEntregaRestaurante(
+
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.area_entrega_id}
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+
+        return true
+    } else {
+        return false
+    }
+}
 
 
 module.exports = {
     proceduresRestauranteCadastro,
     procedureInsertCadastroCliente,
     procedureInsertProduto,
-    procedureUpdateProduto
+    procedureUpdateProduto,
+    procedureInsertRestauranteFormaPagamento,
+    procedureInsertRestauranteAreaEntrega,
+    procedureUpdateRestauranteAreaEntrega,
+    procedureDeleteRestauranteAreaEntrega
     
 }

@@ -250,9 +250,6 @@ app.post('/v1/saveeats/cadastro/cliente', cors(), bodyParserJSON, async function
 * Data : 31/08/2023
 ********************************/
 
-
-
-
 //EndPoint: POST - Insere um Restaurante (PROCEDURE)
 app.post('/v1/saveeats/restaurante/procedore',cors(), bodyParserJSON, async function (request, response) {
 
@@ -289,7 +286,7 @@ app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async func
     }
 });
 
-//EndPoint: PUT - Atualiza telefone  pelo id
+//EndPoint: PUT - Atualiza  pelo id
 app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
     //reccebe o content-type da requisicao
     let contentType = request.headers['content-type'];
@@ -431,8 +428,6 @@ app.get('/v1/saveeats/restaurante/produtos/id-restaurante/:idRestaurante/nome-pr
         response.json(dados);
         response.status(200);
     } else {
-        console.log(dados);
-        console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
     }
@@ -475,6 +470,105 @@ app.get('/v1/saveeats/restaurante/pedidos-cancelados/idRestaurante/:idRestaurant
         response.json(message.ERROR_NOT_FOUND)
     }
 });
+
+
+//EndPoint: GET - Retorna os as formas de pagamento de um restaurante
+app.get('/v1/saveeats/restaurante/forma-pagamento/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getFormaPagamentoPeloIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
+//EndPoint: POST - Restaurante aceitar formas de pagamentos existentes no banco (PROCEDURE)
+app.post('/v1/saveeats/restaurante/aceitar/formas-pagamentos',cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.inserirFormaPagamentoRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//EndPoint: GET - Retorna todas areas de entrega de um restaurante
+app.get('/v1/saveeats/restaurante/frete-area-entrega/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getFreteAreaEntregaIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
+//EndPoint: POST - Restaurante adicionar suas areas de entrega (PROCEDURE)
+app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.restauranteInserirSuasAreasDeEntrega(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+//arrumar essapoha
+//EndPoint: DELETE - Restaurante excluir uma area de entrega
+app.delete('/v1/saveeats/restaurante/frete-area-entrega/:restaurante_id/:area_entrega_id', cors(), bodyParserJSON, async function (request, response) {
+
+    let restaurante_id = request.params.id;
+
+    let area_entrega_id = request.params.id;
+
+    let resultDados = await controllerProcedure.restauranteDeletarSuasAreasDeEntrega(restaurante_id,area_entrega_id)
+
+    if (resultDados) {
+        response.json(resultDados);
+        response.status(200);
+    } else {
+        response.json();
+        response.status(404);
+    }
+});
+
+
+
 
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
@@ -3786,6 +3880,48 @@ app.get('/v1/saveeats/receita/categoria/nome-categoria/:categoria', cors(), asyn
     response.json(dadosReceitas)
 
 });
+
+
+//EndPoint: DELETE - Deleta uma receita pelo id
+app.delete('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let idReceita = request.params.id;
+
+    let resultDados = await controllerReceitas.deletarReceita(idReceita)
+
+    response.status(resultDados.status)
+    response.json(resultDados)
+
+})
+
+
+//EndPoint: PUT - Atualiza um produto pelo id
+app.put('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let idReceita = request.params.id;
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerReceitas.atualizarReceita(dadosBody, idReceita);
+
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
+    }
+
+})
+
+
+
 
 
 

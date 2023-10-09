@@ -257,7 +257,7 @@ const getCategoriasRestaurantePeloNomeFantasia = async function (nome) {
     return { categorias_do_restaurante : dadosRestaurante || [] }; // Retorna um objeto JSON com a chave "categorias"
 }
 
-//inspi
+
 const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
 
     let nomeRestaurante = nome
@@ -288,7 +288,7 @@ const getProdutosRestaurantePeloIdRestaurante = async function (idRestaurante,pr
         dadosJSON.produtos_do_restaurante = dadosProdutoRestaurante
         return dadosJSON
     } else {
-        return false;
+        return message.ERROR_INVALID_EMAIL_PASSWORD
     }
 }
 
@@ -340,7 +340,53 @@ const getPedidosCanceladosPeloIdDoRestaurante = async function (idRestaurante) {
     }
 };
 
+const getFormaPagamentoPeloIdDoRestaurante = async function (idRestaurante) {
 
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectFormaPagamentoByIDRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        
+        let quantidadeFormasDePagamento = dadosRestaurante.length;
+        dadosRestauranteJSON.formas_de_pagamento_do_restaurante = quantidadeFormasDePagamento
+        dadosRestauranteJSON.formas_de_pagamento_do_restaurante = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
+const getFreteAreaEntregaIdDoRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectFreteAreaEntregaByIDRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        
+        let quantidadeFreteAreaEntrega = dadosRestaurante.length;
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = quantidadeFreteAreaEntrega
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
 
 module.exports = {
     deletarRestaurante,
@@ -354,6 +400,8 @@ module.exports = {
     getProdutosRestaurantePeloNomeFantasia,
     getProdutosRestaurantePeloIdRestaurante,
     getProdutosPausadosDoRestaurantePeloIdDoRestaurante,
-    getPedidosCanceladosPeloIdDoRestaurante
+    getPedidosCanceladosPeloIdDoRestaurante,
+    getFormaPagamentoPeloIdDoRestaurante,
+    getFreteAreaEntregaIdDoRestaurante
 
 }

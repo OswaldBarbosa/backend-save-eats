@@ -108,6 +108,7 @@ const selectEnderecoClienteByID = async function (id) {
         
 }
 
+
 const selectLastId = async function () {
     let sql = `select * from tbl_endereco_cliente order by id desc limit 1;`
 

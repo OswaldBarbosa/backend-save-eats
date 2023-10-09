@@ -30,6 +30,8 @@ const ERROR_CATEGORY_PRODUCT_NOT_FOUND = {status: 401, message: 'A categoria-pro
 
 const ERROR_RESTAURANT_NOT_FOUND = {status: 401, message: 'O nome fantasia inserido não existe no banco de dados.'}
 
+const ERROR_FORMA_PAGAMENTO_NOT_FOUND = {status: 401, message: 'O id da forma de pagamento inserido não existe no banco de dados.'}
+
 //Mensagens de Sucesso
 const SUCESS_CREATED_ITEM = {status: 201, message: 'Item criado com sucesso'}
 
@@ -56,5 +58,6 @@ module.exports = {
     ERROR_EMAIL_ALREADY_EXISTS,
     ERROR_STATUS_PRODUCT_NOT_FOUND,
     ERROR_CATEGORY_PRODUCT_NOT_FOUND,
-    ERROR_RESTAURANT_NOT_FOUND
+    ERROR_RESTAURANT_NOT_FOUND,
+    ERROR_FORMA_PAGAMENTO_NOT_FOUND
 }
