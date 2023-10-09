@@ -14,6 +14,8 @@ var clienteDAO = require('../model/DAO/clienteDAO.js')
 var statusProdutoDAO = require('../model/DAO/status_produtoDAO.js')
 var categoriaProdutoDAO = require('../model/DAO/categoria_produtoDAO.js')
 var formaPagamentoDAO = require('../model/DAO/forma_de_pagamentoDAO.js')
+var freteAreaEntregaDAO = require('../model/DAO/frete_area_entregaDAO.js')
+
 
 //funcao para fazer o cadastro do restaurante 
 const inserirCadastroProcedure = async (dadosCadastro) => {
@@ -206,7 +208,7 @@ const atualizarProdutoNoCardapio = async (dadosProduto) => {
 }
 
 
-
+//funcao pro restaurante aceitar formas de pagamentos 
 const inserirFormaPagamentoRestaurante = async (dados) => {
 
     if (
@@ -239,10 +241,105 @@ const inserirFormaPagamentoRestaurante = async (dados) => {
     }
 }
 
+
+//funcao pra restaurante cadastrar suas areas de entrega
+const restauranteInserirSuasAreasDeEntrega = async (dados) => {
+
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.km == '' || dados.km == undefined ||
+        dados.valor_entrega == '' || dados.valor_entrega == undefined ||
+        dados.tempo_entrega == '' || dados.tempo_entrega == undefined ||
+        dados.raio_entrega == '' || dados.raio_entrega == undefined 
+      
+        ) {
+            return message.ERROR_REQUIRED_FIELDS
+    
+        } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureInsertRestauranteAreaEntrega(dados)
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
+
+//funcao para o restaurante atualizar suas areas de entrega
+const restauranteAtualizarSuasAreasDeEntrega = async (dados) => { 
+
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.area_entrega_id == '' || dados.area_entrega_id == undefined ||
+        dados.novo_km == '' || dados.novo_km == undefined ||
+        dados.novo_valor_entrega == '' || dados.novo_valor_entrega == undefined ||
+        dados.novo_tempo_entrega == '' || dados.novo_tempo_entrega == undefined ||
+        dados.novo_raio_entrega == '' || dados.novo_raio_entrega == undefined 
+      
+        ) {
+
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+
+        let dadosJSON = {}
+
+        const resultadoDados = await proceduresDAO.procedureUpdateRestauranteAreaEntrega(dados);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
+
+
+const restauranteDeletarSuasAreasDeEntrega = async function (restaurante_id,area_entrega_id) {
+
+    let statusId = await freteAreaEntregaDAO.selectFreteAreaEntregaAByID(area_entrega_id);
+
+    if (statusId) {
+
+        if (
+            restaurante_id == '' || restaurante_id == undefined || isNaN(restaurante_id) ||
+            area_entrega_id == '' || area_entrega_id == undefined || isNaN(area_entrega_id))
+            {
+            return message.ERROR_INVALID_ID; //Status code 400
+        } else {
+            let resultDados = await proceduresDAO.procedureDeleteRestauranteAreaEntrega(restaurante_id,area_entrega_id)
+
+            if (resultDados) {
+                return message.SUCESS_DELETED_ITEM
+            } else {
+                return message.ERROR_INTERNAL_SERVER
+            }
+        }
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+
+}
+
+
+
+
+
+
 module.exports = {
     inserirCadastroProcedure,
     inserirCadastroCliente,
     inserirProdutoNoCardapio,
     atualizarProdutoNoCardapio,
-    inserirFormaPagamentoRestaurante
+    inserirFormaPagamentoRestaurante,
+    restauranteInserirSuasAreasDeEntrega,
+    restauranteAtualizarSuasAreasDeEntrega,
+    restauranteDeletarSuasAreasDeEntrega
 }

@@ -352,7 +352,7 @@ else {
 }
 }
 
-//traz as formas de pagamento de um restaurante
+//traz as formas de pagamento de um restaurante pelo id
 const selectFormaPagamentoByIDRestaurante = async function (idRestaurante) {
 
     let idDoRestaurante = idRestaurante
@@ -371,14 +371,46 @@ const selectFormaPagamentoByIDRestaurante = async function (idRestaurante) {
     `
 
 
-    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+    let rsFormaPagamento = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCProdutosRestaurante.length > 0) {
-        return rsCProdutosRestaurante
+    if (rsFormaPagamento.length > 0) {
+        return rsFormaPagamento
     } else {
         return false;
     }
 }
+
+//traz as areas entrega/frete  de um restaurante pelo id
+const selectFreteAreaEntregaByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para Filtrar/Buscar as areas de entrega/frete do restaurante especifico pelo id do restaurante
+    let sql = `
+
+    SELECT restaurante.id AS restaurante_id, frete_area_entrega.id AS area_entrega_id, frete_area_entrega.km, frete_area_entrega.valor_entrega, frete_area_entrega.tempo_entrega, frete_area_entrega.raio_entrega
+
+    FROM tbl_restaurante restaurante
+
+    INNER JOIN tbl_restaurante_frete_area_entrega restaurante_frete ON restaurante.id = restaurante_frete.id_restaurante
+
+    INNER JOIN tbl_frete_area_entrega frete_area_entrega ON restaurante_frete.id_frete_area_entrega = frete_area_entrega.id
+
+    WHERE restaurante.id ='${idDoRestaurante}';
+
+    `
+
+
+    let rsFreteAreaEntregaRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFreteAreaEntregaRestaurante.length > 0) {
+        return rsFreteAreaEntregaRestaurante
+    } else {
+        return false;
+    }
+}
+
+
 
 
 
@@ -398,5 +430,6 @@ module.exports = {
     selectProdutoByIDRestaurante,
     selectProdutosPausadosDeUmRestaurante,
     selectPedidosCanceladosDeUmRestaurante,
-    selectFormaPagamentoByIDRestaurante
+    selectFormaPagamentoByIDRestaurante,
+    selectFreteAreaEntregaByIDRestaurante
 }

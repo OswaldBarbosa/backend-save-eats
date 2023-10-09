@@ -364,6 +364,30 @@ const getFormaPagamentoPeloIdDoRestaurante = async function (idRestaurante) {
     }
 }
 
+const getFreteAreaEntregaIdDoRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectFreteAreaEntregaByIDRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        
+        let quantidadeFreteAreaEntrega = dadosRestaurante.length;
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = quantidadeFreteAreaEntrega
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
 module.exports = {
     deletarRestaurante,
     atualizarRestaurante,
@@ -377,6 +401,7 @@ module.exports = {
     getProdutosRestaurantePeloIdRestaurante,
     getProdutosPausadosDoRestaurantePeloIdDoRestaurante,
     getPedidosCanceladosPeloIdDoRestaurante,
-    getFormaPagamentoPeloIdDoRestaurante
+    getFormaPagamentoPeloIdDoRestaurante,
+    getFreteAreaEntregaIdDoRestaurante
 
 }
