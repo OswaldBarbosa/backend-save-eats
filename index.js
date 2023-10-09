@@ -286,11 +286,10 @@ app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async func
     }
 });
 
-//EndPoint: PUT - Atualiza  pelo id
+//EndPoint: PUT - Atualiza um produto pelo id
 app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
-    //reccebe o content-type da requisicao
-    let contentType = request.headers['content-type'];
 
+    let contentType = request.headers['content-type'];
 
     if (String(contentType).toLowerCase() == 'application/json') {
 
@@ -298,21 +297,19 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
 
         let dadosBody = request.body;
 
-        //Encaminha os dados para a controller
-        let resultDados = await controllerRestaurante.atualizarRestaurante(dadosBody, idRestaurante);
-
-        console.log(dadosBody);
+        let resultDados = await controllerProcedure.atualizarCadastroRestaurante(dadosBody, idRestaurante);
 
         response.status(resultDados.status)
         response.json(resultDados)
 
     } else {
+
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
     }
 
-});
-
+})
 //EndPoint: GET - Retorna todos restaurantes
 app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) {
 
@@ -546,25 +543,6 @@ app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, a
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
 
-});
-
-//arrumar essapoha
-//EndPoint: DELETE - Restaurante excluir uma area de entrega
-app.delete('/v1/saveeats/restaurante/frete-area-entrega/:restaurante_id/:area_entrega_id', cors(), bodyParserJSON, async function (request, response) {
-
-    let restaurante_id = request.params.id;
-
-    let area_entrega_id = request.params.id;
-
-    let resultDados = await controllerProcedure.restauranteDeletarSuasAreasDeEntrega(restaurante_id,area_entrega_id)
-
-    if (resultDados) {
-        response.json(resultDados);
-        response.status(200);
-    } else {
-        response.json();
-        response.status(404);
-    }
 });
 
 

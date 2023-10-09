@@ -64,6 +64,32 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 }
 
 
+//funcao para atualizar dados de um restaurante
+const atualizarCadastroRestaurante = async (dadosRestaurante) => {     
+    if (
+        dadosRestaurante.p_restaurante_id === undefined || dadosRestaurante.p_restaurante_id === null ||dadosRestaurante.p_restaurante_id === '' 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+
+        let dadosJSON = {}
+
+      
+        const resultadoDados = await proceduresDAO.procedureUpdateDadosRestaurante(dadosRestaurante);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
+
+
+
+
 //funcao pra fazer cadastro do cliente
 const inserirCadastroCliente = async (dadosCliente) => {
 
@@ -302,31 +328,7 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
-const restauranteDeletarSuasAreasDeEntrega = async function (restaurante_id,area_entrega_id) {
 
-    let statusId = await freteAreaEntregaDAO.selectFreteAreaEntregaAByID(area_entrega_id);
-
-    if (statusId) {
-
-        if (
-            restaurante_id == '' || restaurante_id == undefined || isNaN(restaurante_id) ||
-            area_entrega_id == '' || area_entrega_id == undefined || isNaN(area_entrega_id))
-            {
-            return message.ERROR_INVALID_ID; //Status code 400
-        } else {
-            let resultDados = await proceduresDAO.procedureDeleteRestauranteAreaEntrega(restaurante_id,area_entrega_id)
-
-            if (resultDados) {
-                return message.SUCESS_DELETED_ITEM
-            } else {
-                return message.ERROR_INTERNAL_SERVER
-            }
-        }
-    } else {
-        return message.ERROR_NOT_FOUND
-    }
-
-}
 
 
 
@@ -341,5 +343,5 @@ module.exports = {
     inserirFormaPagamentoRestaurante,
     restauranteInserirSuasAreasDeEntrega,
     restauranteAtualizarSuasAreasDeEntrega,
-    restauranteDeletarSuasAreasDeEntrega
+    atualizarCadastroRestaurante
 }

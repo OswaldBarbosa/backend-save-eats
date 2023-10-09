@@ -192,25 +192,45 @@ const procedureUpdateRestauranteAreaEntrega = async function (dadosProcedures) {
     }
 }
 
-//Funcao para o restaurante excluir suas areas de entregas - PROCEDURE
-const procedureDeleteRestauranteAreaEntrega = async function (dadosProcedures) {
 
+//Funcao pra cadastrar um restaurante (WEB) - PROCEDURE
+const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
     let call = `
-    CALL ExcluirAreaEntregaRestaurante(
-
-        ${dadosProcedures.restaurante_id},
-        ${dadosProcedures.area_entrega_id}
-    );    
+    CALL atualizaDadosRestaurante(
+        '${dadosProcedures.p_restaurante_id}',
+        '${dadosProcedures.p_novo_nome_proprietario}',
+        '${dadosProcedures.p_novo_nome_fantasia}',
+        '${dadosProcedures.p_nova_razao_social}',
+        '${dadosProcedures.p_novo_email}',
+        '${dadosProcedures.p_nova_senha}',
+        '${dadosProcedures.p_nova_foto}',
+        '${dadosProcedures.p_novo_cnpj}',
+        '${dadosProcedures.p_novo_nome_categoria}',
+        '${dadosProcedures.p_numero_telefone}',
+        ${dadosProcedures.idEndereco},
+        '${dadosProcedures.p_nova_rua}',
+        '${dadosProcedures.p_novo_cep}',
+        '${dadosProcedures.p_novo_bairro}',
+        '${dadosProcedures.p_novo_numero}',
+        '${dadosProcedures.p_novo_complemento}',
+        '${dadosProcedures.p_novo_nome_cidade}',
+        '${dadosProcedures.p_novo_nome_estado}'
+    );
+    
 `
+
     let resultStatus = await prisma.$executeRawUnsafe(call)
 
-    if(resultStatus){
 
+    if(resultStatus){
         return true
     } else {
         return false
     }
 }
+
+
+
 
 
 module.exports = {
@@ -221,6 +241,6 @@ module.exports = {
     procedureInsertRestauranteFormaPagamento,
     procedureInsertRestauranteAreaEntrega,
     procedureUpdateRestauranteAreaEntrega,
-    procedureDeleteRestauranteAreaEntrega
+    procedureUpdateDadosRestaurante
     
 }
