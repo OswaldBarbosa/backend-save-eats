@@ -124,6 +124,7 @@ const procedureUpdateProduto = async function (dadosProcedures) {
 
 //Funcao para o restaurante aceitar formas de pagamento existentes no banco de dados e
 //salvar na tabela intermediaria - PROCEDURE
+//TALVEZ NAO IREMOS MAIS USAR,MAS VOU DEIXAR AQUI
 const procedureInsertRestauranteFormaPagamento = async function (dadosProcedures) {
 
     let call = `
@@ -192,8 +193,8 @@ const procedureUpdateRestauranteAreaEntrega = async function (dadosProcedures) {
     }
 }
 
-
-//Funcao pra cadastrar um restaurante (WEB) - PROCEDURE
+//esta dando erro - VERIFICAR
+//Funcao pra atualizar um restaurante (WEB) - PROCEDURE
 const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
     let call = `
     CALL atualizaDadosRestaurante(
@@ -230,6 +231,31 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
 }
 
 
+//Funcao para um cliente realizar um pedido - PROCEDURE
+const procedureClienteInsertPedido = async function (dadosProcedures) {
+
+    let call = `
+
+    CALL InserirPedidoComProdutosValorTotal(
+
+        @novo_numero_pedido,
+        ${dadosProcedures.id_status_pedido},
+        ${dadosProcedures.id_restaurante_forma_pagamento},
+        ${dadosProcedures.id_restaurante_frete_area_entrega},
+        ${dadosProcedures.id_cliente},    
+        ${dadosProcedures.id_restaurante},
+        '${dadosProcedures.produtos_ids}'
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
 
 
 
@@ -241,6 +267,7 @@ module.exports = {
     procedureInsertRestauranteFormaPagamento,
     procedureInsertRestauranteAreaEntrega,
     procedureUpdateRestauranteAreaEntrega,
-    procedureUpdateDadosRestaurante
+    procedureUpdateDadosRestaurante,
+    procedureClienteInsertPedido
     
 }

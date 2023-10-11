@@ -328,6 +328,44 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
+//funcao para cliente fazer um pedido
+const clienteInserirPedido = async (dadosProcedure) => {
+
+    if (
+        dadosProcedure.id_status_pedido == '' || dadosProcedure.id_status_pedido == undefined ||
+        dadosProcedure.id_restaurante_forma_pagamento == '' || dadosProcedure.id_restaurante_forma_pagamento == undefined ||
+        dadosProcedure.id_restaurante_frete_area_entrega == '' || dadosProcedure.id_restaurante_frete_area_entrega == undefined  ||
+        dadosProcedure.id_cliente == '' || dadosProcedure.id_cliente == undefined ||
+        dadosProcedure.id_restaurante == '' || dadosProcedure.id_restaurante == undefined ||
+        dadosProcedure.produtos_ids == '' || dadosProcedure.produtos_ids == undefined 
+    ) {
+
+        return message.ERROR_REQUIRED_FIELDS
+
+    } else {
+
+        
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure)
+
+        if (resultadoDados) {
+
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+
+            return dadosJSON
+
+        } else {
+
+            return message.ERROR_INTERNAL_SERVER
+
+        }
+
+    }
+
+}
 
 
 
@@ -343,5 +381,6 @@ module.exports = {
     inserirFormaPagamentoRestaurante,
     restauranteInserirSuasAreasDeEntrega,
     restauranteAtualizarSuasAreasDeEntrega,
-    atualizarCadastroRestaurante
+    atualizarCadastroRestaurante,
+    clienteInserirPedido
 }

@@ -2654,6 +2654,27 @@ app.post('/v1/saveeats/pedido', cors(), bodyParserJSON, async function (request,
 
 });
 
+
+//EndPoint: POST - CLIENTE INSERIR UM PEDIDO - PROCEDURE
+app.post('/v1/saveeats/cliente/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
+
 //EndPoint: PUT - Atualiza um pedido pelo id
 app.put('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
