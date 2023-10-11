@@ -100,6 +100,42 @@ const selectLastId = async function () {
         return false
     }
 }    
+//detalhes de uma dica
+const selectDetalhesDicasByID = async function (id) {
+
+    let sql = `
+    SELECT d.id AS dica_id, d.nome AS nome_dica, d.foto AS foto_dica, d.descricao AS descricao_dica,
+           c.id AS categoria_id, c.categoria AS nome_categoria
+    FROM tbl_dicas AS d
+    INNER JOIN tbl_intermed_categoria_dicas AS icd ON d.id = icd.id_dicas
+    INNER JOIN tbl_categoria_dicas AS c ON icd.id_categoria_dicas = c.id
+    WHERE d.id = ${id}`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs
+    } {
+        return false
+    }
+}
+
+const selectDicasByIDCategoria = async function (id) {
+    let sql = `
+    SELECT dicas.nome, dicas.foto, dicas.descricao
+    FROM tbl_dicas AS dicas
+    INNER JOIN tbl_intermed_categoria_dicas AS icd ON dicas.id = icd.id_dicas
+    WHERE icd.id_categoria_dicas = ${id}`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs
+    } {
+        return false
+    }
+}
+
 
 module.exports = {
     insertDicas,
@@ -107,5 +143,7 @@ module.exports = {
     updateDicas,
     selectAllDicas,
     selectDicasByID,
-    selectLastId
+    selectLastId,
+    selectDetalhesDicasByID,
+    selectDicasByIDCategoria
 }
