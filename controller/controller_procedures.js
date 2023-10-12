@@ -328,44 +328,45 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
-//funcao para cliente fazer um pedido
 const clienteInserirPedido = async (dadosProcedure) => {
+    let dadosJSON = {};
 
+    // Verificar se os campos necessários estão presentes e não são undefined ou vazios
     if (
-        dadosProcedure.id_status_pedido == '' || dadosProcedure.id_status_pedido == undefined ||
-        dadosProcedure.id_restaurante_forma_pagamento == '' || dadosProcedure.id_restaurante_forma_pagamento == undefined ||
-        dadosProcedure.id_restaurante_frete_area_entrega == '' || dadosProcedure.id_restaurante_frete_area_entrega == undefined  ||
-        dadosProcedure.id_cliente == '' || dadosProcedure.id_cliente == undefined ||
-        dadosProcedure.id_restaurante == '' || dadosProcedure.id_restaurante == undefined ||
-        dadosProcedure.produtos_ids == '' || dadosProcedure.produtos_ids == undefined 
+        !dadosProcedure.id_status_pedido ||
+        !dadosProcedure.id_restaurante_forma_pagamento ||
+        !dadosProcedure.id_restaurante_frete_area_entrega ||
+        !dadosProcedure.id_cliente ||
+        !dadosProcedure.id_restaurante ||
+        !dadosProcedure.produtos_ids
     ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    }
 
-        return message.ERROR_REQUIRED_FIELDS
+    // Converter a string de IDs de produtos para um array de números
+    const produtosIdsArray = dadosProcedure.produtos_ids.split(',').map(Number);
 
-    } else {
+    // Atualizar a propriedade produtos_ids com o array de números
+    dadosProcedure.produtos_ids = produtosIdsArray;
 
-        
-
-        let dadosJSON = {}
-
-        let resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure)
+    try {
+        // Chamar a função que insere o pedido 
+        const resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure);
 
         if (resultadoDados) {
 
-            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
-            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
-
-            return dadosJSON
-
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message;
+            
         } else {
-
-            return message.ERROR_INTERNAL_SERVER
-
+            return message.SUCESS_CREATED_PEDIDO;
         }
-
+    } catch (error) {
+        console.error('Erro ao processar pedido:', error);
+        return message.ERROR_INTERNAL_SERVER;
     }
-
-}
+    return dadosJSON;
+};
 
 
 

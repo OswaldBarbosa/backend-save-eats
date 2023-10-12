@@ -35,6 +35,8 @@ const ERROR_FORMA_PAGAMENTO_NOT_FOUND = {status: 401, message: 'O id da forma de
 //Mensagens de Sucesso
 const SUCESS_CREATED_ITEM = {status: 201, message: 'Item criado com sucesso'}
 
+const SUCESS_CREATED_PEDIDO = {status: 201, message: 'Pedido realizado'}
+
 const SUCESS_UPDATED_ITEM = {status: 200, message: 'Item atualizado com sucesso'}
 
 const SUCESS_DELETED_ITEM = {status: 200, message: 'Item deletado com sucesso'}
@@ -59,5 +61,6 @@ module.exports = {
     ERROR_STATUS_PRODUCT_NOT_FOUND,
     ERROR_CATEGORY_PRODUCT_NOT_FOUND,
     ERROR_RESTAURANT_NOT_FOUND,
-    ERROR_FORMA_PAGAMENTO_NOT_FOUND
+    ERROR_FORMA_PAGAMENTO_NOT_FOUND,
+    SUCESS_CREATED_PEDIDO
 }

@@ -233,29 +233,27 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
 
 //Funcao para um cliente realizar um pedido - PROCEDURE
 const procedureClienteInsertPedido = async function (dadosProcedures) {
-
     let call = `
 
     CALL InserirPedidoComProdutosValorTotal(
-
         @novo_numero_pedido,
         ${dadosProcedures.id_status_pedido},
         ${dadosProcedures.id_restaurante_forma_pagamento},
         ${dadosProcedures.id_restaurante_frete_area_entrega},
-        ${dadosProcedures.id_cliente},    
+        ${dadosProcedures.id_cliente},
         ${dadosProcedures.id_restaurante},
         '${dadosProcedures.produtos_ids}'
-
-    );    
+    );
 `
     let resultStatus = await prisma.$executeRawUnsafe(call)
 
-    if(resultStatus){
-        return true
+    if (resultStatus) {
+        return true;
     } else {
-        return false
+        return false;
     }
 }
+
 
 
 
