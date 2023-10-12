@@ -81,7 +81,7 @@ const selectAllDicas = async function () {
     if (rs.length > 0) {
         return rs;
     }
-    else {
+        else {
         return false;
     }
 }

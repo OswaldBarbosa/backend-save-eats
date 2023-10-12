@@ -3905,6 +3905,18 @@ app.get('/v1/saveeats/receita/categoria/nome-categoria/:categoria', cors(), asyn
 });
 
 
+//EndPoint: GET - Retorna todas receitas
+app.get('/v1/saveeats/receitas/', cors(), async function (request, response) {
+
+
+    let dadosReceitas = await controllerReceitas.getReceitas()
+
+    response.status(dadosReceitas.status)
+    response.json(dadosReceitas)
+
+});
+
+
 //EndPoint: DELETE - Deleta uma receita pelo id
 app.delete('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
 

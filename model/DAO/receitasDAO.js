@@ -79,6 +79,26 @@ const updateRecetia = async function (dadosReceita) {
     }
 }
 
+
+const selectAllReceitas = async function () {
+
+
+    //Script para trazer todas receitas
+    let sql = `
+        select * from tbl_receitas 
+
+    `
+
+let rsReceita = await prisma.$queryRawUnsafe(sql)
+
+if (rsReceita.length > 0) {
+    return rsReceita;
+}else {
+    return false;
+}
+
+}
+
 const selectLastId = async function () {
     let sql = `select * from tbl_receitas order by id desc limit 1;`
 
@@ -178,5 +198,6 @@ module.exports = {
     selectDetalhesReceitasByIdReceita,
     selectDetalhesReceitasByNameCategoria,
     deleteReceita,
-    updateRecetia
+    updateRecetia,
+    selectAllReceitas
 }
