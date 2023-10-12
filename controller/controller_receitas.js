@@ -159,6 +159,30 @@ const getDetalhesReceitaPorId = async function (receita) {
 }
 
 
+
+const getReceitas = async function () {
+    
+    let dadosJSON = {};
+
+
+    let dadosReceitas = await receitasDAO.selectAllReceitas();
+
+    if (dadosReceitas) {
+
+        dadosJSON.status = message.SUCESS_REQUEST.status
+        dadosJSON.message = message.SUCESS_REQUEST.message
+        dadosJSON.quantidade = dadosReceitas.length;
+        dadosJSON.receitas = dadosReceitas
+        return dadosJSON
+    } else {
+        return message.ERROR_NOT_FOUND
+    }
+
+}
+
+
+
+
 const getFiltrarReceitaPelaCategoria = async function (categoria) {
     let nameCategoria = categoria;
     let dadosJSON = {};
@@ -206,5 +230,6 @@ module.exports = {
     getDetalhesReceitaPorId,
     getFiltrarReceitaPelaCategoria,
     deletarReceita,
-    atualizarReceita
+    atualizarReceita,
+    getReceitas
 }

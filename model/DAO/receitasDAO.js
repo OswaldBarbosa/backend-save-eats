@@ -79,6 +79,37 @@ const updateRecetia = async function (dadosReceita) {
     }
 }
 
+
+const selectAllReceitas = async function () {
+
+
+    //Script para trazer todas receitas
+    let sql = `
+    SELECT 
+    r.id AS id_receita,
+    r.nome AS nome_receita, 
+    r.foto AS foto_receita, 
+    r.descricao, 
+    r.numero_porcoes, 
+    r.modo_preparo,
+    nd.nivel_dificuldade, 
+    tp.tempo_preparo
+    FROM tbl_receitas r
+    INNER JOIN tbl_nivel_dificuldade nd ON r.id_nivel_dificuldade = nd.id
+    INNER JOIN tbl_tempo_preparo tp ON r.id_tempo_preparo = tp.id;
+
+    `
+
+let rsReceita = await prisma.$queryRawUnsafe(sql)
+
+if (rsReceita.length > 0) {
+    return rsReceita;
+}else {
+    return false;
+}
+
+}
+
 const selectLastId = async function () {
     let sql = `select * from tbl_receitas order by id desc limit 1;`
 
@@ -178,5 +209,6 @@ module.exports = {
     selectDetalhesReceitasByIdReceita,
     selectDetalhesReceitasByNameCategoria,
     deleteReceita,
-    updateRecetia
+    updateRecetia,
+    selectAllReceitas
 }

@@ -44,6 +44,10 @@ const inserirReceitasIngredientes = async function (dados) {
 }
 
 
+
+
+
+
 module.exports = {
     inserirReceitasIngredientes
 }

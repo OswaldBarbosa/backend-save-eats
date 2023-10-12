@@ -286,11 +286,10 @@ app.delete('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async func
     }
 });
 
-//EndPoint: PUT - Atualiza  pelo id
+//EndPoint: PUT - Atualiza um produto pelo id
 app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async function (request, response) {
-    //reccebe o content-type da requisicao
-    let contentType = request.headers['content-type'];
 
+    let contentType = request.headers['content-type'];
 
     if (String(contentType).toLowerCase() == 'application/json') {
 
@@ -298,21 +297,19 @@ app.put('/v1/saveeats/restaurante/id/:id', cors(), bodyParserJSON, async functio
 
         let dadosBody = request.body;
 
-        //Encaminha os dados para a controller
-        let resultDados = await controllerRestaurante.atualizarRestaurante(dadosBody, idRestaurante);
-
-        console.log(dadosBody);
+        let resultDados = await controllerProcedure.atualizarCadastroRestaurante(dadosBody, idRestaurante);
 
         response.status(resultDados.status)
         response.json(resultDados)
 
     } else {
+
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        
     }
 
-});
-
+})
 //EndPoint: GET - Retorna todos restaurantes
 app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) {
 
@@ -546,25 +543,6 @@ app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, a
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
 
-});
-
-//arrumar essapoha
-//EndPoint: DELETE - Restaurante excluir uma area de entrega
-app.delete('/v1/saveeats/restaurante/frete-area-entrega/:restaurante_id/:area_entrega_id', cors(), bodyParserJSON, async function (request, response) {
-
-    let restaurante_id = request.params.id;
-
-    let area_entrega_id = request.params.id;
-
-    let resultDados = await controllerProcedure.restauranteDeletarSuasAreasDeEntrega(restaurante_id,area_entrega_id)
-
-    if (resultDados) {
-        response.json(resultDados);
-        response.status(200);
-    } else {
-        response.json();
-        response.status(404);
-    }
 });
 
 
@@ -1854,6 +1832,30 @@ app.get('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (req
     response.json(dados)
 });
 
+
+//EndPoint: GET - Retorna detalhes DICAS
+app.get('/v1/saveeats/detalhes/dicas/id/:id', cors(), async function (request, response) {
+    try {
+        const id = request.params.id;
+        const dados = await controllerDicas.getDetalhesDicaID(id);
+
+        response.status(dados.status).json(dados);
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
+});
+
+//EndPoint: GET - AS DICAS DE UMA CATEGORIA
+app.get('/v1/saveeats/dicas/categoria/idCategoria/:id', cors(), async function (request, response) {
+
+    const id = request.params.id;
+    let dados = await controllerDicas.getDicasByIdCategoria(id);
+
+    response.status(dados.status)
+    response.json(dados)
+
+});
+
 ///////////////////////////////////////// Intermed Categoria Dicas  //////////////////////////////////////////////
 
 
@@ -2675,6 +2677,27 @@ app.post('/v1/saveeats/pedido', cors(), bodyParserJSON, async function (request,
     }
 
 });
+
+
+//EndPoint: POST - CLIENTE INSERIR UM PEDIDO - PROCEDURE
+app.post('/v1/saveeats/cliente/pedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
 
 //EndPoint: PUT - Atualiza um pedido pelo id
 app.put('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
@@ -3882,6 +3905,18 @@ app.get('/v1/saveeats/receita/categoria/nome-categoria/:categoria', cors(), asyn
 });
 
 
+//EndPoint: GET - Retorna todas receitas
+app.get('/v1/saveeats/receitas/', cors(), async function (request, response) {
+
+
+    let dadosReceitas = await controllerReceitas.getReceitas()
+
+    response.status(dadosReceitas.status)
+    response.json(dadosReceitas)
+
+});
+
+
 //EndPoint: DELETE - Deleta uma receita pelo id
 app.delete('/v1/saveeats/receita/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
@@ -3956,11 +3991,34 @@ app.post('/v1/saveeats/intermed-categoria-receitas', cors(), bodyParserJSON, asy
 
 
 
+/* ***************************************************************************************************************************************************
+ * Objetivo : API para integração da API de pagamento do mercado pago somente o get.
+ * Autor : Caroline Portela
+ * Data 05/09/2023
+ * Versão : 1.0 
+ *************************************************************************************************************************************************** */
 
+// const mercadoPago = require('mercadopago');
+const axios = require('axios');
+const mercadopagoAccessToken = 'TEST-4600314104156538-100512-94d8d18c090395b88b69c7aab3f71baa-1501647086';
 
+// Rota para obter dados da API do Mercado Pago
+app.get('/v1/saveeats/obter-dados-do-mercado-pago', async (req, res) => {
+  try {
+    // Fazer uma chamada à API do Mercado Pago
+    const response = await axios.get('https://api.mercadopago.com/v1/payment_methods', {
+      headers: {
+        'Authorization': `Bearer ${mercadopagoAccessToken}`,
+      },
+    });
 
-
-
+    // Retornar os dados da API do Mercado Pago para o frontend
+    return res.json(response.data);
+  } catch (error) {
+    console.error('Erro ao obter dados do Mercado Pago:', error);
+    return res.status(500).json({ error: 'Erro ao obter dados do Mercado Pago' });
+  }
+});
 
 
 

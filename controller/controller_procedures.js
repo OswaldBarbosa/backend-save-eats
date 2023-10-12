@@ -64,6 +64,32 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 }
 
 
+//funcao para atualizar dados de um restaurante
+const atualizarCadastroRestaurante = async (dadosRestaurante) => {     
+    if (
+        dadosRestaurante.p_restaurante_id === undefined || dadosRestaurante.p_restaurante_id === null ||dadosRestaurante.p_restaurante_id === '' 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+
+        let dadosJSON = {}
+
+      
+        const resultadoDados = await proceduresDAO.procedureUpdateDadosRestaurante(dadosRestaurante);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
+
+
+
+
 //funcao pra fazer cadastro do cliente
 const inserirCadastroCliente = async (dadosCliente) => {
 
@@ -302,31 +328,45 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
-const restauranteDeletarSuasAreasDeEntrega = async function (restaurante_id,area_entrega_id) {
+//funcao para cliente fazer um pedido
+const clienteInserirPedido = async (dadosProcedure) => {
 
-    let statusId = await freteAreaEntregaDAO.selectFreteAreaEntregaAByID(area_entrega_id);
+    if (
+        dadosProcedure.id_status_pedido == '' || dadosProcedure.id_status_pedido == undefined ||
+        dadosProcedure.id_restaurante_forma_pagamento == '' || dadosProcedure.id_restaurante_forma_pagamento == undefined ||
+        dadosProcedure.id_restaurante_frete_area_entrega == '' || dadosProcedure.id_restaurante_frete_area_entrega == undefined  ||
+        dadosProcedure.id_cliente == '' || dadosProcedure.id_cliente == undefined ||
+        dadosProcedure.id_restaurante == '' || dadosProcedure.id_restaurante == undefined ||
+        dadosProcedure.produtos_ids == '' || dadosProcedure.produtos_ids == undefined 
+    ) {
 
-    if (statusId) {
+        return message.ERROR_REQUIRED_FIELDS
 
-        if (
-            restaurante_id == '' || restaurante_id == undefined || isNaN(restaurante_id) ||
-            area_entrega_id == '' || area_entrega_id == undefined || isNaN(area_entrega_id))
-            {
-            return message.ERROR_INVALID_ID; //Status code 400
-        } else {
-            let resultDados = await proceduresDAO.procedureDeleteRestauranteAreaEntrega(restaurante_id,area_entrega_id)
-
-            if (resultDados) {
-                return message.SUCESS_DELETED_ITEM
-            } else {
-                return message.ERROR_INTERNAL_SERVER
-            }
-        }
     } else {
-        return message.ERROR_NOT_FOUND
+
+        
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure)
+
+        if (resultadoDados) {
+
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+
+            return dadosJSON
+
+        } else {
+
+            return message.ERROR_INTERNAL_SERVER
+
+        }
+
     }
 
 }
+
 
 
 
@@ -341,5 +381,6 @@ module.exports = {
     inserirFormaPagamentoRestaurante,
     restauranteInserirSuasAreasDeEntrega,
     restauranteAtualizarSuasAreasDeEntrega,
-    restauranteDeletarSuasAreasDeEntrega
+    atualizarCadastroRestaurante,
+    clienteInserirPedido
 }

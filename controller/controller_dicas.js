@@ -142,10 +142,64 @@ const getDicasPorID = async function (id) {
     }
 }
 
+
+// detalhes de uma dica pelo id
+const getDetalhesDicaID = async function (id) {
+    try {
+        if (isNaN(parseInt(id)) || id == '' || id == undefined) {
+            return message.ERROR_INVALID_ID         
+        }
+
+        const dados = await dicasDAO.selectDetalhesDicasByID(id);
+
+        if (dados) {
+
+            return {
+
+                status: message.SUCESS_REQUEST.status,
+                message: message.SUCESS_REQUEST.message,
+                dica: dados
+            };
+        } else {
+            return message.ERROR_INTERNAL_SERVER
+        }
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const getDicasByIdCategoria = async function (id) {
+
+    try {
+        
+        if (isNaN(parseInt(id)) || id == '' || id == undefined) {
+            return message.ERROR_INVALID_ID         
+        }
+
+        const dados = await dicasDAO.selectDicasByIDCategoria(id);
+
+        if (dados) {
+
+            return {
+
+                status: message.SUCESS_REQUEST.status,
+                message: message.SUCESS_REQUEST.message,
+                dica: dados
+            };
+        } else {
+            return message.ERROR_INTERNAL_SERVER
+        }
+        } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 module.exports = {
     inserirDicas,
     deletarDicas,
     atualizarDicas,
     getDicas,
-    getDicasPorID
+    getDicasPorID,
+    getDetalhesDicaID,
+    getDicasByIdCategoria
 }
