@@ -1835,18 +1835,21 @@ app.get('/v1/saveeats/dicas/id/:id', cors(), bodyParserJSON, async function (req
 
 //EndPoint: GET - Retorna detalhes DICAS
 app.get('/v1/saveeats/detalhes/dicas/id/:id', cors(), async function (request, response) {
+    try {
+        const id = request.params.id;
+        const dados = await controllerDicas.getDetalhesDicaID(id);
 
-    let dados = await controllerDicas.getDetalhesDicaID();
-
-    response.status(dados.status)
-    response.json(dados)
-
+        response.status(dados.status).json(dados);
+    } catch (error) {
+        response.status(400).json({ error: error.message });
+    }
 });
 
 //EndPoint: GET - AS DICAS DE UMA CATEGORIA
 app.get('/v1/saveeats/dicas/categoria/idCategoria/:id', cors(), async function (request, response) {
 
-    let dados = await controllerDicas.getDicasByIdCategoria();
+    const id = request.params.id;
+    let dados = await controllerDicas.getDicasByIdCategoria(id);
 
     response.status(dados.status)
     response.json(dados)

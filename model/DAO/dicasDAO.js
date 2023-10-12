@@ -65,7 +65,16 @@ const updateDicas = async function (dados) {
 
 ///////////////////////Selects//////////////////////////
 const selectAllDicas = async function () {
-    let sql = `select * from tbl_dicas`
+    let sql = `SELECT
+    cd.id AS id_categoria,
+    cd.categoria,
+    d.id AS id_receita,
+    d.nome AS nome_da_receita,
+    d.foto AS foto_da_receita,
+    d.descricao AS descricao_da_receita
+    FROM tbl_categoria_dicas cd
+    INNER JOIN tbl_intermed_categoria_dicas icd ON cd.id = icd.id_categoria_dicas
+    INNER JOIN tbl_dicas d ON icd.id_dicas = d.id;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
@@ -114,10 +123,13 @@ const selectDetalhesDicasByID = async function (id) {
     let rs = await prisma.$queryRawUnsafe(sql)
 
     if (rs.length > 0) {
-        return rs
-    } {
-        return false
+        return rs;
+    } else {
+        return false;
     }
+    
+
+    
 }
 
 const selectDicasByIDCategoria = async function (id) {

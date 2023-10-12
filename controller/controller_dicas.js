@@ -143,45 +143,56 @@ const getDicasPorID = async function (id) {
 }
 
 
+// detalhes de uma dica pelo id
 const getDetalhesDicaID = async function (id) {
+    try {
+        if (isNaN(parseInt(id)) || id == '' || id == undefined) {
+            return message.ERROR_INVALID_ID         
+        }
 
-    if (id == '' || id == undefined || isNaN(id)) {
-        return message.ERROR_INVALID_ID
-    } else {
-        let dadosJSON = {}
-
-        let dados = await dicasDAO.selectDetalhesDicasByID(id)
+        const dados = await dicasDAO.selectDetalhesDicasByID(id);
 
         if (dados) {
-            dadosJSON.status = message.SUCESS_REQUEST.status
-            dadosJSON.message = message.SUCESS_REQUEST.message
-            dadosJSON.dica = dados
-            return dadosJSON
+
+            return {
+
+                status: message.SUCESS_REQUEST.status,
+                message: message.SUCESS_REQUEST.message,
+                dica: dados
+            };
         } else {
-            return message.ERROR_NOT_FOUND
+            return message.ERROR_INTERNAL_SERVER
         }
+    } catch (error) {
+        throw new Error(error.message);
     }
-}
+};
 
 const getDicasByIdCategoria = async function (id) {
 
-    if (id == '' || id == undefined || isNaN(id)) {
-        return message.ERROR_INVALID_ID
-    } else {
-        let dadosJSON = {}
+    try {
+        
+        if (isNaN(parseInt(id)) || id == '' || id == undefined) {
+            return message.ERROR_INVALID_ID         
+        }
 
-        let dados = await dicasDAO.selectDicasByIDCategoria(id)
+        const dados = await dicasDAO.selectDicasByIDCategoria(id);
 
         if (dados) {
-            dadosJSON.status = message.SUCESS_REQUEST.status
-            dadosJSON.message = message.SUCESS_REQUEST.message
-            dadosJSON.dica = dados
-            return dadosJSON
+
+            return {
+
+                status: message.SUCESS_REQUEST.status,
+                message: message.SUCESS_REQUEST.message,
+                dica: dados
+            };
         } else {
-            return message.ERROR_NOT_FOUND
+            return message.ERROR_INTERNAL_SERVER
         }
+        } catch (error) {
+        throw new Error(error.message);
     }
-}
+};
 
 module.exports = {
     inserirDicas,
