@@ -232,32 +232,43 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
 
 
 //Funcao para um cliente realizar um pedido - PROCEDURE
-const procedureClienteInsertPedido = async function (dadosProcedures) {
-
-    let call = `
+ const procedureClienteInsertPedido = async function (dadosProcedures) {
+     let call = `
 
     CALL InserirPedidoComProdutosValorTotal(
+         @novo_numero_pedido,
+         ${dadosProcedures.id_status_pedido},
+         ${dadosProcedures.id_restaurante_forma_pagamento},
+         ${dadosProcedures.id_restaurante_frete_area_entrega},
+         ${dadosProcedures.id_cliente},
+         ${dadosProcedures.id_restaurante},
+         ${dadosProcedures.produto_id1},
+         ${dadosProcedures.produto_id2}
+     );
+ `
 
-        @novo_numero_pedido,
-        ${dadosProcedures.id_status_pedido},
-        ${dadosProcedures.id_restaurante_forma_pagamento},
-        ${dadosProcedures.id_restaurante_frete_area_entrega},
-        ${dadosProcedures.id_cliente},    
-        ${dadosProcedures.id_restaurante},
-        '${dadosProcedures.produtos_ids}'
+        
+     let resultStatus = await prisma.$executeRawUnsafe(call)
 
-    );    
-`
-    let resultStatus = await prisma.$executeRawUnsafe(call)
+     if (resultStatus) {
+         return true;
+     } else {
+         return false;
+     }
+ }
 
-    if(resultStatus){
-        return true
+
+ const selectLastId = async function () {
+    let sql = `select * from tbl_pedido order by id desc limit 1;`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs
     } else {
         return false
     }
-}
-
-
+}   
 
 module.exports = {
     proceduresRestauranteCadastro,
@@ -268,6 +279,6 @@ module.exports = {
     procedureInsertRestauranteAreaEntrega,
     procedureUpdateRestauranteAreaEntrega,
     procedureUpdateDadosRestaurante,
-    procedureClienteInsertPedido
-    
+    procedureClienteInsertPedido,
+    selectLastId
 }

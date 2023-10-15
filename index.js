@@ -2688,7 +2688,6 @@ app.post('/v1/saveeats/cliente/pedido', cors(), bodyParserJSON, async function (
         let dadosBody = request.body
 
         let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
-
         response.status(resulDados.status)
         response.json(resulDados)
     } else {

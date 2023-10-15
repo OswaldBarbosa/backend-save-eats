@@ -328,44 +328,40 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
-//funcao para cliente fazer um pedido
-const clienteInserirPedido = async (dadosProcedure) => {
+const clienteInserirPedido = async function (dadosProcedures) {
 
     if (
-        dadosProcedure.id_status_pedido == '' || dadosProcedure.id_status_pedido == undefined ||
-        dadosProcedure.id_restaurante_forma_pagamento == '' || dadosProcedure.id_restaurante_forma_pagamento == undefined ||
-        dadosProcedure.id_restaurante_frete_area_entrega == '' || dadosProcedure.id_restaurante_frete_area_entrega == undefined  ||
-        dadosProcedure.id_cliente == '' || dadosProcedure.id_cliente == undefined ||
-        dadosProcedure.id_restaurante == '' || dadosProcedure.id_restaurante == undefined ||
-        dadosProcedure.produtos_ids == '' || dadosProcedure.produtos_ids == undefined 
-    ) {
-
+        dadosProcedures.id_status_pedido == '' || dadosProcedures.id_status_pedido == undefined ||
+        dadosProcedures.id_restaurante_forma_pagamento == '' || dadosProcedures.id_restaurante_forma_pagamento == undefined ||
+        dadosProcedures.id_restaurante_frete_area_entrega == '' || dadosProcedures.id_restaurante_frete_area_entrega == undefined ||
+        dadosProcedures.id_cliente == '' || dadosProcedures.id_cliente == undefined ||
+        dadosProcedures.id_restaurante == '' || dadosProcedures.id_restaurante == undefined ||
+        dadosProcedures.produto_id1 == '' || dadosProcedures.produto_id1 == undefined 
+    ){
         return message.ERROR_REQUIRED_FIELDS
+    }else {
+        //Envia os dados para a model inserir no banco de dados
+        let resultDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedures)
 
-    } else {
+        //Valida se o banco de dados inseriu corretamente os dados
+        if (resultDados) {
 
-        
+            let novoPedido = await proceduresDAO.selectLastId()
 
-        let dadosJSON = {}
-
-        let resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure)
-
-        if (resultadoDados) {
-
+            let dadosJSON = {}
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
-            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            dadosJSON.novo_pedido = novoPedido
 
             return dadosJSON
-
-        } else {
-
+        }
+        else {
             return message.ERROR_INTERNAL_SERVER
-
         }
 
     }
 
 }
+
 
 
 
