@@ -328,45 +328,40 @@ const restauranteAtualizarSuasAreasDeEntrega = async (dados) => {
 }
 
 
-const clienteInserirPedido = async (dadosProcedure) => {
-    let dadosJSON = {};
+const clienteInserirPedido = async function (dadosProcedures) {
 
-    // Verificar se os campos necessários estão presentes e não são undefined ou vazios
     if (
-        !dadosProcedure.id_status_pedido ||
-        !dadosProcedure.id_restaurante_forma_pagamento ||
-        !dadosProcedure.id_restaurante_frete_area_entrega ||
-        !dadosProcedure.id_cliente ||
-        !dadosProcedure.id_restaurante ||
-        !dadosProcedure.produtos_ids
-    ) {
-        return message.ERROR_REQUIRED_FIELDS;
-    }
+        dadosProcedures.id_status_pedido == '' || dadosProcedures.id_status_pedido == undefined ||
+        dadosProcedures.id_restaurante_forma_pagamento == '' || dadosProcedures.id_restaurante_forma_pagamento == undefined ||
+        dadosProcedures.id_restaurante_frete_area_entrega == '' || dadosProcedures.id_restaurante_frete_area_entrega == undefined ||
+        dadosProcedures.id_cliente == '' || dadosProcedures.id_cliente == undefined ||
+        dadosProcedures.id_restaurante == '' || dadosProcedures.id_restaurante == undefined ||
+        dadosProcedures.produto_id1 == '' || dadosProcedures.produto_id1 == undefined 
+    ){
+        return message.ERROR_REQUIRED_FIELDS
+    }else {
+        //Envia os dados para a model inserir no banco de dados
+        let resultDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedures)
 
-    // Converter a string de IDs de produtos para um array de números
-    const produtosIdsArray = dadosProcedure.produtos_ids.split(',').map(Number);
+        //Valida se o banco de dados inseriu corretamente os dados
+        if (resultDados) {
 
-    // Atualizar a propriedade produtos_ids com o array de números
-    dadosProcedure.produtos_ids = produtosIdsArray;
+            let novoPedido = await proceduresDAO.selectLastId()
 
-    try {
-        // Chamar a função que insere o pedido 
-        const resultadoDados = await proceduresDAO.procedureClienteInsertPedido(dadosProcedure);
+            let dadosJSON = {}
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.novo_pedido = novoPedido
 
-        if (resultadoDados) {
-
-            dadosJSON.status = message.SUCESS_CREATED_ITEM.status;
-            dadosJSON.message = message.SUCESS_CREATED_ITEM.message;
-            
-        } else {
-            return message.SUCESS_CREATED_PEDIDO;
+            return dadosJSON
         }
-    } catch (error) {
-        console.error('Erro ao processar pedido:', error);
-        return message.ERROR_INTERNAL_SERVER;
+        else {
+            return message.ERROR_INTERNAL_SERVER
+        }
+
     }
-    return dadosJSON;
-};
+
+}
+
 
 
 
