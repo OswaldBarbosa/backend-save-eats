@@ -388,6 +388,60 @@ const getFreteAreaEntregaIdDoRestaurante = async function (idRestaurante) {
     }
 }
 
+
+const getRaioEntregaByIdDoRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectRaioEntregaByIdRestaurant(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        dadosRestauranteJSON.raio_entrega_do_restaurante = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
+const atualizarRaioEntregaByIdDoRestaurante = async function (dadosRaioEntrega) {
+
+    if (
+        dadosRaioEntrega.id_restaurante == '' || dadosRaioEntrega.id_restaurante == undefined || isNaN(dadosRaioEntrega.id_restaurante) ||
+        dadosRaioEntrega.raio_entrega == '' || dadosRaioEntrega.raio_entrega == undefined
+
+    ) {
+        return message.ERROR_INTERNAL_SERVER.ERROR_REQUIRED_FIELDS
+
+    } else {
+        let statusId = await restauranteDAO.selectLastId();
+
+        if (statusId) {
+            let dadosRestaurante = await restauranteDAO.updateRaioEntregaByIdRestaurant(dadosRaioEntrega)
+            if (dadosRestaurante) {
+
+                let dadosRestauranteJSON = {}
+
+                dadosRestauranteJSON.status = message.SUCESS_UPDATED_ITEM.status
+                dadosRestauranteJSON.message = message.SUCESS_UPDATED_ITEM.message
+                dadosRestauranteJSON.raio_entrega_do_restaurante = dadosRaioEntrega
+                return dadosRestauranteJSON
+            } else {
+                return message.ERROR_INTERNAL_SERVER
+            }
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
+
 module.exports = {
     deletarRestaurante,
     atualizarRestaurante,
@@ -402,6 +456,9 @@ module.exports = {
     getProdutosPausadosDoRestaurantePeloIdDoRestaurante,
     getPedidosCanceladosPeloIdDoRestaurante,
     getFormaPagamentoPeloIdDoRestaurante,
-    getFreteAreaEntregaIdDoRestaurante
+    getFreteAreaEntregaIdDoRestaurante,
+    getRaioEntregaByIdDoRestaurante,
+    atualizarRaioEntregaByIdDoRestaurante
+
 
 }

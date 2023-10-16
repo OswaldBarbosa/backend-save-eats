@@ -548,6 +548,50 @@ app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, a
 
 
 
+//EndPoint: GET - Retorna o raio de entrega de um restaurante
+app.get('/v1/saveeats/restaurante/raio-entrega/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getRaioEntregaByIdDoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
+//EndPoint: PUT - Atualiza o raio de entrega de um restaurante pelo id
+app.put('/v1/saveeats/restaurante/raio-entrega', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerRestaurante.atualizarRaioEntregaByIdDoRestaurante(dadosBody);
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+})
+
+
+
+
+
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 

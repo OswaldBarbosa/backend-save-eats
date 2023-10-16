@@ -410,7 +410,35 @@ const selectFreteAreaEntregaByIDRestaurante = async function (idRestaurante) {
     }
 }
 
+const selectRaioEntregaByIdRestaurant = async (idRestaurante) => {
+    let idDoRestaurante = idRestaurante
 
+    let sql = `select raio_entrega from tbl_frete_area_entrega where id = ${idDoRestaurante};`
+
+    let rsFreteAreaEntregaRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFreteAreaEntregaRestaurante.length > 0) {
+        return rsFreteAreaEntregaRestaurante
+    } else {
+        return false;
+    }
+}
+
+const updateRaioEntregaByIdRestaurant = async (dadosRestaurante) => {
+    let sql = `UPDATE tbl_frete_area_entrega AS frete_area_entrega
+     INNER JOIN tbl_restaurante_frete_area_entrega AS restaurante_frete_area_entrega
+         ON frete_area_entrega.id = restaurante_frete_area_entrega.id_frete_area_entrega
+    SET frete_area_entrega.raio_entrega = ${dadosRestaurante.raio_entrega}
+    WHERE restaurante_frete_area_entrega.id_restaurante = ${dadosRestaurante.id_restaurante};`;
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if (resultStatus) {
+        return true
+    } else {
+        return false
+    }
+}
 
 
 
@@ -431,5 +459,8 @@ module.exports = {
     selectProdutosPausadosDeUmRestaurante,
     selectPedidosCanceladosDeUmRestaurante,
     selectFormaPagamentoByIDRestaurante,
-    selectFreteAreaEntregaByIDRestaurante
+    selectFreteAreaEntregaByIDRestaurante,
+    selectRaioEntregaByIdRestaurant,
+    updateRaioEntregaByIdRestaurant
+
 }
