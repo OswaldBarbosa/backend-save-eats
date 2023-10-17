@@ -193,13 +193,26 @@ app.get('/v1/saveeats/cliente/id/:id', cors(), bodyParserJSON, async function (r
 
 //EndPoint: GET - Retorna o cliente existente no banco pelo email e senha
 app.get('/v1/saveeats/cliente/email/:email/senha/:senha',cors(),async function(request, response) {
-    let email = request.params.email
+     let email = request.params.email
     let senha = request.params.senha
 
     let dados = await controllerCliente.getClienteByEmailSenha(email, senha)
 
     response.status(dados.status)
     response.json(dados)
+});
+
+
+
+//EndPoint: GET - Retorna o cliente existente no banco pelo email 
+app.get('/v1/saveeats/cliente/email/:email',cors(),async function(request, response) {
+
+    let email = request.params.email
+
+    let dados = await controllerCliente.getClienteByEmail(email)
+
+   response.status(dados.status)
+   response.json(dados)
 });
 
 //EndPoint: POST - Passar dados do login no body e retorna os dados se existir o usuario no banco

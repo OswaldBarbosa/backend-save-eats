@@ -122,6 +122,19 @@ const selectClienteByEmailPassword = async function(email, password){
     }
 }
 
+
+const selectClienteByEmail = async function(email){
+    let sql = `select * from tbl_cliente where email = '${email}';`
+
+    let rsCliente = await prisma.$queryRawUnsafe(sql);
+
+    if (rsCliente.length > 0){
+        return rsCliente
+    } else{
+        return false
+    }
+}
+
 //Funcao pra verificar se o email que for inserido no cadastro ja existe no banco
 const verificarEmailExistenteCliente = async function (email) {
     let sql = `SELECT  * FROM tbl_cliente WHERE email = '${email}';`
@@ -157,5 +170,6 @@ module.exports = {
     updateCliente,
     selectAllClientes,
     selectClienteByEmailPassword,
-    verificarEmailExistenteCliente
+    verificarEmailExistenteCliente,
+    selectClienteByEmail
 }

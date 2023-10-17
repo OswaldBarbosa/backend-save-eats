@@ -189,6 +189,42 @@ const getClienteByEmailSenha = async function (email, password) {
 }
 
 
+const getClienteByEmail = async function (email) {
+    
+    if (
+        email == '' || email == undefined || email.length > 255 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS
+
+    } else {
+
+        // Import do JWT
+        const jwt = require("../middleware/middlewareJWT.js");
+
+        let clienteJSONEmailpassword = {}
+
+        let dadosCliente = await clienteDAO.selectClienteByEmail(email)
+
+        if (dadosCliente != null && dadosCliente != undefined) {
+
+            let tokenUser = await jwt.createJWT(dadosCliente[0].id);
+            
+            // Inclua o token no objeto dadosRestaurante
+            dadosCliente[0].token = tokenUser;
+
+            clienteJSONEmailpassword.status = message.SUCESS_REQUEST.status
+            clienteJSONEmailpassword.clientes = dadosCliente;
+
+            return clienteJSONEmailpassword
+
+        } else {
+            return message.ERROR_INVALID_EMAIL_PASSWORD
+        }
+    }
+}
+
+
+
 const autenticarLoginClienteEmailSenha = async function (email, password) {
     
     if (
@@ -240,6 +276,7 @@ module.exports = {
     getClientes,
     getClientePorID,
     getClienteByEmailSenha,
-    autenticarLoginClienteEmailSenha
+    autenticarLoginClienteEmailSenha,
+    getClienteByEmail
    
 }
