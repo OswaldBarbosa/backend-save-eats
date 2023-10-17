@@ -2816,6 +2816,18 @@ app.delete('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function 
 });
 
 
+
+//EndPoint: GET - Retorna  a view com todos detalhes de pedido
+app.get('/v1/saveeats/detalhes/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getDetalhesPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
 ///////////////////////////////////////// Recomendacao  //////////////////////////////////////////////
 
 

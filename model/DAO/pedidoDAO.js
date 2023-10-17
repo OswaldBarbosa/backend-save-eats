@@ -121,7 +121,22 @@ const selectLastId = async function () {
         return false
     }
    
-}    
+} 
+
+const selectAllDetalhesPedidoById = async function () {
+    let sql = `select * from view_detalhes_pedido`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs;
+    }
+    else {
+        return false;
+    }
+}
+
+
 
 module.exports = {
     insertPedido,
@@ -129,5 +144,6 @@ module.exports = {
     selectAllPedido,
     selectLastId,
     selectPedidoByID,
-    deletePedido
+    deletePedido,
+    selectAllDetalhesPedidoById
 }

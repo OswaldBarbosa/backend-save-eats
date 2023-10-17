@@ -152,10 +152,33 @@ const getPedidoPorID = async function (id) {
     }
 }
 
+const getDetalhesPedidoPorID = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosJSON = {}
+
+        let dados = await pedidoDAO.selectAllDetalhesPedidoById(id)
+
+        if (dados) {
+            dadosJSON.status = message.SUCESS_REQUEST.status
+            dadosJSON.message = message.SUCESS_REQUEST.message
+            dadosJSON.detalhes_do_pedido = dados
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
+
+
 module.exports = {
     inserirPedido,
     atualizarPedido,
     deletarPedido,
     getPedidoPorID,
-    getPedidos
+    getPedidos,
+    getDetalhesPedidoPorID
 }
