@@ -405,8 +405,6 @@ app.get('/v1/saveeats/restaurante/produtos/nome-fantasia/:nomefantasia', cors(),
         response.json(dadosRestaurante);
         response.status(200);
     } else {
-        console.log(dadosRestaurante);
-        console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
     }

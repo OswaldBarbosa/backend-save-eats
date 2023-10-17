@@ -267,9 +267,9 @@ const getProdutosRestaurantePeloNomeFantasia = async function (nome) {
     let dadosRestaurante = await restauranteDAO.selectProdutosDoRestaurantePeloNomeFantasia(nomeRestaurante)
 
     if (dadosRestaurante) {
-        dadosRestaurante.status = message.SUCESS_REQUEST.status
-        dadosRestaurante.message = message.SUCESS_REQUEST.message
-        dadosRestaurante.quantidade = dadosRestaurante.length
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        dadosRestauranteJSON.quantidade = dadosRestaurante.length
         dadosRestauranteJSON.produtos_do_restaurante = dadosRestaurante
         return dadosRestauranteJSON
     } else {
