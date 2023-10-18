@@ -229,7 +229,7 @@ const getDetalhesPedido = async function () {
         if (dados) {
         dadosJSON.status = message.SUCESS_REQUEST.status;
         dadosJSON.message = message.SUCESS_REQUEST.message;
-        dadosJSON.detalhes_do_pedido = {};
+        dadosJSON.detalhes_do_pedido = [];
 
     
         // Iterar sobre todos os pedidos
