@@ -152,25 +152,142 @@ const getPedidoPorID = async function (id) {
     }
 }
 
+////////////////////////////////////////////////////////
 const getDetalhesPedidoPorID = async function (id) {
 
     if (id == '' || id == undefined || isNaN(id)) {
-        return message.ERROR_INVALID_ID
-    } else {
-        let dadosJSON = {}
 
-        let dados = await pedidoDAO.selectAllDetalhesPedidoById(id)
+        return message.ERROR_INVALID_ID;
+
+    } else {
+
+        let dadosJSON = {};
+
+        let dados = await pedidoDAO.selectAllDetalhesPedidoById(id);
 
         if (dados) {
-            dadosJSON.status = message.SUCESS_REQUEST.status
-            dadosJSON.message = message.SUCESS_REQUEST.message
-            dadosJSON.detalhes_do_pedido = dados
-            return dadosJSON
+            dadosJSON.status = message.SUCESS_REQUEST.status;
+            dadosJSON.message = message.SUCESS_REQUEST.message;
+
+                //detalhes do pedido
+                dadosJSON.detalhes_do_pedido = {
+                id_pedido: dados[0].id_pedido,
+                id_pedido_produto: dados[0].id_pedido_produto,
+                id_restaurante: dados[0].id_restaurante,
+                nome_restaurante: dados[0].nome_restaurante,
+                numero_pedido: dados[0].numero_pedido,
+                horario_pedido: dados[0].horario_pedido,
+                previsao_entrega: dados[0].previsao_entrega,
+                data_pedido: dados[0].data_pedido,
+                valor_total: dados[0].valor_total,
+                status_pedido: dados[0].status_pedido,
+                id_restaurante_forma_pagamento: dados[0].id_restaurante_forma_pagamento,
+                id_forma_pagamento: dados[0].id_forma_pagamento,
+                nome_forma_pagamento: dados[0].nome_forma_pagamento,
+                id_restaurante_frete_area_entrega: dados[0].id_restaurante_frete_area_entrega,
+                id_frete_area_entrega: dados[0].id_frete_area_entrega,
+                km: dados[0].km,
+                valor_entrega: dados[0].valor_entrega,
+                tempo_entrega: dados[0].tempo_entrega,
+                raio_entrega: dados[0].raio_entrega,
+                id_cliente: dados[0].id_cliente,
+                nome_cliente: dados[0].nome_cliente,
+                telefone_cliente: dados[0].telefone_cliente,
+                produtos: []
+            };
+
+                //adicionar cada produto à array de produtos
+                dados.forEach((detalhe) => {
+                const produto = {
+                    id_produto: detalhe.id_produto,
+                    nome_produto: detalhe.nome_produto,
+                    descricao_produto: detalhe.descricao_produto,
+                    imagem_produto: detalhe.imagem_produto,
+                    id_status_produto: detalhe.id_status_produto,
+                    status_produto: detalhe.status_produto,
+                    id_categoria_produto: detalhe.id_categoria_produto,
+                    categoria_produto: detalhe.categoria_produto,
+                };
+
+                dadosJSON.detalhes_do_pedido.produtos.push(produto);
+
+            });
+
+            return dadosJSON;
         } else {
-            return message.ERROR_NOT_FOUND
+            return message.ERROR_NOT_FOUND;
         }
     }
-}
+};
+
+
+const getDetalhesPedido = async function () {
+
+        let dadosJSON = {};
+        let dados = await pedidoDAO.selectAllDetalhesPedido();
+
+        if (dados) {
+        dadosJSON.status = message.SUCESS_REQUEST.status;
+        dadosJSON.message = message.SUCESS_REQUEST.message;
+        dadosJSON.detalhes_do_pedido = {};
+
+    
+        // Iterar sobre todos os pedidos
+        dados.forEach((detalhe) => {
+        const idPedido = detalhe.id_pedido;
+
+           
+                if (!dadosJSON.detalhes_do_pedido[idPedido]) {
+                    dadosJSON.detalhes_do_pedido[idPedido] = {
+
+                    id_pedido: idPedido,
+                    id_restaurante: detalhe.id_restaurante,
+                    nome_restaurante: detalhe.nome_restaurante,
+                    numero_pedido: detalhe.numero_pedido,
+                    horario_pedido: detalhe.horario_pedido,
+                    previsao_entrega: detalhe.previsao_entrega,
+                    data_pedido: detalhe.data_pedido,
+                    valor_total: detalhe.valor_total,
+                    status_pedido: detalhe.status_pedido,
+                    id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
+                    id_forma_pagamento: detalhe.id_forma_pagamento,
+                    nome_forma_pagamento: detalhe.nome_forma_pagamento,
+                    id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
+                    id_frete_area_entrega: detalhe.id_frete_area_entrega,
+                    km: detalhe.km,
+                    valor_entrega: detalhe.valor_entrega,
+                    tempo_entrega: detalhe.tempo_entrega,
+                    raio_entrega: detalhe.raio_entrega,
+                    id_cliente: detalhe.id_cliente,
+                    nome_cliente: detalhe.nome_cliente,
+                    telefone_cliente: detalhe.telefone_cliente,
+                    // inicializar a lista de produtos
+                    produtos: []  
+                };
+            }
+
+            // adicionar produto ao pedido correspondente
+            const produto = {
+                id_produto: detalhe.id_produto,
+                nome_produto: detalhe.nome_produto,
+                descricao_produto: detalhe.descricao_produto,
+                imagem_produto: detalhe.imagem_produto,
+                id_status_produto: detalhe.id_status_produto,
+                status_produto: detalhe.status_produto,
+                id_categoria_produto: detalhe.id_categoria_produto,
+                categoria_produto: detalhe.categoria_produto,
+            };
+
+            dadosJSON.detalhes_do_pedido[idPedido].produtos.push(produto);
+        });
+
+        return dadosJSON;
+    } else {
+        return message.ERROR_NOT_FOUND;
+    }
+};
+
+
 
 
 
@@ -178,7 +295,7 @@ module.exports = {
     inserirPedido,
     atualizarPedido,
     deletarPedido,
-    getPedidoPorID,
     getPedidos,
-    getDetalhesPedidoPorID
+    getDetalhesPedidoPorID,
+    getDetalhesPedido
 }

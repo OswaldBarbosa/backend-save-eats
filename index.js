@@ -2817,12 +2817,23 @@ app.delete('/v1/saveeats/pedido/id/:id', cors(), bodyParserJSON, async function 
 
 
 
-//EndPoint: GET - Retorna  a view com todos detalhes de pedido
+//EndPoint: GET - Retorna  todos detalhes de pedido por id
 app.get('/v1/saveeats/detalhes/pedido/id/:id', cors(), bodyParserJSON, async function (request, response) {
 
     let id = request.params.id
 
     let dados = await controllerPedido.getDetalhesPedidoPorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: GET - Retorna  todos pedidos e seus detalhes
+app.get('/v1/saveeats/detalhes/pedido/', cors(), bodyParserJSON, async function (request, response) {
+
+
+    let dados = await controllerPedido.getDetalhesPedido()
 
     response.status(dados.status)
     response.json(dados)
