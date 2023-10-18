@@ -223,22 +223,23 @@ const getDetalhesPedidoPorID = async function (id) {
 
 const getDetalhesPedido = async function () {
 
-        let dadosJSON = {};
-        let dados = await pedidoDAO.selectAllDetalhesPedido();
-
-        if (dados) {
-        dadosJSON.status = message.SUCESS_REQUEST.status;
-        dadosJSON.message = message.SUCESS_REQUEST.message;
-        dadosJSON.detalhes_do_pedido = [];
-
     
-        // Iterar sobre todos os pedidos
-        dados.forEach((detalhe) => {
-        const idPedido = detalhe.id_pedido;
+    let dadosJSON = {
+        status: message.SUCESS_REQUEST.status,
+        message: message.SUCESS_REQUEST.message,
+        detalhes_do_pedido: {}
+    };
 
-           
-                if (!dadosJSON.detalhes_do_pedido[idPedido]) {
-                    dadosJSON.detalhes_do_pedido[idPedido] = {
+            let dados = await pedidoDAO.selectAllDetalhesPedido();
+
+            if (dados) {
+            dadosJSON.detalhes_do_pedido = {};
+
+            dados.forEach((detalhe) => {
+            const idPedido = detalhe.id_pedido;
+
+            if (!dadosJSON.detalhes_do_pedido[idPedido]) {
+                dadosJSON.detalhes_do_pedido[idPedido] = {
 
                     id_pedido: idPedido,
                     id_restaurante: detalhe.id_restaurante,
@@ -262,31 +263,37 @@ const getDetalhesPedido = async function () {
                     nome_cliente: detalhe.nome_cliente,
                     telefone_cliente: detalhe.telefone_cliente,
                     // inicializar a lista de produtos
-                    produtos: []  
+                    produtos: []
                 };
             }
 
-            // adicionar produto ao pedido correspondente
-            const produto = {
-                id_produto: detalhe.id_produto,
-                nome_produto: detalhe.nome_produto,
-                descricao_produto: detalhe.descricao_produto,
-                imagem_produto: detalhe.imagem_produto,
-                id_status_produto: detalhe.id_status_produto,
-                status_produto: detalhe.status_produto,
-                id_categoria_produto: detalhe.id_categoria_produto,
-                categoria_produto: detalhe.categoria_produto,
-            };
+            // Verifique se o detalhe atual contém informações relevantes
+            if (detalhe.nome_restaurante) {
+                const produto = {
+                    id_produto: detalhe.id_produto,
+                    nome_produto: detalhe.nome_produto,
+                    descricao_produto: detalhe.descricao_produto,
+                    imagem_produto: detalhe.imagem_produto,
+                    id_status_produto: detalhe.id_status_produto,
+                    status_produto: detalhe.status_produto,
+                    id_categoria_produto: detalhe.id_categoria_produto,
+                    categoria_produto: detalhe.categoria_produto,
+                };
 
-            dadosJSON.detalhes_do_pedido[idPedido].produtos.push(produto);
+                dadosJSON.detalhes_do_pedido[idPedido].produtos.push(produto);
+            }
         });
+
+        // Filtrar pedidos vazios ou com produtos nulos
+        dadosJSON.detalhes_do_pedido = Object.values(dadosJSON.detalhes_do_pedido).filter(
+            (pedido) => pedido.produtos.length > 0
+        );
 
         return dadosJSON;
     } else {
         return message.ERROR_NOT_FOUND;
     }
 };
-
 
 
 
