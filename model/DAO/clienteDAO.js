@@ -162,6 +162,47 @@ const selectLastId = async function () {
    
 }          
 
+//trazer endereco de um cliente
+const selectEnderecoByIdCliente = async function (id) {
+    let sql = `SELECT
+    tbl_cliente.id AS id_cliente,
+    tbl_cliente.nome AS nome_cliente,
+    tbl_cliente.telefone AS telefone_cliente,
+    tbl_intermed_endereco_cliente.id AS id_intermed_endereco_cliente,
+    tbl_endereco_cliente.id AS id_endereco_cliente,
+    tbl_endereco_cliente.rua AS rua_cliente,
+    tbl_endereco_cliente.cep AS cep_cliente,
+    tbl_endereco_cliente.bairro AS bairro_cliente,
+    tbl_endereco_cliente.numero AS numero_endereco_cliente,
+    tbl_endereco_cliente.complemento AS complemento_cliente,
+    tbl_cidade_cliente.id AS id_cidade_cliente,
+    tbl_cidade_cliente.nome_cidade,
+    tbl_estado_cliente.id AS id_estado_cliente,
+    tbl_estado_cliente.nome_estado
+    FROM
+    tbl_intermed_endereco_cliente
+    INNER JOIN
+    tbl_cliente ON tbl_intermed_endereco_cliente.id_cliente = tbl_cliente.id
+    INNER JOIN
+    tbl_endereco_cliente ON tbl_intermed_endereco_cliente.id_endereco_cliente = tbl_endereco_cliente.id
+    INNER JOIN
+    tbl_cidade_cliente ON tbl_endereco_cliente.id_cidade_cliente = tbl_cidade_cliente.id
+    INNER JOIN
+    tbl_estado_cliente ON tbl_cidade_cliente.id_estado_cliente = tbl_estado_cliente.id
+    WHERE
+    tbl_cliente.id = ${id}
+`
+
+    let rsCliente = await prisma.$queryRawUnsafe(sql)
+
+    if (rsCliente.length > 0){
+        return rsCliente
+    }{
+        return false
+    }
+    
+        
+}
 module.exports = {
     insertCliente,
     deleteCliente,
@@ -171,5 +212,6 @@ module.exports = {
     selectAllClientes,
     selectClienteByEmailPassword,
     verificarEmailExistenteCliente,
-    selectClienteByEmail
+    selectClienteByEmail,
+    selectEnderecoByIdCliente
 }

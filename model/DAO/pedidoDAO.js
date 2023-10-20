@@ -123,6 +123,7 @@ const selectLastId = async function () {
 
 }
 
+//traz um pedido pelo id 
 const selectAllDetalhesPedidoById = async function (idPedido) {
     let sql = ` 
         SELECT
@@ -206,10 +207,13 @@ const selectAllDetalhesPedidoById = async function (idPedido) {
 
 }
 
+
+
+//traz todos pedidos
 const selectAllDetalhesPedido = async function () {
     let sql = ` 
         SELECT
-        tbl_pedido.id as id_pedido, -- Alias para o id do pedido
+        tbl_pedido.id as id_pedido, 
         tbl_pedido_produto.id as id_pedido_produto,
         tbl_produto.id as id_produto,
         tbl_produto.nome as nome_produto,
@@ -287,6 +291,83 @@ const selectAllDetalhesPedido = async function () {
 
 }
 
+
+//traz pedido de um restaurante especifico
+//preciso so ver o pq que horario e previsao entrega nao estao certos
+const selectAllDetalhesPedidoByIdRestaurante = async function (idRestaurante) {
+    let sql = ` 
+    select tbl_pedido_produto.id as id_pedido_produto,
+    tbl_produto.id as id_produto, tbl_produto.nome as nome_produto, tbl_produto.descricao as descricao_produto, tbl_produto.imagem as imagem_produto, tbl_produto.preco as preco_produto,
+    tbl_status_produto.id as id_status_produto, tbl_status_produto.status_produto,
+    tbl_categoria_produto.id as id_categoria_produto, tbl_categoria_produto.categoria_produto,
+    tbl_restaurante.id as id_restaurante, tbl_restaurante.nome_fantasia as nome_restaurante,
+    tbl_pedido.id as id_pedido, tbl_pedido.numero_pedido, time_format(tbl_pedido.horario, '%H:%I') as horario_pedido,
+    date_format(tbl_pedido.data_pedido, '%d/%m/%Y') as data_pedido, time_format(tbl_pedido.previsao_entrega, '%H:%I') as previsao_entrega, tbl_pedido.valor_total,
+    tbl_status_pedido.status_pedido,
+    tbl_restaurante_forma_pagamento.id as id_restaurante_forma_pagamento,
+    tbl_forma_pagamento.id as id_forma_pagamento, tbl_forma_pagamento.nome_forma_pagamento,
+    tbl_restaurante_frete_area_entrega.id as id_restaurante_frete_area_entrega,
+    tbl_frete_area_entrega.id as id_frete_area_entrega, tbl_frete_area_entrega.km, tbl_frete_area_entrega.valor_entrega, tbl_frete_area_entrega.tempo_entrega, tbl_frete_area_entrega.raio_entrega,
+    tbl_cliente.id as id_cliente, tbl_cliente.nome as nome_cliente, tbl_cliente.telefone as telefone_cliente
+    from tbl_pedido_produto
+    inner join tbl_produto
+    on tbl_pedido_produto.id_produto = tbl_produto.id
+    inner join tbl_pedido
+    on tbl_pedido_produto.id_pedido = tbl_pedido.id
+    inner join tbl_status_produto
+    on tbl_produto.id_status_produto = tbl_status_produto.id
+    inner join tbl_categoria_produto
+    on tbl_produto.id_categoria_produto = tbl_categoria_produto.id
+    inner join tbl_restaurante
+    on tbl_produto.id_restaurante = tbl_restaurante.id
+    inner join tbl_status_pedido
+    on tbl_pedido.id_status_pedido = tbl_status_pedido.id
+    inner join tbl_restaurante_forma_pagamento
+    on tbl_pedido.id_restaurante_forma_pagamento = tbl_restaurante_forma_pagamento.id
+    inner join tbl_forma_pagamento
+    on tbl_restaurante_forma_pagamento.id_forma_pagamento = tbl_forma_pagamento.id
+    inner join tbl_restaurante_frete_area_entrega
+    on tbl_pedido.id_restaurante_frete_area_entrega = tbl_restaurante_frete_area_entrega.id
+    inner join tbl_frete_area_entrega
+    on tbl_restaurante_frete_area_entrega.id_frete_area_entrega = tbl_frete_area_entrega.id
+    inner join tbl_cliente
+    on tbl_pedido.id_cliente = tbl_cliente.id
+    where tbl_pedido.id_restaurante = ${idRestaurante};`
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs
+    } else {
+        return false
+    }
+
+}
+
+//Funcao para o restaurante editar status de um pedido
+const procedureUpdateStatusPedido = async function (dadosProcedures) {
+
+    let call = `
+    CALL EditarStatusPedido(
+
+        ${dadosProcedures.id_pedido},
+        ${dadosProcedures.id_novo_status_pedido}   
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+
+
+    if(resultStatus){
+
+        return true
+    } else {
+        return false
+    }
+}
+
+
 module.exports = {
     insertPedido,
     updatePedido,
@@ -295,5 +376,7 @@ module.exports = {
     selectPedidoByID,
     deletePedido,
     selectAllDetalhesPedidoById,
-    selectAllDetalhesPedido
+    selectAllDetalhesPedido,
+    selectAllDetalhesPedidoByIdRestaurante,
+    procedureUpdateStatusPedido
 }

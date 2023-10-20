@@ -224,7 +224,6 @@ const getClienteByEmail = async function (email) {
 }
 
 
-
 const autenticarLoginClienteEmailSenha = async function (email, password) {
     
     if (
@@ -266,7 +265,25 @@ const autenticarLoginClienteEmailSenha = async function (email, password) {
     }
 }
 
+const getEnderecoClientePorID = async function (id) {
 
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosJSON = {}
+
+        let dados = await clienteDAO.selectEnderecoByIdCliente(id)
+
+        if (dados) {
+            dadosJSON.status = message.SUCESS_REQUEST.status
+            dadosJSON.message = message.SUCESS_REQUEST.message
+            dadosJSON.endereco_cliente = dados
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
 
 
 
@@ -277,6 +294,7 @@ module.exports = {
     getClientePorID,
     getClienteByEmailSenha,
     autenticarLoginClienteEmailSenha,
-    getClienteByEmail
+    getClienteByEmail,
+    getEnderecoClientePorID
    
 }

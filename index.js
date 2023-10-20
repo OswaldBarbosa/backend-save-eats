@@ -254,6 +254,16 @@ app.post('/v1/saveeats/cadastro/cliente', cors(), bodyParserJSON, async function
 
 });
 
+//EndPoint: GET - Retorna endereco de um cliente pelo id cliente
+app.get('/v1/saveeats/endereco/cliente/idcliente/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerCliente.getEnderecoClientePorID(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
 
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////
 
@@ -335,6 +345,7 @@ app.get('/v1/saveeats/restaurantes', cors(), async function (request, response) 
 
 //EndPoint: GET - Retorna o restaurante existente no banco pelo email e senha
 app.get('/v1/saveeats/restaurante/email/:email/senha/:senha',cors(),async function(request, response) {
+
     let email = request.params.email
     let senha = request.params.senha
 
@@ -557,8 +568,6 @@ app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, a
 });
 
 
-
-
 //EndPoint: GET - Retorna o raio de entrega de um restaurante
 app.get('/v1/saveeats/restaurante/raio-entrega/idRestaurante/:idRestaurante', cors(), async function (request, response) {
 
@@ -597,9 +606,29 @@ app.put('/v1/saveeats/restaurante/raio-entrega', cors(), bodyParserJSON, async f
 
     }
 
-})
+});
 
+//EndPoint: PUT - Atualiza o status de um pedido
+app.put('/v1/saveeats/status-pedido', cors(), bodyParserJSON, async function (request, response) {
 
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerPedido.restauranteAtualizarStatusDoPedido(dadosBody);
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+});
 
 
 
@@ -2834,6 +2863,18 @@ app.get('/v1/saveeats/detalhes/pedido/', cors(), bodyParserJSON, async function 
 
 
     let dados = await controllerPedido.getDetalhesPedido()
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
+//EndPoint: GET - Retorna  pedidos de um restaurante
+app.get('/v1/saveeats/detalhes/pedido/idRestaurante/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getDetalhesPedidoPorIDRestaurante(id)
 
     response.status(dados.status)
     response.json(dados)

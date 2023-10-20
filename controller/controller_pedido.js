@@ -10,6 +10,7 @@
 var message = require('./modulo/config.js')
 
 var pedidoDAO = require('../model/DAO/pedidoDAO.js')
+var restauranteDAO = require('../model/DAO/restauranteDAO.js')
 
 const { request } = require('express')
 
@@ -153,6 +154,82 @@ const getPedidoPorID = async function (id) {
 }
 
 ////////////////////////////////////////////////////////
+
+
+const getDetalhesPedido = async function () {
+
+    
+    let dadosJSON = {
+        status: message.SUCESS_REQUEST.status,
+        message: message.SUCESS_REQUEST.message,
+        detalhes_do_pedido: {}
+    };
+
+            let dados = await pedidoDAO.selectAllDetalhesPedido();
+
+            if (dados) {
+            dadosJSON.detalhes_do_pedido = {};
+
+            dados.forEach((detalhe) => {
+            const idPedido = detalhe.id_pedido;
+
+            if (!dadosJSON.detalhes_do_pedido[idPedido]) {
+                dadosJSON.detalhes_do_pedido[idPedido] = {
+
+                    id_pedido: idPedido,
+                    id_restaurante: detalhe.id_restaurante,
+                    nome_restaurante: detalhe.nome_restaurante,
+                    numero_pedido: detalhe.numero_pedido,
+                    horario_pedido: detalhe.horario_pedido,
+                    previsao_entrega: detalhe.previsao_entrega,
+                    data_pedido: detalhe.data_pedido,
+                    valor_total: detalhe.valor_total,
+                    status_pedido: detalhe.status_pedido,
+                    id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
+                    id_forma_pagamento: detalhe.id_forma_pagamento,
+                    nome_forma_pagamento: detalhe.nome_forma_pagamento,
+                    id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
+                    id_frete_area_entrega: detalhe.id_frete_area_entrega,
+                    km: detalhe.km,
+                    valor_entrega: detalhe.valor_entrega,
+                    tempo_entrega: detalhe.tempo_entrega,
+                    raio_entrega: detalhe.raio_entrega,
+                    id_cliente: detalhe.id_cliente,
+                    nome_cliente: detalhe.nome_cliente,
+                    telefone_cliente: detalhe.telefone_cliente,
+                    // inicializar a lista de produtos
+                    produtos: []
+                };
+            }
+
+            // Verifica se o detalhe atual contém informações relevantes
+            if (detalhe.nome_restaurante) {
+                const produto = {
+                    id_produto: detalhe.id_produto,
+                    nome_produto: detalhe.nome_produto,
+                    descricao_produto: detalhe.descricao_produto,
+                    imagem_produto: detalhe.imagem_produto,
+                    id_status_produto: detalhe.id_status_produto,
+                    status_produto: detalhe.status_produto,
+                    id_categoria_produto: detalhe.id_categoria_produto,
+                    categoria_produto: detalhe.categoria_produto,
+                };
+
+                dadosJSON.detalhes_do_pedido[idPedido].produtos.push(produto);
+            }
+        });
+
+        // Filtrar pedidos vazios ou com produtos nulos
+        dadosJSON.detalhes_do_pedido = Object.values(dadosJSON.detalhes_do_pedido).filter(
+            (pedido) => pedido.produtos.length > 0
+        );
+
+        return dadosJSON;
+    } else {
+        return message.ERROR_NOT_FOUND;
+    }
+};
+
 const getDetalhesPedidoPorID = async function (id) {
 
     if (id == '' || id == undefined || isNaN(id)) {
@@ -220,80 +297,96 @@ const getDetalhesPedidoPorID = async function (id) {
     }
 };
 
+//preciso so ver o pq que horario e previsao entrega nao estao certos
+const getDetalhesPedidoPorIDRestaurante = async function (id) {
+    let idDoRestaurante = id;
+    let dadosRestauranteJSON = {};
+    let dadosRestaurante = await pedidoDAO.selectAllDetalhesPedidoByIdRestaurante(idDoRestaurante);
 
-const getDetalhesPedido = async function () {
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status;
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message;
 
-    
-    let dadosJSON = {
-        status: message.SUCESS_REQUEST.status,
-        message: message.SUCESS_REQUEST.message,
-        detalhes_do_pedido: {}
-    };
+        // Inicialize o objeto de detalhes do pedido
+        const detalhesPedido = {
+            id_pedido: dadosRestaurante[0].id_pedido,
+            numero_pedido: dadosRestaurante[0].numero_pedido,
+            horario_pedido: dadosRestaurante[0].horario_pedido,
+            data_pedido: dadosRestaurante[0].data_pedido,
+            previsao_entrega: dadosRestaurante[0].previsao_entrega,
+            valor_total: dadosRestaurante[0].valor_total,
+            status_pedido: dadosRestaurante[0].status_pedido,
+            id_restaurante_forma_pagamento: dadosRestaurante[0].id_restaurante_forma_pagamento,
+            id_forma_pagamento: dadosRestaurante[0].id_forma_pagamento,
+            nome_forma_pagamento: dadosRestaurante[0].nome_forma_pagamento,
+            id_restaurante_frete_area_entrega: dadosRestaurante[0].id_restaurante_frete_area_entrega,
+            id_frete_area_entrega: dadosRestaurante[0].id_frete_area_entrega,
+            km: dadosRestaurante[0].km,
+            valor_entrega: dadosRestaurante[0].valor_entrega,
+            tempo_entrega: dadosRestaurante[0].tempo_entrega,
+            raio_entrega: dadosRestaurante[0].raio_entrega,
+            id_cliente: dadosRestaurante[0].id_cliente,
+            nome_cliente: dadosRestaurante[0].nome_cliente,
+            telefone_cliente: dadosRestaurante[0].telefone_cliente,
+            produtos: [], // Inicialize a array de produtos vazia
+        };
 
-            let dados = await pedidoDAO.selectAllDetalhesPedido();
+        // Iterar por todos os registros de pedidos
+        dadosRestaurante.forEach(detalhe => {
+            const produto = {
+                id_produto: detalhe.id_produto,
+                nome_produto: detalhe.nome_produto,
+                descricao_produto: detalhe.descricao_produto,
+                preco_produto: detalhe.preco_produto,
+                // Outros campos de detalhes do produto
+            };
 
-            if (dados) {
-            dadosJSON.detalhes_do_pedido = {};
-
-            dados.forEach((detalhe) => {
-            const idPedido = detalhe.id_pedido;
-
-            if (!dadosJSON.detalhes_do_pedido[idPedido]) {
-                dadosJSON.detalhes_do_pedido[idPedido] = {
-
-                    id_pedido: idPedido,
-                    id_restaurante: detalhe.id_restaurante,
-                    nome_restaurante: detalhe.nome_restaurante,
-                    numero_pedido: detalhe.numero_pedido,
-                    horario_pedido: detalhe.horario_pedido,
-                    previsao_entrega: detalhe.previsao_entrega,
-                    data_pedido: detalhe.data_pedido,
-                    valor_total: detalhe.valor_total,
-                    status_pedido: detalhe.status_pedido,
-                    id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
-                    id_forma_pagamento: detalhe.id_forma_pagamento,
-                    nome_forma_pagamento: detalhe.nome_forma_pagamento,
-                    id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
-                    id_frete_area_entrega: detalhe.id_frete_area_entrega,
-                    km: detalhe.km,
-                    valor_entrega: detalhe.valor_entrega,
-                    tempo_entrega: detalhe.tempo_entrega,
-                    raio_entrega: detalhe.raio_entrega,
-                    id_cliente: detalhe.id_cliente,
-                    nome_cliente: detalhe.nome_cliente,
-                    telefone_cliente: detalhe.telefone_cliente,
-                    // inicializar a lista de produtos
-                    produtos: []
-                };
-            }
-
-            // Verifique se o detalhe atual contém informações relevantes
-            if (detalhe.nome_restaurante) {
-                const produto = {
-                    id_produto: detalhe.id_produto,
-                    nome_produto: detalhe.nome_produto,
-                    descricao_produto: detalhe.descricao_produto,
-                    imagem_produto: detalhe.imagem_produto,
-                    id_status_produto: detalhe.id_status_produto,
-                    status_produto: detalhe.status_produto,
-                    id_categoria_produto: detalhe.id_categoria_produto,
-                    categoria_produto: detalhe.categoria_produto,
-                };
-
-                dadosJSON.detalhes_do_pedido[idPedido].produtos.push(produto);
-            }
+            detalhesPedido.produtos.push(produto);
         });
 
-        // Filtrar pedidos vazios ou com produtos nulos
-        dadosJSON.detalhes_do_pedido = Object.values(dadosJSON.detalhes_do_pedido).filter(
-            (pedido) => pedido.produtos.length > 0
-        );
+        // Adicione detalhes do pedido aos detalhes do pedido JSON
+        dadosRestauranteJSON.detalhes_do_pedido = detalhesPedido;
 
-        return dadosJSON;
+        return dadosRestauranteJSON;
     } else {
-        return message.ERROR_NOT_FOUND;
+        return message.ERROR_INTERNAL_SERVER;
     }
-};
+}
+
+//funcao para o restaurante atualizar status de um pedido
+const restauranteAtualizarStatusDoPedido = async (dados) => { 
+
+    if (
+        dados.id_pedido == '' || dados.id_pedido == undefined ||
+        dados.id_novo_status_pedido == '' || dados.id_novo_status_pedido == undefined    
+        ) {
+        return message.ERROR_REQUIRED_FIELDS;
+
+    } else {
+
+        let dadosJSON = {}
+
+        const resultadoDados = await pedidoDAO.procedureUpdateStatusPedido(dados);
+        console.log(dados);
+
+        // if (resultadoDados) {
+        //     dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+        //     dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+        //     return dadosJSON;
+        // } else {
+        //     return message.ERROR_INTERNAL_SERVER;
+        // }
+
+        if (resultadoDados) {
+            dadosJSON.message = message.ERROR_INTERNAL_SERVER
+        } else {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        }
+    }
+}
+
 
 
 
@@ -304,5 +397,7 @@ module.exports = {
     deletarPedido,
     getPedidos,
     getDetalhesPedidoPorID,
-    getDetalhesPedido
+    getDetalhesPedido,
+    getDetalhesPedidoPorIDRestaurante,
+    restauranteAtualizarStatusDoPedido
 }
