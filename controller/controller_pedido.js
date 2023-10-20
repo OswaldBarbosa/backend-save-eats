@@ -297,7 +297,7 @@ const getDetalhesPedidoPorID = async function (id) {
     }
 };
 
-//preciso so ver o pq que horario e previsao entrega nao estao certos
+
 const getDetalhesPedidoPorIDRestaurante = async function (id) {
     let idDoRestaurante = id;
     let dadosRestauranteJSON = {};
@@ -307,32 +307,40 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
         dadosRestauranteJSON.status = message.SUCESS_REQUEST.status;
         dadosRestauranteJSON.message = message.SUCESS_REQUEST.message;
 
-        // Inicialize o objeto de detalhes do pedido
-        const detalhesPedido = {
-            id_pedido: dadosRestaurante[0].id_pedido,
-            numero_pedido: dadosRestaurante[0].numero_pedido,
-            horario_pedido: dadosRestaurante[0].horario_pedido,
-            data_pedido: dadosRestaurante[0].data_pedido,
-            previsao_entrega: dadosRestaurante[0].previsao_entrega,
-            valor_total: dadosRestaurante[0].valor_total,
-            status_pedido: dadosRestaurante[0].status_pedido,
-            id_restaurante_forma_pagamento: dadosRestaurante[0].id_restaurante_forma_pagamento,
-            id_forma_pagamento: dadosRestaurante[0].id_forma_pagamento,
-            nome_forma_pagamento: dadosRestaurante[0].nome_forma_pagamento,
-            id_restaurante_frete_area_entrega: dadosRestaurante[0].id_restaurante_frete_area_entrega,
-            id_frete_area_entrega: dadosRestaurante[0].id_frete_area_entrega,
-            km: dadosRestaurante[0].km,
-            valor_entrega: dadosRestaurante[0].valor_entrega,
-            tempo_entrega: dadosRestaurante[0].tempo_entrega,
-            raio_entrega: dadosRestaurante[0].raio_entrega,
-            id_cliente: dadosRestaurante[0].id_cliente,
-            nome_cliente: dadosRestaurante[0].nome_cliente,
-            telefone_cliente: dadosRestaurante[0].telefone_cliente,
-            produtos: [], // Inicialize a array de produtos vazia
-        };
+        // Inicialize um array para detalhes do pedido
+        const detalhesPedido = [];
 
         // Iterar por todos os registros de pedidos
         dadosRestaurante.forEach(detalhe => {
+            let detalhePedido = detalhesPedido.find(pedido => pedido.id_pedido === detalhe.id_pedido);
+
+            if (!detalhePedido) {
+                detalhePedido = {
+                    id_pedido: detalhe.id_pedido,
+                    numero_pedido: detalhe.numero_pedido,
+                    horario_pedido: detalhe.horario_pedido,
+                    data_pedido: detalhe.data_pedido,
+                    previsao_entrega: detalhe.previsao_entrega,
+                    valor_total: detalhe.valor_total,
+                    status_pedido: detalhe.status_pedido,
+                    id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
+                    id_forma_pagamento: detalhe.id_forma_pagamento,
+                    nome_forma_pagamento: detalhe.nome_forma_pagamento,
+                    id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
+                    id_frete_area_entrega: detalhe.id_frete_area_entrega,
+                    km: detalhe.km,
+                    valor_entrega: detalhe.valor_entrega,
+                    tempo_entrega: detalhe.tempo_entrega,
+                    raio_entrega: detalhe.raio_entrega,
+                    id_cliente: detalhe.id_cliente,
+                    nome_cliente: detalhe.nome_cliente,
+                    telefone_cliente: detalhe.telefone_cliente,
+                    produtos: [], // Inicialize a array de produtos vazia
+                };
+                detalhesPedido.push(detalhePedido);
+            }
+
+            // Adicione os produtos a este detalhe do pedido
             const produto = {
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
@@ -341,7 +349,7 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
                 // Outros campos de detalhes do produto
             };
 
-            detalhesPedido.produtos.push(produto);
+            detalhePedido.produtos.push(produto);
         });
 
         // Adicione detalhes do pedido aos detalhes do pedido JSON
@@ -352,6 +360,9 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
         return message.ERROR_INTERNAL_SERVER;
     }
 }
+
+  
+
 
 //funcao para o restaurante atualizar status de um pedido
 const restauranteAtualizarStatusDoPedido = async (dados) => { 
