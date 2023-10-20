@@ -198,25 +198,18 @@ const getClienteByEmail = async function (email) {
 
     } else {
 
-        // Import do JWT
-        const jwt = require("../middleware/middlewareJWT.js");
 
-        let clienteJSONEmailpassword = {}
+        let clienteJSONEmail = {}
 
         let dadosCliente = await clienteDAO.selectClienteByEmail(email)
 
-        if (dadosCliente != null && dadosCliente != undefined) {
+        if (dadosCliente) {
 
-            let tokenUser = await jwt.createJWT(dadosCliente[0].id);
-            
-            // Inclua o token no objeto dadosRestaurante
-            dadosCliente[0].token = tokenUser;
 
-            clienteJSONEmailpassword.status = message.SUCESS_REQUEST.status
-            clienteJSONEmailpassword.clientes = dadosCliente;
+            clienteJSONEmail.status = message.SUCESS_REQUEST.status
+            clienteJSONEmail.clientes = dadosCliente;
 
-            return clienteJSONEmailpassword
-
+            return clienteJSONEmail
         } else {
             return message.ERROR_INVALID_EMAIL_PASSWORD
         }
