@@ -2880,6 +2880,21 @@ app.get('/v1/saveeats/detalhes/pedido/idRestaurante/:id', cors(), bodyParserJSON
     response.json(dados)
 });
 
+
+//EndPoint: GET - Retorna  pedidos de um restaurante pelo id restaurante e pelo numero do pedido
+app.get('/v1/saveeats/detalhes/pedido/idRestaurante/:id/numeroPedido/:numeroPedido', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let numeroPedido = request.params.numeroPedido
+
+    let dados = await controllerPedido.getDetalhesPedidoPorIDRestauranteNumeroPedido(id,numeroPedido)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
 ///////////////////////////////////////// Recomendacao  //////////////////////////////////////////////
 
 
