@@ -355,13 +355,10 @@ const procedureUpdateStatusPedido = async function (dadosProcedures) {
 
     );    
 `
-    let resultStatus = await prisma.$executeRawUnsafe(call)
+    let rs = await prisma.$queryRawUnsafe(call)
 
-
-
-    if(resultStatus){
-
-        return true
+    if (rs.length > 0) {
+        return rs
     } else {
         return false
     }

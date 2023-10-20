@@ -368,22 +368,16 @@ const restauranteAtualizarStatusDoPedido = async (dados) => {
 
         const resultadoDados = await pedidoDAO.procedureUpdateStatusPedido(dados);
         console.log(dados);
-
-        // if (resultadoDados) {
-        //     dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
-        //     dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
-        //     return dadosJSON;
-        // } else {
-        //     return message.ERROR_INTERNAL_SERVER;
-        // }
-
+        console.log(resultadoDados);
         if (resultadoDados) {
-            dadosJSON.message = message.ERROR_INTERNAL_SERVER
-        } else {
             dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
             dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
             return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
         }
+
+
     }
 }
 

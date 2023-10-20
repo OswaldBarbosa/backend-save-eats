@@ -608,7 +608,7 @@ app.put('/v1/saveeats/restaurante/raio-entrega', cors(), bodyParserJSON, async f
 
 });
 
-//EndPoint: PUT - Atualiza o status de um pedido
+//EndPoint: PUT - Restaurante atualizar o status de um pedido
 app.put('/v1/saveeats/status-pedido', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type'];
