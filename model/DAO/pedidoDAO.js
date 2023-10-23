@@ -341,6 +341,88 @@ const selectAllDetalhesPedidoByIdRestaurante = async function (idRestaurante) {
 
 }
 
+
+
+//traz pedido de um cliente
+const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
+    let sql = ` 
+
+    SELECT 
+    tbl_pedido_produto.id AS id_pedido_produto,
+    tbl_produto.id AS id_produto,
+    tbl_produto.nome AS nome_produto,
+    tbl_produto.descricao AS descricao_produto,
+    tbl_produto.imagem AS imagem_produto,
+    tbl_produto.preco AS preco_produto,
+    tbl_status_produto.id AS id_status_produto,
+    tbl_status_produto.status_produto,
+    tbl_categoria_produto.id AS id_categoria_produto,
+    tbl_categoria_produto.categoria_produto,
+    tbl_restaurante.id AS id_restaurante,
+    tbl_restaurante.nome_fantasia AS nome_restaurante,
+    tbl_pedido.id AS id_pedido,
+    tbl_pedido.numero_pedido,
+    TIME_FORMAT(tbl_pedido.horario, '%H:%i') AS horario_pedido,
+    DATE_FORMAT(tbl_pedido.data_pedido, '%d/%m/%Y') AS data_pedido,
+    TIME_FORMAT(tbl_pedido.previsao_entrega, '%H:%i') AS previsao_entrega,
+    tbl_pedido.valor_total,
+    tbl_status_pedido.status_pedido,
+    tbl_restaurante_forma_pagamento.id AS id_restaurante_forma_pagamento,
+    tbl_forma_pagamento.id AS id_forma_pagamento,
+    tbl_forma_pagamento.nome_forma_pagamento,
+    tbl_restaurante_frete_area_entrega.id AS id_restaurante_frete_area_entrega,
+    tbl_frete_area_entrega.id AS id_frete_area_entrega,
+    tbl_frete_area_entrega.km,
+    tbl_frete_area_entrega.valor_entrega,
+    tbl_frete_area_entrega.tempo_entrega,
+    tbl_frete_area_entrega.raio_entrega,
+    tbl_cliente.id AS id_cliente,
+    tbl_cliente.nome AS nome_cliente,
+    tbl_cliente.telefone AS telefone_cliente,
+    
+    -- Adicionar campos de endereço do cliente
+    tbl_endereco_cliente.rua AS rua_cliente,
+    tbl_endereco_cliente.cep AS cep_cliente,
+    tbl_endereco_cliente.bairro AS bairro_cliente,
+    tbl_endereco_cliente.numero AS numero_cliente,
+    tbl_endereco_cliente.complemento AS complemento_cliente,
+    tbl_cidade_cliente.nome_cidade AS cidade_cliente,
+    tbl_estado_cliente.nome_estado AS estado_cliente
+    
+    FROM tbl_pedido_produto
+    INNER JOIN tbl_produto ON tbl_pedido_produto.id_produto = tbl_produto.id
+    INNER JOIN tbl_pedido ON tbl_pedido_produto.id_pedido = tbl_pedido.id
+    INNER JOIN tbl_status_produto ON tbl_produto.id_status_produto = tbl_status_produto.id
+    INNER JOIN tbl_categoria_produto ON tbl_produto.id_categoria_produto = tbl_categoria_produto.id
+    INNER JOIN tbl_restaurante ON tbl_produto.id_restaurante = tbl_restaurante.id
+    INNER JOIN tbl_status_pedido ON tbl_pedido.id_status_pedido = tbl_status_pedido.id
+    INNER JOIN tbl_restaurante_forma_pagamento ON tbl_pedido.id_restaurante_forma_pagamento = tbl_restaurante_forma_pagamento.id
+    INNER JOIN tbl_forma_pagamento ON tbl_restaurante_forma_pagamento.id_forma_pagamento = tbl_forma_pagamento.id
+    INNER JOIN tbl_restaurante_frete_area_entrega ON tbl_pedido.id_restaurante_frete_area_entrega = tbl_restaurante_frete_area_entrega.id
+    INNER JOIN tbl_frete_area_entrega ON tbl_restaurante_frete_area_entrega.id_frete_area_entrega = tbl_frete_area_entrega.id
+    INNER JOIN tbl_cliente ON tbl_pedido.id_cliente = tbl_cliente.id
+
+    INNER JOIN tbl_intermed_endereco_cliente ON tbl_cliente.id = tbl_intermed_endereco_cliente.id_cliente
+    INNER JOIN tbl_endereco_cliente ON tbl_intermed_endereco_cliente.id_endereco_cliente = tbl_endereco_cliente.id
+    INNER JOIN tbl_cidade_cliente ON tbl_endereco_cliente.id_cidade_cliente = tbl_cidade_cliente.id
+    INNER JOIN tbl_estado_cliente ON tbl_cidade_cliente.id_estado_cliente = tbl_estado_cliente.id
+
+    WHERE tbl_pedido.id_cliente =  ${idCliente};
+ `
+
+    let rs = await prisma.$queryRawUnsafe(sql)
+
+    if (rs.length > 0) {
+        return rs
+    } else {
+        return false
+    }
+
+}
+
+
+
+
 //Funcao para o restaurante editar status de um pedido
 const procedureUpdateStatusPedido = async function (dadosProcedures) {
 
@@ -434,7 +516,7 @@ const selectAllDetalhesPedidoByIdRestauranteByNumeroPedido = async function (idR
     ON tbl_pedido.id_cliente = tbl_cliente.id
 
     WHERE tbl_pedido.id_restaurante = ${idRestaurante}
-    AND tbl_pedido.numero_pedido = '${numeroPedido}';
+    AND tbl_pedido.numero_pedido LIKE '%${numeroPedido}%';
 `
 
     let rs = await prisma.$queryRawUnsafe(sql)
@@ -463,5 +545,6 @@ module.exports = {
     selectAllDetalhesPedido,
     selectAllDetalhesPedidoByIdRestaurante,
     procedureUpdateStatusPedido,
-    selectAllDetalhesPedidoByIdRestauranteByNumeroPedido
+    selectAllDetalhesPedidoByIdRestauranteByNumeroPedido,
+    selectAllDetalhesPedidoByIdCliente
 }

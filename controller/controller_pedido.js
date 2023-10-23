@@ -362,6 +362,83 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
     }
 }
 
+const getDetalhesPedidoPorIDCliente = async function (id) {
+    
+    let idDoCliente = id;
+    let dadosRestauranteJSON = {};
+    let dadosRestaurante = await pedidoDAO.selectAllDetalhesPedidoByIdCliente(idDoCliente);
+
+    if (dadosRestaurante) {
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status;
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message;
+
+        // Inicialize um array para detalhes do pedido
+        const detalhesPedido = [];
+
+        // Iterar por todos os registros de pedidos
+        for (const detalhe of dadosRestaurante) {
+            let detalhePedido = detalhesPedido.find(pedido => pedido.id_pedido === detalhe.id_pedido);
+
+            if (!detalhePedido) {
+                detalhePedido = {
+                    id_pedido: detalhe.id_pedido,
+                    // Adicionar os dados do endereço do cliente
+                    rua_cliente: detalhe.rua_cliente,
+                    cep_cliente: detalhe.cep_cliente,
+                    bairro_cliente: detalhe.bairro_cliente,
+                    numero_cliente: detalhe.numero_cliente,
+                    complemento_cliente: detalhe.complemento_cliente,
+                    cidade_cliente: detalhe.cidade_cliente,
+                    estado_cliente: detalhe.estado_cliente,
+                    // Resto dos campos
+                    nome_restaurante: detalhe.nome_restaurante,
+                    numero_pedido: detalhe.numero_pedido,
+                    horario_pedido: detalhe.horario_pedido,
+                    data_pedido: detalhe.data_pedido,
+                    previsao_entrega: detalhe.previsao_entrega,
+                    valor_total: detalhe.valor_total,
+                    status_pedido: detalhe.status_pedido,
+                    id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
+                    id_forma_pagamento: detalhe.id_forma_pagamento,
+                    nome_forma_pagamento: detalhe.nome_forma_pagamento,
+                    id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
+                    id_frete_area_entrega: detalhe.id_frete_area_entrega,
+                    km: detalhe.km,
+                    valor_entrega: detalhe.valor_entrega,
+                    tempo_entrega: detalhe.tempo_entrega,
+                    raio_entrega: detalhe.raio_entrega,
+                    id_cliente: detalhe.id_cliente,
+                    nome_cliente: detalhe.nome_cliente,
+                    telefone_cliente: detalhe.telefone_cliente,
+                    produtos: [], // Inicialize a array de produtos vazia
+                };
+                detalhesPedido.push(detalhePedido);
+            }
+
+            // Adicione os produtos a este detalhe do pedido
+            const produto = {
+                id_produto: detalhe.id_produto,
+                nome_produto: detalhe.nome_produto,
+                descricao_produto: detalhe.descricao_produto,
+                preco_produto: detalhe.preco_produto,
+                // Outros campos de detalhes do produto
+            };
+
+            detalhePedido.produtos.push(produto);
+        }
+
+        // Adicione detalhes do pedido aos detalhes do pedido JSON
+        dadosRestauranteJSON.detalhes_do_pedido_do_cliente = detalhesPedido;
+
+        return dadosRestauranteJSON;
+    } else {
+        return message.ERROR_INTERNAL_SERVER;
+    }
+}
+
+
+
+
   
 const getDetalhesPedidoPorIDRestauranteNumeroPedido = async function (id,numeroPedido) {
     
@@ -472,5 +549,6 @@ module.exports = {
     getDetalhesPedido,
     getDetalhesPedidoPorIDRestaurante,
     restauranteAtualizarStatusDoPedido,
-    getDetalhesPedidoPorIDRestauranteNumeroPedido
+    getDetalhesPedidoPorIDRestauranteNumeroPedido,
+    getDetalhesPedidoPorIDCliente
 }

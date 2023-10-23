@@ -2895,6 +2895,18 @@ app.get('/v1/saveeats/detalhes/pedido/idRestaurante/:id/numeroPedido/:numeroPedi
 });
 
 
+//EndPoint: GET - Retorna  pedidos de um cliente
+app.get('/v1/saveeats/detalhes/pedido/idCliente/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getDetalhesPedidoPorIDCliente(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+
 ///////////////////////////////////////// Recomendacao  //////////////////////////////////////////////
 
 
