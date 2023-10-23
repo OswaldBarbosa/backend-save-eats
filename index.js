@@ -4167,6 +4167,54 @@ app.get('/v1/saveeats/obter-dados-do-mercado-pago', async (req, res) => {
 
 
 
+///////////////////////////////////////// Pedido em tempo real  //////////////////////////////////////////////
+
+
+/********************************
+* Objetivo : API de controle da tbl_pedido com web.sockets
+* Data : 23/10/2023
+********************************/
+
+
+const socketIO = require('socket.io');
+
+// 'app' é a aplicação Express
+//const server = http.createServer(app); 
+//const io = socketIO(server);
+
+
+// io.on('connection', (socket) => {
+//     console.log('Cliente conectado');
+    
+//     socket.on('disconnect', () => {
+//         console.log('Cliente desconectado');
+//     });
+// });
+
+app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
+        
+        // Aqui, após salvar o pedido no banco de dados, emite uma notificação em tempo real para o front-end do restaurante
+        // Emite o evento 'novo_pedido'
+        //O restaurante precisa estar escutando esse evento no web
+        io.emit('novo_pedido', dadosBody); 
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+});
+
+
+
 
 
 

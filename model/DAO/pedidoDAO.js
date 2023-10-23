@@ -360,6 +360,7 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     tbl_categoria_produto.categoria_produto,
     tbl_restaurante.id AS id_restaurante,
     tbl_restaurante.nome_fantasia AS nome_restaurante,
+    tbl_restaurante.foto AS foto_restaurante, -- Adicione esta linha
     tbl_pedido.id AS id_pedido,
     tbl_pedido.numero_pedido,
     TIME_FORMAT(tbl_pedido.horario, '%H:%i') AS horario_pedido,
@@ -402,12 +403,15 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     INNER JOIN tbl_frete_area_entrega ON tbl_restaurante_frete_area_entrega.id_frete_area_entrega = tbl_frete_area_entrega.id
     INNER JOIN tbl_cliente ON tbl_pedido.id_cliente = tbl_cliente.id
 
+    -- Adicionar o relacionamento com o endereço do cliente
     INNER JOIN tbl_intermed_endereco_cliente ON tbl_cliente.id = tbl_intermed_endereco_cliente.id_cliente
     INNER JOIN tbl_endereco_cliente ON tbl_intermed_endereco_cliente.id_endereco_cliente = tbl_endereco_cliente.id
     INNER JOIN tbl_cidade_cliente ON tbl_endereco_cliente.id_cidade_cliente = tbl_cidade_cliente.id
     INNER JOIN tbl_estado_cliente ON tbl_cidade_cliente.id_estado_cliente = tbl_estado_cliente.id
 
-    WHERE tbl_pedido.id_cliente =  ${idCliente};
+    WHERE tbl_pedido.id_cliente = ${idCliente};
+
+  
  `
 
     let rs = await prisma.$queryRawUnsafe(sql)

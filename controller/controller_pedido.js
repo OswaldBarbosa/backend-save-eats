@@ -300,6 +300,7 @@ const getDetalhesPedidoPorID = async function (id) {
 
 const getDetalhesPedidoPorIDRestaurante = async function (id) {
 
+
     let idDoRestaurante = id;
     let dadosRestauranteJSON = {};
     let dadosRestaurante = await pedidoDAO.selectAllDetalhesPedidoByIdRestaurante(idDoRestaurante);
@@ -362,8 +363,14 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
     }
 }
 
+
 const getDetalhesPedidoPorIDCliente = async function (id) {
-    
+
+
+    if (id === undefined || id === null || id === '') {
+        return message.ERROR_INVALID_ID;  
+    }
+
     let idDoCliente = id;
     let dadosRestauranteJSON = {};
     let dadosRestaurante = await pedidoDAO.selectAllDetalhesPedidoByIdCliente(idDoCliente);
@@ -392,6 +399,7 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
                     estado_cliente: detalhe.estado_cliente,
                     // Resto dos campos
                     nome_restaurante: detalhe.nome_restaurante,
+                    foto_restaurante : detalhe.foto_restaurante,
                     numero_pedido: detalhe.numero_pedido,
                     horario_pedido: detalhe.horario_pedido,
                     data_pedido: detalhe.data_pedido,
@@ -410,12 +418,13 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
                     id_cliente: detalhe.id_cliente,
                     nome_cliente: detalhe.nome_cliente,
                     telefone_cliente: detalhe.telefone_cliente,
-                    produtos: [], // Inicialize a array de produtos vazia
+                     // Inicialize a array de produtos vazia
+                    produtos: [],
                 };
                 detalhesPedido.push(detalhePedido);
             }
 
-            // Adicione os produtos a este detalhe do pedido
+                // Adicione os produtos a este detalhe do pedido
             const produto = {
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
