@@ -2743,7 +2743,7 @@ app.delete('/v1/saveeats/status/pedido/id/:id', cors(), bodyParserJSON, async fu
 ********************************/
 
 
-//EndPoint: POST - Insere um novo pedido
+//EndPoint: POST - Insere um novo pedido - crud basico
 app.post('/v1/saveeats/pedido', cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']
@@ -2901,6 +2901,17 @@ app.get('/v1/saveeats/detalhes/pedido/idCliente/:id', cors(), bodyParserJSON, as
     let id = request.params.id
 
     let dados = await controllerPedido.getDetalhesPedidoPorIDCliente(id)
+
+    response.status(dados.status)
+    response.json(dados)
+});
+
+//EndPoint: GET - Retornar o status do pedido pelo id do pedido
+app.get('/v1/saveeats/status-pedido/idPedido/:id', cors(), bodyParserJSON, async function (request, response) {
+
+    let id = request.params.id
+
+    let dados = await controllerPedido.getStatusPedidoPorIDPedido(id)
 
     response.status(dados.status)
     response.json(dados)
@@ -4196,6 +4207,7 @@ app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON,
     let contentType = request.headers['content-type']
 
     if (String(contentType).toLowerCase() == 'application/json') {
+        
         let dadosBody = request.body
 
         let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)

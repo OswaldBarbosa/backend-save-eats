@@ -106,8 +106,6 @@ const selectPedidoByID = async function (id) {
     } {
         return false
     }
-
-
 }
 
 const selectLastId = async function () {
@@ -342,7 +340,6 @@ const selectAllDetalhesPedidoByIdRestaurante = async function (idRestaurante) {
 }
 
 
-
 //traz pedido de um cliente
 const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     let sql = ` 
@@ -423,9 +420,6 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     }
 
 }
-
-
-
 
 //Funcao para o restaurante editar status de um pedido
 const procedureUpdateStatusPedido = async function (dadosProcedures) {
@@ -533,8 +527,21 @@ const selectAllDetalhesPedidoByIdRestauranteByNumeroPedido = async function (idR
 
 }
 
+//pegar o status do pedido pelo id do pedido
+const selectStatusPedidoByIDPedido = async function (idPedido) {
+    let sql =  `SELECT tbl_pedido.id, tbl_pedido.numero_pedido, tbl_status_pedido.status_pedido
+                FROM tbl_pedido
+                INNER JOIN tbl_status_pedido ON tbl_pedido.id_status_pedido = tbl_status_pedido.id
+                WHERE tbl_pedido.id = ${idPedido}`
 
+    let rs = await prisma.$queryRawUnsafe(sql)
 
+    if (rs.length > 0) {
+        return rs
+    } {
+        return false
+    }
+}
 
 
 
@@ -550,5 +557,6 @@ module.exports = {
     selectAllDetalhesPedidoByIdRestaurante,
     procedureUpdateStatusPedido,
     selectAllDetalhesPedidoByIdRestauranteByNumeroPedido,
-    selectAllDetalhesPedidoByIdCliente
+    selectAllDetalhesPedidoByIdCliente,
+    selectStatusPedidoByIDPedido
 }

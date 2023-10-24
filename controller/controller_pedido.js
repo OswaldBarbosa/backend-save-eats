@@ -446,9 +446,6 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
 }
 
 
-
-
-  
 const getDetalhesPedidoPorIDRestauranteNumeroPedido = async function (id,numeroPedido) {
     
     let idDoRestaurante = id;
@@ -546,7 +543,25 @@ const restauranteAtualizarStatusDoPedido = async (dados) => {
 }
 
 
+const getStatusPedidoPorIDPedido = async function (id) {
 
+    if (id == '' || id == undefined || isNaN(id)) {
+        return message.ERROR_INVALID_ID
+    } else {
+        let dadosJSON = {}
+
+        let dados = await pedidoDAO.selectStatusPedidoByIDPedido(id)
+
+        if (dados) {
+            dadosJSON.status = message.SUCESS_REQUEST.status
+            dadosJSON.message = message.SUCESS_REQUEST.message
+            dadosJSON.status_pedido = dados
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
 
 
 module.exports = {
@@ -559,5 +574,6 @@ module.exports = {
     getDetalhesPedidoPorIDRestaurante,
     restauranteAtualizarStatusDoPedido,
     getDetalhesPedidoPorIDRestauranteNumeroPedido,
-    getDetalhesPedidoPorIDCliente
+    getDetalhesPedidoPorIDCliente,
+    getStatusPedidoPorIDPedido
 }
