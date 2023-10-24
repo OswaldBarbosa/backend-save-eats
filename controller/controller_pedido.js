@@ -278,6 +278,7 @@ const getDetalhesPedidoPorID = async function (id) {
                 const produto = {
                     id_produto: detalhe.id_produto,
                     nome_produto: detalhe.nome_produto,
+                    preco_produto : detalhe.preco_produto,
                     descricao_produto: detalhe.descricao_produto,
                     imagem_produto: detalhe.imagem_produto,
                     id_status_produto: detalhe.id_status_produto,

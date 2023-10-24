@@ -4186,21 +4186,31 @@ app.get('/v1/saveeats/obter-dados-do-mercado-pago', async (req, res) => {
 * Data : 23/10/2023
 ********************************/
 
+// importa o módulo 'http' para criar um servidor HTTP
+const http = require('http');
 
+
+// importa o módulo 'socket.io' para configurar WebSocket
 const socketIO = require('socket.io');
 
+
 // 'app' é a aplicação Express
-//const server = http.createServer(app); 
-//const io = socketIO(server);
+// cria um servidor HTTP usando o Express como manipulador de solicitações
+const server = http.createServer(app); 
 
+// configura o WebSocket no mesmo servidor HTTP
+const io = socketIO(server);
 
-// io.on('connection', (socket) => {
-//     console.log('Cliente conectado');
+// configura um tratamento para quando um cliente se conecta/desconecta
+// registra no console quando um cliente se conecta/desconecta
+io.on('connection', (socket) => {
+
+    console.log('Cliente conectado');
     
-//     socket.on('disconnect', () => {
-//         console.log('Cliente desconectado');
-//     });
-// });
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
+});
 
 app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON, async function (request, response) {
 
@@ -4212,9 +4222,9 @@ app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON,
 
         let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
         
-        // Aqui, após salvar o pedido no banco de dados, emite uma notificação em tempo real para o front-end do restaurante
-        // Emite o evento 'novo_pedido'
-        //O restaurante precisa estar escutando esse evento no web
+        // aqui, após salvar o pedido no banco de dados, emite uma notificação em tempo real para o front-end do restaurante
+        // emite o evento 'novo_pedido'
+        //o restaurante precisa estar escutando esse evento no web
         io.emit('novo_pedido', dadosBody); 
 
         response.status(resulDados.status)
