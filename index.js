@@ -4205,10 +4205,10 @@ const io = socketIO(server);
 // registra no console quando um cliente se conecta/desconecta
 io.on('connection', (socket) => {
 
-    console.log('Cliente conectado');
+    console.log('Restaurante conectado');
     
     socket.on('disconnect', () => {
-        console.log('Cliente desconectado');
+        console.log('Restaurante desconectado');
     });
 });
 
@@ -4227,6 +4227,8 @@ app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON,
         //o restaurante precisa estar escutando esse evento no web
         io.emit('novo_pedido', dadosBody); 
 
+        console.log(dadosBody);
+        
         response.status(resulDados.status)
         response.json(resulDados)
     } else {
