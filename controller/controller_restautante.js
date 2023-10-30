@@ -379,13 +379,11 @@ const getFreteAreaEntregaIdDoRestaurante = async function (idRestaurante) {
 
         dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
         dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
-        
-        let quantidadeFreteAreaEntrega = dadosRestaurante.length;
-        dadosRestauranteJSON.frete_area_entrega_do_restaurante = quantidadeFreteAreaEntrega
-        dadosRestauranteJSON.frete_area_entrega_do_restaurante = dadosRestaurante;
-
+        dadosRestauranteJSON.quantidade = dadosRestaurante.length
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = dadosRestaurante[0];
 
         return dadosRestauranteJSON
+
     } else {
         return message.ERROR_INTERNAL_SERVER
     }
