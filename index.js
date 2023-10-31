@@ -631,7 +631,24 @@ app.put('/v1/saveeats/status-pedido', cors(), bodyParserJSON, async function (re
 });
 
 
+//EndPoint: POST - Restaurante adicionar seus dias/horarios funcionament (PROCEDURE)
+app.post('/v1/saveeats/restaurante/dias-horario-funcionamento',cors(), bodyParserJSON, async function (request, response) {
 
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.restauranteInserirSeusDiasHorariosFuncionamento(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
@@ -4178,64 +4195,6 @@ app.get('/v1/saveeats/obter-dados-do-mercado-pago', async (req, res) => {
 
 
 
-///////////////////////////////////////// Pedido em tempo real  //////////////////////////////////////////////
-
-
-/********************************
-* Objetivo : API de controle da tbl_pedido com web.sockets
-* Data : 23/10/2023
-********************************/
-
-// importa o módulo 'http' para criar um servidor HTTP
-const http = require('http');
-
-
-// importa o módulo 'socket.io' para configurar WebSocket
-const socketIO = require('socket.io');
-
-
-// 'app' é a aplicação Express
-// cria um servidor HTTP usando o Express como manipulador de solicitações
-const server = http.createServer(app); 
-
-// configura o WebSocket no mesmo servidor HTTP
-const io = socketIO(server);
-
-// configura um tratamento para quando um cliente se conecta/desconecta
-// registra no console quando um cliente se conecta/desconecta
-io.on('connection', (socket) => {
-
-    console.log('Restaurante conectado');
-    
-    socket.on('disconnect', () => {
-        console.log('Restaurante desconectado');
-    });
-});
-
-app.post('/v1/saveeats/cliente/pedido/teste/websockets', cors(), bodyParserJSON, async function (request, response) {
-
-    let contentType = request.headers['content-type']
-
-    if (String(contentType).toLowerCase() == 'application/json') {
-        
-        let dadosBody = request.body
-
-        let resulDados = await controllerProcedure.clienteInserirPedido(dadosBody)
-        
-        // aqui, após salvar o pedido no banco de dados, emite uma notificação em tempo real para o front-end do restaurante
-        // emite o evento 'novo_pedido'
-        //o restaurante precisa estar escutando esse evento no web
-        io.emit('novo_pedido', dadosBody); 
-
-        console.log(dadosBody);
-        
-        response.status(resulDados.status)
-        response.json(resulDados)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
-});
 
 
 

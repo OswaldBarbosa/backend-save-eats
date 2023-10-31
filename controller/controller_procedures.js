@@ -363,6 +363,33 @@ const clienteInserirPedido = async function (dadosProcedures) {
 }
 
 
+//funcao pra restaurante cadastrar seus dias e horarios de funcionamento
+const restauranteInserirSeusDiasHorariosFuncionamento = async (dados) => {
+
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.horario_inicio == '' || dados.horario_inicio == undefined ||
+        dados.horario_final == '' || dados.horario_final == undefined ||
+        dados.dias_semana == '' || dados.dias_semana == undefined 
+      
+        ) {
+            return message.ERROR_REQUIRED_FIELDS
+    
+        } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureRestauranteInsertDiasHorariosFuncionamento(dados)
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
 
 
 
@@ -378,5 +405,6 @@ module.exports = {
     restauranteInserirSuasAreasDeEntrega,
     restauranteAtualizarSuasAreasDeEntrega,
     atualizarCadastroRestaurante,
-    clienteInserirPedido
+    clienteInserirPedido,
+    restauranteInserirSeusDiasHorariosFuncionamento
 }
