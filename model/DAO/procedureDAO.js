@@ -235,7 +235,7 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
  const procedureClienteInsertPedido = async function (dadosProcedures) {
      let call = `
 
-    CALL InserirPedidoComProdutosValorTotal(
+    CALL InserirPedidoComProdutosValorTotalComFrete(
          @novo_numero_pedido,
          ${dadosProcedures.id_status_pedido},
          ${dadosProcedures.id_restaurante_forma_pagamento},
