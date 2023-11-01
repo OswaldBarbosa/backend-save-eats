@@ -124,8 +124,11 @@ const inserirCadastroCliente = async (dadosCliente) => {
 
         if (resultadoDados) {
 
+            let novoCliente = await clienteDAO.selectLastId()
+
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
             dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            dadosJSON.cliente = novoCliente
 
             return dadosJSON
 
