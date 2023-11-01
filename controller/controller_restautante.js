@@ -443,6 +443,31 @@ const atualizarRaioEntregaByIdDoRestaurante = async function (dadosRaioEntrega) 
 }
 
 
+const getDiaHorarioFuncionamentoRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectDiaHorarioFuncionamentoByIdRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        dadosRestauranteJSON.dias_horarios_funcionamento = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
+
+
+
+
 module.exports = {
     deletarRestaurante,
     atualizarRestaurante,
@@ -459,7 +484,6 @@ module.exports = {
     getFormaPagamentoPeloIdDoRestaurante,
     getFreteAreaEntregaIdDoRestaurante,
     getRaioEntregaByIdDoRestaurante,
-    atualizarRaioEntregaByIdDoRestaurante
-
-
+    atualizarRaioEntregaByIdDoRestaurante,
+    getDiaHorarioFuncionamentoRestaurante
 }

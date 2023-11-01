@@ -258,7 +258,6 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
  }
 
 
-
 //Funcao para o restaurante adicionar seus dias/horarios funcionamentos  - PROCEDURE
 const procedureRestauranteInsertDiasHorariosFuncionamento = async function (dadosProcedures) {
 
@@ -281,6 +280,31 @@ const procedureRestauranteInsertDiasHorariosFuncionamento = async function (dado
         return false
     }
 }
+
+
+//Funcao para o restaurante editar os horarios de um dia da semana - PROCEDURE
+const procedureUpdateHorariosFuncionamentoDoRestaurante = async function (dadosProcedures) {
+
+    let call = `
+    CALL restaurante_editar_horario_funcionamento(
+
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.dia_semana_id},
+        '${dadosProcedures.horario_inicio}',
+        '${dadosProcedures.horario_final}'
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
+
+        return true
+    } else {
+        return false
+    }
+}
+
 
 
  const selectLastId = async function () {
@@ -306,5 +330,6 @@ module.exports = {
     procedureUpdateDadosRestaurante,
     procedureClienteInsertPedido,
     procedureRestauranteInsertDiasHorariosFuncionamento,
+    procedureUpdateHorariosFuncionamentoDoRestaurante,
     selectLastId
 }

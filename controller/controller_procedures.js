@@ -15,7 +15,7 @@ var statusProdutoDAO = require('../model/DAO/status_produtoDAO.js')
 var categoriaProdutoDAO = require('../model/DAO/categoria_produtoDAO.js')
 var formaPagamentoDAO = require('../model/DAO/forma_de_pagamentoDAO.js')
 var freteAreaEntregaDAO = require('../model/DAO/frete_area_entregaDAO.js')
-
+var diaSemanaDAO = require('../model/DAO/dia_semanaDAO.js')
 
 //funcao para fazer o cadastro do restaurante 
 const inserirCadastroProcedure = async (dadosCadastro) => {
@@ -128,7 +128,7 @@ const inserirCadastroCliente = async (dadosCliente) => {
 
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
             dadosJSON.message = message.SUCESS_CREATED_ITEM.message
-            dadosJSON.cliente = novoCliente
+            dadosJSON.cliente = novoCliente[0]
 
             return dadosJSON
 
@@ -395,7 +395,39 @@ const restauranteInserirSeusDiasHorariosFuncionamento = async (dados) => {
 }
 
 
+//funcao para o restaurante atualizar seu horario de funcionamento
+const restauranteAtualizarHorarioFuncionamento = async (dados) => {
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.dia_semana_id == '' || dados.dia_semana_id == undefined ||
+        dados.horario_inicio == '' || dados.horario_inicio == undefined ||
+        dados.horario_final == '' || dados.horario_final == undefined 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+        // Verifica se o restaurante_id e dia_semana_idexiste no banco de dados 
+        const restauranteExistente = await restauranteDAO.selectRestauranteByID(dados.restaurante_id);
+        const diaSemanaExistente = await diaSemanaDAO.selectDiaSemanaByID(dados.dia_semana_id);
 
+        if (!restauranteExistente) {
+            return message.ERROR_INVALID_ID_RESTAURANTE;
+        }
+        if (!diaSemanaExistente) {
+            return message.ERROR_INVALID_ID_DIA_SEMANA;
+        }
+        let dadosJSON = {};
+
+        const resultadoDados = await proceduresDAO.procedureUpdateHorariosFuncionamentoDoRestaurante(dados);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
 
 
 
@@ -409,5 +441,7 @@ module.exports = {
     restauranteAtualizarSuasAreasDeEntrega,
     atualizarCadastroRestaurante,
     clienteInserirPedido,
-    restauranteInserirSeusDiasHorariosFuncionamento
+    restauranteInserirSeusDiasHorariosFuncionamento,
+    restauranteAtualizarHorarioFuncionamento
+
 }

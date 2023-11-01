@@ -440,7 +440,31 @@ const updateRaioEntregaByIdRestaurant = async (dadosRestaurante) => {
     }
 }
 
+const selectDiaHorarioFuncionamentoByIdRestaurante = async (idRestaurante) => {
 
+    let idDoRestaurante = idRestaurante
+
+    let sql = `    SELECT
+    ds.dia_semana AS dia_da_semana,
+    TIME_FORMAT(hf.horario_inicio, '%H:%i') AS horario_inicio,
+    TIME_FORMAT(hf.horario_final, '%H:%i') AS horario_final
+    FROM
+    tbl_restaurante_funcionamento_dia_semana rfd
+    INNER JOIN
+    tbl_dia_semana ds ON rfd.id_dia_semana = ds.id
+    INNER JOIN
+    tbl_horario_funcionamento hf ON rfd.id_horario_funcionamento = hf.id
+    WHERE
+    rfd.id_restaurante =  ${idDoRestaurante};`
+
+    let rsDiaHorarioFuncionamento = await prisma.$queryRawUnsafe(sql);
+
+    if (rsDiaHorarioFuncionamento.length > 0) {
+        return rsDiaHorarioFuncionamento
+    } else {
+        return false;
+    }
+}
 
 module.exports = {
     insertRestaurante,
@@ -461,6 +485,7 @@ module.exports = {
     selectFormaPagamentoByIDRestaurante,
     selectFreteAreaEntregaByIDRestaurante,
     selectRaioEntregaByIdRestaurant,
-    updateRaioEntregaByIdRestaurant
+    updateRaioEntregaByIdRestaurant,
+    selectDiaHorarioFuncionamentoByIdRestaurante
 
 }

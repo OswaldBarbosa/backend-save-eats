@@ -650,6 +650,50 @@ app.post('/v1/saveeats/restaurante/dias-horario-funcionamento',cors(), bodyParse
 
 });
 
+
+
+//EndPoint: GET - Retorna os dias/horarios funcionamento de um restaurante
+app.get('/v1/saveeats/restaurante/dia-horario-funcionamento/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getDiaHorarioFuncionamentoRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+//EndPoint: PUT - Restaurante atualizar horario de funcionamento de um dia especifico
+app.put('/v1/saveeats/restaurante/dia-horario-funcionamento', cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type'];
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+
+        let dadosBody = request.body;
+
+        let resultDados = await controllerProcedure.restauranteAtualizarHorarioFuncionamento(dadosBody);
+        response.status(resultDados.status)
+        response.json(resultDados)
+
+    } else {
+
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+
+    }
+
+});
+
+
+
+
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
 
