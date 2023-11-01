@@ -631,7 +631,7 @@ app.put('/v1/saveeats/status-pedido', cors(), bodyParserJSON, async function (re
 });
 
 
-//EndPoint: POST - Restaurante adicionar seus dias/horarios funcionament (PROCEDURE)
+//EndPoint: POST - Restaurante adicionar seus dias/horarios funcionamento (PROCEDURE)
 app.post('/v1/saveeats/restaurante/dias-horario-funcionamento',cors(), bodyParserJSON, async function (request, response) {
 
     let contentType = request.headers['content-type']

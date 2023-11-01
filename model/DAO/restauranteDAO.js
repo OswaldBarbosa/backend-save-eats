@@ -126,7 +126,7 @@ const selectAllRestaurante = async function () {
 }
 
 const selectRestauranteByID = async function (id) {
-    let sql = `select * from tbl_restaurante where id = ${id}`
+    let sql = `select * from vwRestauranteCategoriaTelefoneEndereco where id = ${id}`
 
     let rsRestaurante = await prisma.$queryRawUnsafe(sql)
 
