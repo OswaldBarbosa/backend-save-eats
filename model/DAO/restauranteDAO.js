@@ -466,6 +466,50 @@ const selectDiaHorarioFuncionamentoByIdRestaurante = async (idRestaurante) => {
     }
 }
 
+
+const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
+
+    let idDoRestaurante = idRestaurante
+
+    let sql = `
+
+    SELECT
+    avaliacao.id AS avaliacao_id,
+    avaliacao.quantidade_estrela,
+    avaliacao.descricao AS avaliacao_descricao,
+    DATE_FORMAT(avaliacao.data_avaliacao, '%d/%m/%Y') AS data_avaliacao,
+    recomendacao.id AS recomendacao_id,
+    recomendacao.recomendacao,
+    cliente.nome AS nome_cliente,
+    cliente.foto AS foto_cliente
+
+    FROM
+
+    tbl_avaliacao avaliacao
+    INNER JOIN
+    tbl_avaliacao_recomendacao AR ON avaliacao.id = AR.id_avaliacao
+
+    INNER JOIN
+    tbl_recomendacao recomendacao ON AR.id_recomendacao = recomendacao.id
+
+    INNER JOIN
+    tbl_cliente cliente ON avaliacao.id_cliente = cliente.id
+
+    INNER JOIN
+    tbl_restaurante restaurante ON avaliacao.id_restaurante = restaurante.id
+
+    WHERE avaliacao.id_restaurante =  ${idDoRestaurante};`
+
+    let rsAvaliacoesRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAvaliacoesRestaurante.length > 0) {
+        return rsAvaliacoesRestaurante
+    } else {
+        return false;
+    }
+}
+
+
 module.exports = {
     insertRestaurante,
     deleteRestaurante,
@@ -486,6 +530,7 @@ module.exports = {
     selectFreteAreaEntregaByIDRestaurante,
     selectRaioEntregaByIdRestaurant,
     updateRaioEntregaByIdRestaurant,
-    selectDiaHorarioFuncionamentoByIdRestaurante
+    selectDiaHorarioFuncionamentoByIdRestaurante,
+    selectAvaliacoesByIdRestaurante
 
 }

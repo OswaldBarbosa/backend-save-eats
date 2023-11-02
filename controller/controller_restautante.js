@@ -9,9 +9,9 @@
 //Import do arquivo de configuração das variaveis, constantes e funções globais
 var message = require('./modulo/config.js')
 
-
 var restauranteDAO = require('../model/DAO/restauranteDAO.js')
 
+//crud basico
 const inserirRestaurante = async function (dadosRestaurante) {
 
     if (
@@ -122,7 +122,7 @@ const atualizarRestaurante = async function (dadosRestaurante, idRestaurante) {
                 return message.ERROR_NOT_FOUND
             }
         }
-    }
+}
 
 const getRestaurantes = async function () {
     let dadosRestaurantesJSON = {};
@@ -443,7 +443,7 @@ const atualizarRaioEntregaByIdDoRestaurante = async function (dadosRaioEntrega) 
 }
 
 
-const getDiaHorarioFuncionamentoRestaurante = async function (idRestaurante) {
+const getDiaHorarioFuncionamentoByIdRestaurante = async function (idRestaurante) {
 
     let idDoRestaurante = idRestaurante
 
@@ -465,6 +465,27 @@ const getDiaHorarioFuncionamentoRestaurante = async function (idRestaurante) {
 }
 
 
+const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante;
+
+    let dadosRestaurante = await restauranteDAO.selectAvaliacoesByIdRestaurante(idDoRestaurante);
+
+    const quantidadeAvaliacoes = dadosRestaurante.length; 
+
+    let dadosRestauranteJSON = {
+        "status": message.SUCESS_REQUEST.status,
+        "message": message.SUCESS_REQUEST.message,
+        "quantidade_avaliacoes": quantidadeAvaliacoes,
+        "avaliacoes_do_restaurante": dadosRestaurante
+    };
+
+    if (dadosRestaurante) {
+        return dadosRestauranteJSON;
+    } else {
+        return message.ERROR_INTERNAL_SERVER;
+    }
+}
 
 
 
@@ -485,5 +506,6 @@ module.exports = {
     getFreteAreaEntregaIdDoRestaurante,
     getRaioEntregaByIdDoRestaurante,
     atualizarRaioEntregaByIdDoRestaurante,
-    getDiaHorarioFuncionamentoRestaurante
+    getDiaHorarioFuncionamentoByIdRestaurante,
+    getAvaliacoesByIdRestaurante
 }

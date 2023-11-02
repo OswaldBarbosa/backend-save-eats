@@ -223,7 +223,6 @@ const atualizarProdutoNoCardapio = async (dadosProduto) => {
 
         let dadosJSON = {}
 
-        // Chame sua função ou método para atualizar o produto no banco de dados
         const resultadoDados = await proceduresDAO.procedureUpdateProduto(dadosProduto);
 
         if (resultadoDados) {
@@ -429,6 +428,35 @@ const restauranteAtualizarHorarioFuncionamento = async (dados) => {
     }
 }
 
+//funcao para o cliente avaliar um restaurante
+const clienteAvaliarRestaurante = async (dados) => {
+
+    if (
+        dados.cliente_id == '' || dados.cliente_id == undefined ||
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.quantidade_estrela == '' || dados.quantidade_estrela == undefined ||
+        dados.descricao == '' || dados.descricao == undefined ||
+        dados.data_avaliacao == '' || dados.data_avaliacao == undefined ||
+        dados.recomendacoes == '' || dados.recomendacoes == undefined
+      
+        ) {
+            return message.ERROR_REQUIRED_FIELDS
+    
+        } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureClienteAvaliarRestaurante(dados)
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
 
 
 module.exports = {
@@ -442,6 +470,7 @@ module.exports = {
     atualizarCadastroRestaurante,
     clienteInserirPedido,
     restauranteInserirSeusDiasHorariosFuncionamento,
-    restauranteAtualizarHorarioFuncionamento
+    restauranteAtualizarHorarioFuncionamento,
+    clienteAvaliarRestaurante
 
 }

@@ -274,7 +274,6 @@ const procedureRestauranteInsertDiasHorariosFuncionamento = async function (dado
     let resultStatus = await prisma.$executeRawUnsafe(call)
 
     if(resultStatus){
-
         return true
     } else {
         return false
@@ -305,6 +304,28 @@ const procedureUpdateHorariosFuncionamentoDoRestaurante = async function (dadosP
     }
 }
 
+//Funcao para o cliente avaliar um restaurante  - PROCEDURE
+const procedureClienteAvaliarRestaurante = async function (dadosProcedures) {
+    try {
+        let call = `
+        CALL AvaliarRestaurante(
+            ${dadosProcedures.cliente_id},
+            ${dadosProcedures.restaurante_id},
+            ${dadosProcedures.quantidade_estrela},
+            '${dadosProcedures.descricao}',
+            '${dadosProcedures.data_avaliacao}',
+            '${dadosProcedures.recomendacoes}' 
+        );    
+        `;
+
+        await prisma.$executeRawUnsafe(call);
+        // chamada da procedure foi bem-sucedida
+        return true; 
+    } catch (error) {
+        console.error('Erro ao chamar a procedure:', error);
+        return false; 
+    }
+}
 
 
  const selectLastId = async function () {
@@ -331,5 +352,6 @@ module.exports = {
     procedureClienteInsertPedido,
     procedureRestauranteInsertDiasHorariosFuncionamento,
     procedureUpdateHorariosFuncionamentoDoRestaurante,
+    procedureClienteAvaliarRestaurante,
     selectLastId
 }

@@ -348,7 +348,7 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
                 descricao_produto: detalhe.descricao_produto,
-                preco_produto: detalhe.preco_produto,
+                preco_produto_formatado: detalhe.preco_produto_formatado,
                 // Outros campos de detalhes do produto
             };
 

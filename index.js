@@ -265,6 +265,25 @@ app.get('/v1/saveeats/endereco/cliente/idcliente/:id', cors(), bodyParserJSON, a
     response.json(dados)
 });
 
+//EndPoint: POST - Cliene avaliar um restaurante (PROCEDURE)
+app.post('/v1/saveeats/cliente-avaliar-restaurante',cors(), bodyParserJSON, async function (request, response) {
+
+    let contentType = request.headers['content-type']
+
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let dadosBody = request.body
+
+        let resulDados = await controllerProcedure.clienteAvaliarRestaurante(dadosBody)
+
+        response.status(resulDados.status)
+        response.json(resulDados)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+
+});
+
 ///////////////////////////////////////// Restaurante //////////////////////////////////////////////
 
 
@@ -691,7 +710,22 @@ app.put('/v1/saveeats/restaurante/dia-horario-funcionamento', cors(), bodyParser
 
 });
 
+//EndPoint: GET - Retorna as avaliacoes de um restaurante 
+app.get('/v1/saveeats/avaliacoes/restaurante/idRestaurante/:idRestaurante', cors(), async function (request, response) {
 
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getAvaliacoesByIdRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
 
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////

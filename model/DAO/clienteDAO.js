@@ -203,6 +203,8 @@ const selectEnderecoByIdCliente = async function (id) {
     
         
 }
+
+
 module.exports = {
     insertCliente,
     deleteCliente,
