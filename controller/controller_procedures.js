@@ -437,7 +437,7 @@ const clienteAvaliarRestaurante = async (dados) => {
         dados.quantidade_estrela == '' || dados.quantidade_estrela == undefined ||
         dados.descricao == '' || dados.descricao == undefined ||
         dados.data_avaliacao == '' || dados.data_avaliacao == undefined ||
-        dados.recomendacoes == '' || dados.recomendacoes == undefined
+        dados.recomendacao_id == '' || dados.recomendacao_id == undefined
       
         ) {
             return message.ERROR_REQUIRED_FIELDS

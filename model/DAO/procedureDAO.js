@@ -314,7 +314,7 @@ const procedureClienteAvaliarRestaurante = async function (dadosProcedures) {
             ${dadosProcedures.quantidade_estrela},
             '${dadosProcedures.descricao}',
             '${dadosProcedures.data_avaliacao}',
-            '${dadosProcedures.recomendacoes}' 
+            ${dadosProcedures.recomendacao_id} 
         );    
         `;
 
