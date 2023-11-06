@@ -67,14 +67,28 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 //funcao para atualizar dados de um restaurante
 const atualizarCadastroRestaurante = async (dadosRestaurante) => {     
     if (
-        dadosRestaurante.p_restaurante_id === undefined || dadosRestaurante.p_restaurante_id === null ||dadosRestaurante.p_restaurante_id === '' 
+        dadosRestaurante.id_restaurante === undefined || dadosRestaurante.id_restaurante === null ||dadosRestaurante.id_restaurante === '' ||
+        dadosRestaurante.nome_proprietario === undefined || dadosRestaurante.nome_proprietario === null ||dadosRestaurante.nome_proprietario === '' ||
+        dadosRestaurante.nome_fantasia === undefined || dadosRestaurante.nome_fantasia === null ||dadosRestaurante.nome_fantasia === '' ||
+        dadosRestaurante.razao_social === undefined || dadosRestaurante.razao_social === null ||dadosRestaurante.razao_social === '' ||
+        dadosRestaurante.email === undefined || dadosRestaurante.email === null ||dadosRestaurante.email === '' ||
+        dadosRestaurante.senha === undefined || dadosRestaurante.senha === null ||dadosRestaurante.senha === '' ||
+        dadosRestaurante.cnpj === undefined || dadosRestaurante.cnpj === null ||dadosRestaurante.cnpj === '' ||
+        dadosRestaurante.categoria_restaurante === undefined || dadosRestaurante.categoria_restaurante === null ||dadosRestaurante.categoria_restaurante === '' ||
+        dadosRestaurante.numero_telefone === undefined || dadosRestaurante.numero_telefone === null ||dadosRestaurante.numero_telefone === '' ||
+        dadosRestaurante.id_endereco_restaurante === undefined || dadosRestaurante.id_endereco_restaurante === null ||dadosRestaurante.id_endereco_restaurante === '' ||
+        dadosRestaurante.rua === undefined || dadosRestaurante.rua === null ||dadosRestaurante.rua === '' ||
+        dadosRestaurante.cep === undefined || dadosRestaurante.cep === null ||dadosRestaurante.cep === '' ||
+        dadosRestaurante.bairro === undefined || dadosRestaurante.bairro === null ||dadosRestaurante.bairro === '' ||
+        dadosRestaurante.numero === undefined || dadosRestaurante.numero === null ||dadosRestaurante.numero === '' ||
+        dadosRestaurante.nome_cidade === undefined || dadosRestaurante.nome_cidade === null ||dadosRestaurante.nome_cidade === '' ||
+        dadosRestaurante.nome_estado === undefined || dadosRestaurante.nome_estado === null ||dadosRestaurante.nome_estado === '' 
     ) {
         return message.ERROR_REQUIRED_FIELDS;
     } else {
 
         let dadosJSON = {}
-
-      
+    
         const resultadoDados = await proceduresDAO.procedureUpdateDadosRestaurante(dadosRestaurante);
 
         if (resultadoDados) {

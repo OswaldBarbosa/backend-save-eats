@@ -514,7 +514,6 @@ module.exports = {
     insertRestaurante,
     deleteRestaurante,
     selectRestauranteByID,
-    updateRestaurante,
     selectAllRestaurante,
     selectRestauranteByEmailPassword,
     verificarEmailExistenteRestaurante,
