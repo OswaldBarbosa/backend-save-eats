@@ -474,6 +474,8 @@ const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
     let sql = `
 
     SELECT
+    restaurante.nome_fantasia AS nome_restaurante,
+    FORMAT(AVG(avaliacao.quantidade_estrela), 1) AS media_estrelas,
     avaliacao.id AS avaliacao_id,
     avaliacao.quantidade_estrela,
     avaliacao.descricao AS avaliacao_descricao,
@@ -482,23 +484,25 @@ const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
     recomendacao.recomendacao,
     cliente.nome AS nome_cliente,
     cliente.foto AS foto_cliente
-
     FROM
-
     tbl_avaliacao avaliacao
-    INNER JOIN
-    tbl_avaliacao_recomendacao AR ON avaliacao.id = AR.id_avaliacao
-
-    INNER JOIN
-    tbl_recomendacao recomendacao ON AR.id_recomendacao = recomendacao.id
-
-    INNER JOIN
-    tbl_cliente cliente ON avaliacao.id_cliente = cliente.id
-
-    INNER JOIN
-    tbl_restaurante restaurante ON avaliacao.id_restaurante = restaurante.id
-
-    WHERE avaliacao.id_restaurante =  ${idDoRestaurante};`
+    INNER JOIN tbl_avaliacao_recomendacao AR ON avaliacao.id = AR.id_avaliacao
+    INNER JOIN tbl_recomendacao recomendacao ON AR.id_recomendacao = recomendacao.id
+    INNER JOIN tbl_cliente cliente ON avaliacao.id_cliente = cliente.id
+    INNER JOIN tbl_restaurante restaurante ON avaliacao.id_restaurante = restaurante.id
+    WHERE
+    avaliacao.id_restaurante = '${idDoRestaurante}'
+    GROUP BY
+    restaurante.nome_fantasia,
+    avaliacao.id,
+    avaliacao.quantidade_estrela,
+    avaliacao.descricao,
+    avaliacao.data_avaliacao,
+    recomendacao.id,
+    recomendacao.recomendacao,
+    cliente.nome,
+    cliente.foto;
+`
 
     let rsAvaliacoesRestaurante = await prisma.$queryRawUnsafe(sql);
 

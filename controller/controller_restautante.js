@@ -466,18 +466,30 @@ const getDiaHorarioFuncionamentoByIdRestaurante = async function (idRestaurante)
 
 
 const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
-
+    
     let idDoRestaurante = idRestaurante;
-
     let dadosRestaurante = await restauranteDAO.selectAvaliacoesByIdRestaurante(idDoRestaurante);
+    const quantidadeAvaliacoes = dadosRestaurante.length;
 
-    const quantidadeAvaliacoes = dadosRestaurante.length; 
+    // Adicione o campo media_estrelas diretamente e substitua ponto por vírgula
+    let mediaEstrelas = dadosRestaurante[0].media_estrelas.toString().replace('.', ',');
 
     let dadosRestauranteJSON = {
         "status": message.SUCESS_REQUEST.status,
         "message": message.SUCESS_REQUEST.message,
         "quantidade_avaliacoes": quantidadeAvaliacoes,
-        "avaliacoes_do_restaurante": dadosRestaurante
+        "media_estrelas_restaurante": mediaEstrelas,
+        "avaliacoes_do_restaurante": dadosRestaurante.map(avaliacao => ({
+        "avaliacao_id": avaliacao.avaliacao_id,
+        "nome_restaurante": avaliacao.nome_restaurante,
+        "quantidade_estrela": avaliacao.quantidade_estrela,
+        "avaliacao_descricao": avaliacao.avaliacao_descricao,
+        "data_avaliacao": avaliacao.data_avaliacao,
+        "recomendacao_id": avaliacao.recomendacao_id,
+        "recomendacao": avaliacao.recomendacao,
+        "nome_cliente": avaliacao.nome_cliente,
+        "foto_cliente": avaliacao.foto_cliente
+        }))
     };
 
     if (dadosRestaurante) {
@@ -486,6 +498,9 @@ const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
         return message.ERROR_INTERNAL_SERVER;
     }
 }
+
+
+
 
 
 
