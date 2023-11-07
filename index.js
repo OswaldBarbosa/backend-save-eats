@@ -676,7 +676,7 @@ app.get('/v1/saveeats/restaurante/dia-horario-funcionamento/idRestaurante/:idRes
 
     let idRestaurante = request.params.idRestaurante;
 
-    let dadosRestaurante = await controllerRestaurante.getDiaHorarioFuncionamentoRestaurante(idRestaurante);
+    let dadosRestaurante = await controllerRestaurante.getDiaHorarioFuncionamentoByIdRestaurante(idRestaurante);
 
     if (dadosRestaurante) {
         response.json(dadosRestaurante);
