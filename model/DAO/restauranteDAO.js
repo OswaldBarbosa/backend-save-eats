@@ -514,6 +514,38 @@ const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
 }
 
 
+//traz o total de vendas,e o valor liquido pelo  id do restaurante
+const selectValorTotalComissaoValorLiquidoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para buscar e calcular os dados financeiro pelo id do restaurante
+    let sql = `
+
+    SELECT ROUND(SUM(tbl_pedido.valor_total), 2) AS total_pedidos,
+
+    ROUND((SUM(tbl_pedido.valor_total) * 0.11), 2) AS comissao_save_eats,
+
+    ROUND((SUM(tbl_pedido.valor_total) * (1 - 0.11)), 2) AS valor_liquido
+
+    FROM tbl_pedido
+
+    WHERE tbl_pedido.id_restaurante = '${idDoRestaurante}';
+
+    `
+
+    let rsFinanceiroRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFinanceiroRestaurante.length > 0) {
+        return rsFinanceiroRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+
+
 module.exports = {
     insertRestaurante,
     deleteRestaurante,
@@ -534,6 +566,7 @@ module.exports = {
     selectRaioEntregaByIdRestaurant,
     updateRaioEntregaByIdRestaurant,
     selectDiaHorarioFuncionamentoByIdRestaurante,
-    selectAvaliacoesByIdRestaurante
+    selectAvaliacoesByIdRestaurante,
+    selectValorTotalComissaoValorLiquidoByIDRestaurante
 
 }

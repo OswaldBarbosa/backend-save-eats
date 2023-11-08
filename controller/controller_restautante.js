@@ -466,20 +466,21 @@ const getDiaHorarioFuncionamentoByIdRestaurante = async function (idRestaurante)
 
 
 const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
+
     let idDoRestaurante = idRestaurante;
     let dadosRestaurante = await restauranteDAO.selectAvaliacoesByIdRestaurante(idDoRestaurante);
 
     // Inicialize as variáveis com valores padrão
     let quantidadeAvaliacoes = 0;
     let mediaEstrelas = "0,0";
-    let contagemAvaliacoesPorEstrela = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    let contagemAvaliacoesPorEstrela = [0, 0, 0, 0, 0];
 
     if (dadosRestaurante && Array.isArray(dadosRestaurante) && dadosRestaurante.length > 0) {
         quantidadeAvaliacoes = dadosRestaurante.length;
 
         dadosRestaurante.forEach((avaliacao) => {
             const quantidadeEstrela = avaliacao.quantidade_estrela;
-            contagemAvaliacoesPorEstrela[quantidadeEstrela]++;
+            contagemAvaliacoesPorEstrela[quantidadeEstrela - 1]++;
         });
 
         const somaEstrelas = dadosRestaurante.reduce((total, avaliacao) => total + avaliacao.quantidade_estrela, 0);
@@ -487,13 +488,13 @@ const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
     }
 
     const dadosRestauranteJSON = {
-        "status": message.SUCESS_REQUEST.status,
-        "message": message.SUCESS_REQUEST.message,
-        "quantidade_avaliacoes": quantidadeAvaliacoes,
-        "media_estrelas": mediaEstrelas,
-        "contagem_avaliacoes_por_estrela": contagemAvaliacoesPorEstrela,
-        "avaliacoes_do_restaurante": dadosRestaurante && Array.isArray(dadosRestaurante)
-            ? dadosRestaurante.map((avaliacao) => ({
+                "status": message.SUCESS_REQUEST.status,
+                "message": message.SUCESS_REQUEST.message,
+                "quantidade_avaliacoes": quantidadeAvaliacoes,
+                "media_estrelas": mediaEstrelas,
+                "contagem_avaliacoes_por_estrela": contagemAvaliacoesPorEstrela,
+                "avaliacoes_do_restaurante": dadosRestaurante && Array.isArray(dadosRestaurante)
+                ? dadosRestaurante.map((avaliacao) => ({
                 "avaliacao_id": avaliacao.avaliacao_id,
                 "nome_restaurante": avaliacao.nome_restaurante,
                 "quantidade_estrela": avaliacao.quantidade_estrela,
@@ -511,6 +512,33 @@ const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
 };
 
 
+const getValorTotalComissaoValorLiquidoByIdRestaurante = async function (idRestaurante) {
+    if (idRestaurante === '' || idRestaurante === undefined || isNaN(idRestaurante)) {
+        return message.ERROR_INVALID_ID;
+    } else {
+        let dadosJSON = {};
+        let dados = await restauranteDAO.selectValorTotalComissaoValorLiquidoByIDRestaurante(idRestaurante);
+
+        if (dados) {
+            const formatarNumeros = (numero) => {
+                return numero.toFixed(2).replace('.', ',');
+            };
+
+            const dadosFormatados = dados.map((item) => ({
+                total_pedidos: formatarNumeros(item.total_pedidos),
+                comissao_save_eats: formatarNumeros(item.comissao_save_eats),
+                valor_liquido: formatarNumeros(item.valor_liquido),
+            }));
+
+            dadosJSON.status = message.SUCESS_REQUEST.status;
+            dadosJSON.message = message.SUCESS_REQUEST.message;
+            dadosJSON.dados_financeiro = dadosFormatados;
+            return dadosJSON;
+        } else {
+            return message.ERROR_NOT_FOUND;
+        }
+    }
+}
 
 
 
@@ -539,5 +567,6 @@ module.exports = {
     getRaioEntregaByIdDoRestaurante,
     atualizarRaioEntregaByIdDoRestaurante,
     getDiaHorarioFuncionamentoByIdRestaurante,
-    getAvaliacoesByIdRestaurante
+    getAvaliacoesByIdRestaurante,
+    getValorTotalComissaoValorLiquidoByIdRestaurante
 }

@@ -728,6 +728,23 @@ app.get('/v1/saveeats/avaliacoes/restaurante/idRestaurante/:idRestaurante', cors
 });
 
 
+//EndPoint: GET - Retorna valor total de vendas e valor liquido de um restaurante 
+app.get('/v1/saveeats/valor-total-liquido-comissao/restaurante/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getValorTotalComissaoValorLiquidoByIdRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
 
