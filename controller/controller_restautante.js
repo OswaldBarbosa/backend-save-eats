@@ -466,62 +466,49 @@ const getDiaHorarioFuncionamentoByIdRestaurante = async function (idRestaurante)
 
 
 const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
-
     let idDoRestaurante = idRestaurante;
     let dadosRestaurante = await restauranteDAO.selectAvaliacoesByIdRestaurante(idDoRestaurante);
 
-    if (!dadosRestaurante || dadosRestaurante.length === 0) {
-        return message.ERROR_NOT_FOUND; 
-    }
-
-    // valor padrão
-    let mediaEstrelas = 0; 
-
-    // inicializa a variável quantidadeAvaliacoes  
-    let quantidadeAvaliacoes = 0; 
-
-     // inicializa o objeto de contagem
+    // Inicialize as variáveis com valores padrão
+    let quantidadeAvaliacoes = 0;
+    let mediaEstrelas = "0,0";
     let contagemAvaliacoesPorEstrela = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
-    if (dadosRestaurante.length > 0) {
+    if (dadosRestaurante && Array.isArray(dadosRestaurante) && dadosRestaurante.length > 0) {
+        quantidadeAvaliacoes = dadosRestaurante.length;
 
-        // define a quantidade de avaliações
-        quantidadeAvaliacoes = dadosRestaurante.length; 
-
-        // contar as avaliações por quantidade de estrelas
-        dadosRestaurante.forEach(avaliacao => {
+        dadosRestaurante.forEach((avaliacao) => {
             const quantidadeEstrela = avaliacao.quantidade_estrela;
             contagemAvaliacoesPorEstrela[quantidadeEstrela]++;
         });
 
-        // calcular a média das estrelas (se houver avaliações)
         const somaEstrelas = dadosRestaurante.reduce((total, avaliacao) => total + avaliacao.quantidade_estrela, 0);
         mediaEstrelas = (somaEstrelas / quantidadeAvaliacoes).toFixed(1).replace('.', ',');
     }
 
-            // objeto dadosRestauranteJSON
-            let dadosRestauranteJSON = {
-            "status": message.SUCESS_REQUEST.status,
-            "message": message.SUCESS_REQUEST.message,
-            "quantidade_avaliacoes": quantidadeAvaliacoes,
-            "media_estrelas": mediaEstrelas,
-            "contagem_avaliacoes_por_estrela": contagemAvaliacoesPorEstrela,         
-            "avaliacoes_do_restaurante": dadosRestaurante.map(avaliacao => ({
-            "avaliacao_id": avaliacao.avaliacao_id,
-            "nome_restaurante": avaliacao.nome_restaurante,
-            "quantidade_estrela": avaliacao.quantidade_estrela,
-            "avaliacao_descricao": avaliacao.avaliacao_descricao,
-            "data_avaliacao": avaliacao.data_avaliacao,
-            "recomendacao_id": avaliacao.recomendacao_id,
-            "recomendacao": avaliacao.recomendacao,
-            "nome_cliente": avaliacao.nome_cliente,
-            "foto_cliente": avaliacao.foto_cliente
-        })
-    )};
+    const dadosRestauranteJSON = {
+        "status": message.SUCESS_REQUEST.status,
+        "message": message.SUCESS_REQUEST.message,
+        "quantidade_avaliacoes": quantidadeAvaliacoes,
+        "media_estrelas": mediaEstrelas,
+        "contagem_avaliacoes_por_estrela": contagemAvaliacoesPorEstrela,
+        "avaliacoes_do_restaurante": dadosRestaurante && Array.isArray(dadosRestaurante)
+            ? dadosRestaurante.map((avaliacao) => ({
+                "avaliacao_id": avaliacao.avaliacao_id,
+                "nome_restaurante": avaliacao.nome_restaurante,
+                "quantidade_estrela": avaliacao.quantidade_estrela,
+                "avaliacao_descricao": avaliacao.avaliacao_descricao,
+                "data_avaliacao": avaliacao.data_avaliacao,
+                "recomendacao_id": avaliacao.recomendacao_id,
+                "recomendacao": avaliacao.recomendacao,
+                "nome_cliente": avaliacao.nome_cliente,
+                "foto_cliente": avaliacao.foto_cliente,
+            }))
+            : [],
+    };
 
     return dadosRestauranteJSON;
-}
-
+};
 
 
 
