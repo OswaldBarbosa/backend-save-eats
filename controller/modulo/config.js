@@ -12,6 +12,11 @@ const ERROR_INTERNAL_SERVER = {status: 500, message: 'Devido a um erro interno d
 
 const ERROR_INVALID_ID = {status: 400, message: 'O ID informado na requisição não é valido, ou não foi encaminhado'}
 
+
+const ERROR_INVALID_ID_RESTAURANTE = {status: 400, message: 'O ID do restaurante informado na requisição não é valido, ou não foi encaminhado'}
+
+const ERROR_INVALID_ID_DIA_SEMANA = {status: 400, message: 'O ID do dia informado na requisição não é valido, ou não foi encaminhado'}
+
 const ERROR_NOT_FOUND_ID = {status: 400, message: 'O ID informado na requisição não existe, ou não pode ser encontrado'}
 
 const ERROR_NOT_FOUND = {status: 404, message: 'Nenhum item foi encontrado na requisição'}
@@ -62,5 +67,7 @@ module.exports = {
     ERROR_CATEGORY_PRODUCT_NOT_FOUND,
     ERROR_RESTAURANT_NOT_FOUND,
     ERROR_FORMA_PAGAMENTO_NOT_FOUND,
-    SUCESS_CREATED_PEDIDO
+    SUCESS_CREATED_PEDIDO,
+    ERROR_INVALID_ID_RESTAURANTE,
+    ERROR_INVALID_ID_DIA_SEMANA
 }

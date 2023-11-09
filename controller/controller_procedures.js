@@ -15,7 +15,7 @@ var statusProdutoDAO = require('../model/DAO/status_produtoDAO.js')
 var categoriaProdutoDAO = require('../model/DAO/categoria_produtoDAO.js')
 var formaPagamentoDAO = require('../model/DAO/forma_de_pagamentoDAO.js')
 var freteAreaEntregaDAO = require('../model/DAO/frete_area_entregaDAO.js')
-
+var diaSemanaDAO = require('../model/DAO/dia_semanaDAO.js')
 
 //funcao para fazer o cadastro do restaurante 
 const inserirCadastroProcedure = async (dadosCadastro) => {
@@ -67,14 +67,28 @@ const inserirCadastroProcedure = async (dadosCadastro) => {
 //funcao para atualizar dados de um restaurante
 const atualizarCadastroRestaurante = async (dadosRestaurante) => {     
     if (
-        dadosRestaurante.p_restaurante_id === undefined || dadosRestaurante.p_restaurante_id === null ||dadosRestaurante.p_restaurante_id === '' 
+        dadosRestaurante.id_restaurante === undefined || dadosRestaurante.id_restaurante === null ||dadosRestaurante.id_restaurante === '' ||
+        dadosRestaurante.nome_proprietario === undefined || dadosRestaurante.nome_proprietario === null ||dadosRestaurante.nome_proprietario === '' ||
+        dadosRestaurante.nome_fantasia === undefined || dadosRestaurante.nome_fantasia === null ||dadosRestaurante.nome_fantasia === '' ||
+        dadosRestaurante.razao_social === undefined || dadosRestaurante.razao_social === null ||dadosRestaurante.razao_social === '' ||
+        dadosRestaurante.email === undefined || dadosRestaurante.email === null ||dadosRestaurante.email === '' ||
+        dadosRestaurante.senha === undefined || dadosRestaurante.senha === null ||dadosRestaurante.senha === '' ||
+        dadosRestaurante.cnpj === undefined || dadosRestaurante.cnpj === null ||dadosRestaurante.cnpj === '' ||
+        dadosRestaurante.categoria_restaurante === undefined || dadosRestaurante.categoria_restaurante === null ||dadosRestaurante.categoria_restaurante === '' ||
+        dadosRestaurante.numero_telefone === undefined || dadosRestaurante.numero_telefone === null ||dadosRestaurante.numero_telefone === '' ||
+        dadosRestaurante.id_endereco_restaurante === undefined || dadosRestaurante.id_endereco_restaurante === null ||dadosRestaurante.id_endereco_restaurante === '' ||
+        dadosRestaurante.rua === undefined || dadosRestaurante.rua === null ||dadosRestaurante.rua === '' ||
+        dadosRestaurante.cep === undefined || dadosRestaurante.cep === null ||dadosRestaurante.cep === '' ||
+        dadosRestaurante.bairro === undefined || dadosRestaurante.bairro === null ||dadosRestaurante.bairro === '' ||
+        dadosRestaurante.numero === undefined || dadosRestaurante.numero === null ||dadosRestaurante.numero === '' ||
+        dadosRestaurante.nome_cidade === undefined || dadosRestaurante.nome_cidade === null ||dadosRestaurante.nome_cidade === '' ||
+        dadosRestaurante.nome_estado === undefined || dadosRestaurante.nome_estado === null ||dadosRestaurante.nome_estado === '' 
     ) {
         return message.ERROR_REQUIRED_FIELDS;
     } else {
 
         let dadosJSON = {}
-
-      
+    
         const resultadoDados = await proceduresDAO.procedureUpdateDadosRestaurante(dadosRestaurante);
 
         if (resultadoDados) {
@@ -124,8 +138,11 @@ const inserirCadastroCliente = async (dadosCliente) => {
 
         if (resultadoDados) {
 
+            let novoCliente = await clienteDAO.selectLastId()
+
             dadosJSON.status = message.SUCESS_CREATED_ITEM.status
             dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            dadosJSON.cliente = novoCliente[0]
 
             return dadosJSON
 
@@ -220,7 +237,6 @@ const atualizarProdutoNoCardapio = async (dadosProduto) => {
 
         let dadosJSON = {}
 
-        // Chame sua função ou método para atualizar o produto no banco de dados
         const resultadoDados = await proceduresDAO.procedureUpdateProduto(dadosProduto);
 
         if (resultadoDados) {
@@ -392,8 +408,69 @@ const restauranteInserirSeusDiasHorariosFuncionamento = async (dados) => {
 }
 
 
+//funcao para o restaurante atualizar seu horario de funcionamento
+const restauranteAtualizarHorarioFuncionamento = async (dados) => {
+    if (
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.dia_semana_id == '' || dados.dia_semana_id == undefined ||
+        dados.horario_inicio == '' || dados.horario_inicio == undefined ||
+        dados.horario_final == '' || dados.horario_final == undefined 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+        // Verifica se o restaurante_id e dia_semana_idexiste no banco de dados 
+        const restauranteExistente = await restauranteDAO.selectRestauranteByID(dados.restaurante_id);
+        const diaSemanaExistente = await diaSemanaDAO.selectDiaSemanaByID(dados.dia_semana_id);
 
+        if (!restauranteExistente) {
+            return message.ERROR_INVALID_ID_RESTAURANTE;
+        }
+        if (!diaSemanaExistente) {
+            return message.ERROR_INVALID_ID_DIA_SEMANA;
+        }
+        let dadosJSON = {};
 
+        const resultadoDados = await proceduresDAO.procedureUpdateHorariosFuncionamentoDoRestaurante(dados);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
+
+//funcao para o cliente avaliar um restaurante
+const clienteAvaliarRestaurante = async (dados) => {
+
+    if (
+        dados.cliente_id == '' || dados.cliente_id == undefined ||
+        dados.restaurante_id == '' || dados.restaurante_id == undefined ||
+        dados.quantidade_estrela == '' || dados.quantidade_estrela == undefined ||
+        dados.descricao == '' || dados.descricao == undefined ||
+        dados.data_avaliacao == '' || dados.data_avaliacao == undefined ||
+        dados.recomendacao_id == '' || dados.recomendacao_id == undefined
+      
+        ) {
+            return message.ERROR_REQUIRED_FIELDS
+    
+        } else {
+
+        let dadosJSON = {}
+
+        let resultadoDados = await proceduresDAO.procedureClienteAvaliarRestaurante(dados)
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_CREATED_ITEM.status
+            dadosJSON.message = message.SUCESS_CREATED_ITEM.message
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
+}
 
 
 module.exports = {
@@ -406,5 +483,8 @@ module.exports = {
     restauranteAtualizarSuasAreasDeEntrega,
     atualizarCadastroRestaurante,
     clienteInserirPedido,
-    restauranteInserirSeusDiasHorariosFuncionamento
+    restauranteInserirSeusDiasHorariosFuncionamento,
+    restauranteAtualizarHorarioFuncionamento,
+    clienteAvaliarRestaurante
+
 }

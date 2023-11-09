@@ -237,6 +237,7 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
 
 
 const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
+    
     let nameRestaurante = name;
 
     // Script para buscar os PRODUTOS de um restaurante filtrando pelo nome fantasia
@@ -248,7 +249,16 @@ const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
     let rsProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
 
     if (rsProdutosRestaurante.length > 0) {
-        return rsProdutosRestaurante
+
+        //formatar o preço para usar vírgula
+        rsProdutosRestaurante = rsProdutosRestaurante.map(produto => {
+            return {
+                ...produto,
+                preco: produto.preco.toString().replace('.', ',')
+            };
+        });
+
+        return rsProdutosRestaurante;
     } else {
         return false;
     }
@@ -268,14 +278,23 @@ const selectProdutoByIDRestaurante = async function (nomeProduto,idRestaurante) 
                 AND produto.nome LIKE '%${nomeDoProduto}%'`
 
 
-    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+                let rsProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCProdutosRestaurante.length > 0) {
-        return rsCProdutosRestaurante
-    } else {
-        return false;
-    }
-}
+                if (rsProdutosRestaurante.length > 0) {
+            
+                    //formatar o preço para usar vírgula
+                    rsProdutosRestaurante = rsProdutosRestaurante.map(produto => {
+                        return {
+                            ...produto,
+                            preco: produto.preco.toString().replace('.', ',')
+                        };
+                    });
+            
+                    return rsProdutosRestaurante;
+                } else {
+                    return false;
+                }
+            }
 
 
 const selectProdutosPausadosDeUmRestaurante = async function (restaurante) {
@@ -440,13 +459,185 @@ const updateRaioEntregaByIdRestaurant = async (dadosRestaurante) => {
     }
 }
 
+const selectDiaHorarioFuncionamentoByIdRestaurante = async (idRestaurante) => {
+
+    let idDoRestaurante = idRestaurante
+
+    let sql = `    SELECT
+    ds.dia_semana AS dia_da_semana,
+    TIME_FORMAT(hf.horario_inicio, '%H:%i') AS horario_inicio,
+    TIME_FORMAT(hf.horario_final, '%H:%i') AS horario_final
+    FROM
+    tbl_restaurante_funcionamento_dia_semana rfd
+    INNER JOIN
+    tbl_dia_semana ds ON rfd.id_dia_semana = ds.id
+    INNER JOIN
+    tbl_horario_funcionamento hf ON rfd.id_horario_funcionamento = hf.id
+    WHERE
+    rfd.id_restaurante =  ${idDoRestaurante};`
+
+    let rsDiaHorarioFuncionamento = await prisma.$queryRawUnsafe(sql);
+
+    if (rsDiaHorarioFuncionamento.length > 0) {
+        return rsDiaHorarioFuncionamento
+    } else {
+        return false;
+    }
+}
+
+
+const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
+
+    let idDoRestaurante = idRestaurante
+
+    let sql = `
+
+    SELECT
+    restaurante.nome_fantasia AS nome_restaurante,
+    FORMAT(AVG(avaliacao.quantidade_estrela), 1) AS media_estrelas,
+    avaliacao.id AS avaliacao_id,
+    avaliacao.quantidade_estrela,
+    avaliacao.descricao AS avaliacao_descricao,
+    DATE_FORMAT(avaliacao.data_avaliacao, '%d/%m/%Y') AS data_avaliacao,
+    recomendacao.id AS recomendacao_id,
+    recomendacao.recomendacao,
+    cliente.nome AS nome_cliente,
+    cliente.foto AS foto_cliente
+    FROM
+    tbl_avaliacao avaliacao
+    INNER JOIN tbl_avaliacao_recomendacao AR ON avaliacao.id = AR.id_avaliacao
+    INNER JOIN tbl_recomendacao recomendacao ON AR.id_recomendacao = recomendacao.id
+    INNER JOIN tbl_cliente cliente ON avaliacao.id_cliente = cliente.id
+    INNER JOIN tbl_restaurante restaurante ON avaliacao.id_restaurante = restaurante.id
+    WHERE
+    avaliacao.id_restaurante = '${idDoRestaurante}'
+    GROUP BY
+    restaurante.nome_fantasia,
+    avaliacao.id,
+    avaliacao.quantidade_estrela,
+    avaliacao.descricao,
+    avaliacao.data_avaliacao,
+    recomendacao.id,
+    recomendacao.recomendacao,
+    cliente.nome,
+    cliente.foto;
+`
+
+    let rsAvaliacoesRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAvaliacoesRestaurante.length > 0) {
+        return rsAvaliacoesRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+//traz o total de vendas,e o valor liquido pelo  id do restaurante
+const selectValorTotalComissaoValorLiquidoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para buscar e calcular os dados financeiro pelo id do restaurante
+    let sql = `
+
+    SELECT ROUND(SUM(tbl_pedido.valor_total), 2) AS total_pedidos,
+
+    ROUND((SUM(tbl_pedido.valor_total) * 0.11), 2) AS comissao_save_eats,
+
+    ROUND((SUM(tbl_pedido.valor_total) * (1 - 0.11)), 2) AS valor_liquido
+
+    FROM tbl_pedido
+
+    WHERE tbl_pedido.id_restaurante = '${idDoRestaurante}';
+
+    `
+
+    let rsFinanceiroRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsFinanceiroRestaurante.length > 0) {
+        return rsFinanceiroRestaurante
+    } else {
+        return false;
+    }
+}
+
+
+//traz os pedidos,valor total e pedidos concluidos da data atual pelo  id do restaurante
+const selectAcompanhamentoDesempenhoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    let sql = `
+
+    SELECT
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE()) AS quantidade_pedidos_data_atual,
+
+    (SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE()) AS valor_total_pedidos_data_atual,
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE() AND pedido.id_status_pedido = (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')) AS quantidade_pedidos_concluido_data_atual
+
+    FROM
+
+    tbl_restaurante restaurante
+
+    WHERE
+
+    restaurante.id = '${idDoRestaurante}';
+
+    `
+
+    let rsAcompanhamentoDesempenhoRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAcompanhamentoDesempenhoRestaurante.length > 0) {
+        return rsAcompanhamentoDesempenhoRestaurante
+    } else {
+        return false;
+    }
+}
+
+//traz os pedidos,valor total e pedidos concluidos da MêS atual pelo  id do restaurante
+const selectAcompanhamentoDesempenhoMensalByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    let sql = `
+
+    SELECT
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) AS quantidade_pedidos_mes_atual, 
+
+    (SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) AS valor_total_pedidos_mes_atual,
+
+    ((SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) * 0.89) AS valor_liquido_mes_atual
+
+    FROM
+
+    tbl_restaurante restaurante
+
+    WHERE
+
+    restaurante.id = '${idDoRestaurante}';
+
+    `
+
+    let rsAcompanhamentoDesempenhoMensalRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAcompanhamentoDesempenhoMensalRestaurante.length > 0) {
+        return rsAcompanhamentoDesempenhoMensalRestaurante
+    } else {
+        return false;
+    }
+}
 
 
 module.exports = {
     insertRestaurante,
     deleteRestaurante,
     selectRestauranteByID,
-    updateRestaurante,
     selectAllRestaurante,
     selectRestauranteByEmailPassword,
     verificarEmailExistenteRestaurante,
@@ -461,6 +652,11 @@ module.exports = {
     selectFormaPagamentoByIDRestaurante,
     selectFreteAreaEntregaByIDRestaurante,
     selectRaioEntregaByIdRestaurant,
-    updateRaioEntregaByIdRestaurant
+    updateRaioEntregaByIdRestaurant,
+    selectDiaHorarioFuncionamentoByIdRestaurante,
+    selectAvaliacoesByIdRestaurante,
+    selectValorTotalComissaoValorLiquidoByIDRestaurante,
+    selectAcompanhamentoDesempenhoByIDRestaurante,
+    selectAcompanhamentoDesempenhoMensalByIDRestaurante
 
 }

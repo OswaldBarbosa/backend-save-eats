@@ -198,37 +198,34 @@ const procedureUpdateRestauranteAreaEntrega = async function (dadosProcedures) {
 const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
     let call = `
     CALL atualizaDadosRestaurante(
-        '${dadosProcedures.p_restaurante_id}',
-        '${dadosProcedures.p_novo_nome_proprietario}',
-        '${dadosProcedures.p_novo_nome_fantasia}',
-        '${dadosProcedures.p_nova_razao_social}',
-        '${dadosProcedures.p_novo_email}',
-        '${dadosProcedures.p_nova_senha}',
-        '${dadosProcedures.p_nova_foto}',
-        '${dadosProcedures.p_novo_cnpj}',
-        '${dadosProcedures.p_novo_nome_categoria}',
-        '${dadosProcedures.p_numero_telefone}',
-        ${dadosProcedures.idEndereco},
-        '${dadosProcedures.p_nova_rua}',
-        '${dadosProcedures.p_novo_cep}',
-        '${dadosProcedures.p_novo_bairro}',
-        '${dadosProcedures.p_novo_numero}',
-        '${dadosProcedures.p_novo_complemento}',
-        '${dadosProcedures.p_novo_nome_cidade}',
-        '${dadosProcedures.p_novo_nome_estado}'
+        ${dadosProcedures.id_restaurante},
+        '${dadosProcedures.nome_proprietario}',
+        '${dadosProcedures.nome_fantasia}',
+        '${dadosProcedures.razao_social}',
+        '${dadosProcedures.email}',
+        '${dadosProcedures.senha}',
+        '${dadosProcedures.foto}',
+        '${dadosProcedures.cnpj}',
+        '${dadosProcedures.categoria_restaurante}',
+        '${dadosProcedures.numero_telefone}',
+        ${dadosProcedures.id_endereco_restaurante},
+        '${dadosProcedures.rua}',
+        '${dadosProcedures.cep}',
+        '${dadosProcedures.bairro}',
+        '${dadosProcedures.numero}',
+        '${dadosProcedures.complemento}',
+        '${dadosProcedures.nome_cidade}',
+        '${dadosProcedures.nome_estado}'
     );
-    
 `
-
     let resultStatus = await prisma.$executeRawUnsafe(call)
-
-
     if(resultStatus){
         return true
     } else {
         return false
     }
 }
+
 
 
 //Funcao para um cliente realizar um pedido - PROCEDURE
@@ -258,7 +255,6 @@ const procedureUpdateDadosRestaurante = async function (dadosProcedures) {
  }
 
 
-
 //Funcao para o restaurante adicionar seus dias/horarios funcionamentos  - PROCEDURE
 const procedureRestauranteInsertDiasHorariosFuncionamento = async function (dadosProcedures) {
 
@@ -275,10 +271,56 @@ const procedureRestauranteInsertDiasHorariosFuncionamento = async function (dado
     let resultStatus = await prisma.$executeRawUnsafe(call)
 
     if(resultStatus){
+        return true
+    } else {
+        return false
+    }
+}
+
+
+//Funcao para o restaurante editar os horarios de um dia da semana - PROCEDURE
+const procedureUpdateHorariosFuncionamentoDoRestaurante = async function (dadosProcedures) {
+
+    let call = `
+    CALL restaurante_editar_horario_funcionamento(
+
+        ${dadosProcedures.restaurante_id},
+        ${dadosProcedures.dia_semana_id},
+        '${dadosProcedures.horario_inicio}',
+        '${dadosProcedures.horario_final}'
+
+    );    
+`
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if(resultStatus){
 
         return true
     } else {
         return false
+    }
+}
+
+//Funcao para o cliente avaliar um restaurante  - PROCEDURE
+const procedureClienteAvaliarRestaurante = async function (dadosProcedures) {
+    try {
+        let call = `
+        CALL AvaliarRestaurante(
+            ${dadosProcedures.cliente_id},
+            ${dadosProcedures.restaurante_id},
+            ${dadosProcedures.quantidade_estrela},
+            '${dadosProcedures.descricao}',
+            '${dadosProcedures.data_avaliacao}',
+            ${dadosProcedures.recomendacao_id} 
+        );    
+        `;
+
+        await prisma.$executeRawUnsafe(call);
+        // chamada da procedure foi bem-sucedida
+        return true; 
+    } catch (error) {
+        console.error('Erro ao chamar a procedure:', error);
+        return false; 
     }
 }
 
@@ -306,5 +348,7 @@ module.exports = {
     procedureUpdateDadosRestaurante,
     procedureClienteInsertPedido,
     procedureRestauranteInsertDiasHorariosFuncionamento,
+    procedureUpdateHorariosFuncionamentoDoRestaurante,
+    procedureClienteAvaliarRestaurante,
     selectLastId
 }
