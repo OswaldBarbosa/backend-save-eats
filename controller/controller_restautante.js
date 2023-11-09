@@ -510,11 +510,12 @@ const getAvaliacoesByIdRestaurante = async function (idRestaurante) {
 
     return dadosRestauranteJSON;
 };
-
-
 const getValorTotalComissaoValorLiquidoByIdRestaurante = async function (idRestaurante) {
+
     if (idRestaurante === '' || idRestaurante === undefined || isNaN(idRestaurante)) {
+
         return message.ERROR_INVALID_ID;
+
     } else {
         let dadosJSON = {};
         let dados = await restauranteDAO.selectValorTotalComissaoValorLiquidoByIDRestaurante(idRestaurante);
@@ -539,6 +540,63 @@ const getValorTotalComissaoValorLiquidoByIdRestaurante = async function (idResta
         }
     }
 }
+
+
+const getAcompanhamentoDesempenhoByIDRestaurante = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+
+        return message.ERROR_INVALID_ID
+
+    } else {
+        let dadosJSON = {}
+
+        let dados = await restauranteDAO.selectAcompanhamentoDesempenhoByIDRestaurante(id)
+
+        if (dados) {
+                dadosJSON.status = message.SUCESS_REQUEST.status
+                dadosJSON.message = message.SUCESS_REQUEST.message
+                dadosJSON.acompanhamento_desempenho_data_atual = dados.map(item => ({
+                quantidade_pedidos_data_atual: Number(item.quantidade_pedidos_data_atual),
+                valor_total_pedidos_data_atual: Number(item.valor_total_pedidos_data_atual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                quantidade_pedidos_concluido_data_atual: Number(item.quantidade_pedidos_concluido_data_atual),
+            }));
+            
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
+
+const getAcompanhamentoDesempenhoMensalByIDRestaurante = async function (id) {
+
+    if (id == '' || id == undefined || isNaN(id)) {
+
+        return message.ERROR_INVALID_ID
+
+    } else {
+        let dadosJSON = {}
+
+        let dados = await restauranteDAO.selectAcompanhamentoDesempenhoMensalByIDRestaurante(id)
+
+        if (dados) {
+                dadosJSON.status = message.SUCESS_REQUEST.status
+                dadosJSON.message = message.SUCESS_REQUEST.message
+                dadosJSON.acompanhamento_desempenho_mes_atual = dados.map(item => ({
+                quantidade_pedidos_mes_atual: Number(item.quantidade_pedidos_mes_atual),
+                valor_total_pedidos_mes_atual: Number(item.valor_total_pedidos_mes_atual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+                valor_liquido_mes_atual: Number(item.valor_liquido_mes_atual).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            }));
+            
+            return dadosJSON
+        } else {
+            return message.ERROR_NOT_FOUND
+        }
+    }
+}
+
 
 
 
@@ -568,5 +626,7 @@ module.exports = {
     atualizarRaioEntregaByIdDoRestaurante,
     getDiaHorarioFuncionamentoByIdRestaurante,
     getAvaliacoesByIdRestaurante,
-    getValorTotalComissaoValorLiquidoByIdRestaurante
+    getValorTotalComissaoValorLiquidoByIdRestaurante,
+    getAcompanhamentoDesempenhoByIDRestaurante,
+    getAcompanhamentoDesempenhoMensalByIDRestaurante
 }

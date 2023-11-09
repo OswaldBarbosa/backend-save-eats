@@ -237,6 +237,7 @@ const selectCategoriasDoRestaurantePeloNomeFantasia = async function (name) {
 
 
 const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
+    
     let nameRestaurante = name;
 
     // Script para buscar os PRODUTOS de um restaurante filtrando pelo nome fantasia
@@ -248,7 +249,16 @@ const selectProdutosDoRestaurantePeloNomeFantasia = async function (name) {
     let rsProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
 
     if (rsProdutosRestaurante.length > 0) {
-        return rsProdutosRestaurante
+
+        //formatar o preço para usar vírgula
+        rsProdutosRestaurante = rsProdutosRestaurante.map(produto => {
+            return {
+                ...produto,
+                preco: produto.preco.toString().replace('.', ',')
+            };
+        });
+
+        return rsProdutosRestaurante;
     } else {
         return false;
     }
@@ -268,14 +278,23 @@ const selectProdutoByIDRestaurante = async function (nomeProduto,idRestaurante) 
                 AND produto.nome LIKE '%${nomeDoProduto}%'`
 
 
-    let rsCProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
+                let rsProdutosRestaurante = await prisma.$queryRawUnsafe(sql);
 
-    if (rsCProdutosRestaurante.length > 0) {
-        return rsCProdutosRestaurante
-    } else {
-        return false;
-    }
-}
+                if (rsProdutosRestaurante.length > 0) {
+            
+                    //formatar o preço para usar vírgula
+                    rsProdutosRestaurante = rsProdutosRestaurante.map(produto => {
+                        return {
+                            ...produto,
+                            preco: produto.preco.toString().replace('.', ',')
+                        };
+                    });
+            
+                    return rsProdutosRestaurante;
+                } else {
+                    return false;
+                }
+            }
 
 
 const selectProdutosPausadosDeUmRestaurante = async function (restaurante) {
@@ -544,6 +563,75 @@ const selectValorTotalComissaoValorLiquidoByIDRestaurante = async function (idRe
 }
 
 
+//traz os pedidos,valor total e pedidos concluidos da data atual pelo  id do restaurante
+const selectAcompanhamentoDesempenhoByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    let sql = `
+
+    SELECT
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE()) AS quantidade_pedidos_data_atual,
+
+    (SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE()) AS valor_total_pedidos_data_atual,
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND DATE(pedido.data_pedido) = CURDATE() AND pedido.id_status_pedido = (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')) AS quantidade_pedidos_concluido_data_atual
+
+    FROM
+
+    tbl_restaurante restaurante
+
+    WHERE
+
+    restaurante.id = '${idDoRestaurante}';
+
+    `
+
+    let rsAcompanhamentoDesempenhoRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAcompanhamentoDesempenhoRestaurante.length > 0) {
+        return rsAcompanhamentoDesempenhoRestaurante
+    } else {
+        return false;
+    }
+}
+
+//traz os pedidos,valor total e pedidos concluidos da MêS atual pelo  id do restaurante
+const selectAcompanhamentoDesempenhoMensalByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    let sql = `
+
+    SELECT
+
+    (SELECT COUNT(id) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) AS quantidade_pedidos_mes_atual, 
+
+    (SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) AS valor_total_pedidos_mes_atual,
+
+    ((SELECT SUM(valor_total) FROM tbl_pedido pedido WHERE pedido.id_restaurante = restaurante.id AND MONTH(pedido.data_pedido) = MONTH(CURDATE())) * 0.89) AS valor_liquido_mes_atual
+
+    FROM
+
+    tbl_restaurante restaurante
+
+    WHERE
+
+    restaurante.id = '${idDoRestaurante}';
+
+    `
+
+    let rsAcompanhamentoDesempenhoMensalRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsAcompanhamentoDesempenhoMensalRestaurante.length > 0) {
+        return rsAcompanhamentoDesempenhoMensalRestaurante
+    } else {
+        return false;
+    }
+}
 
 
 module.exports = {
@@ -567,6 +655,8 @@ module.exports = {
     updateRaioEntregaByIdRestaurant,
     selectDiaHorarioFuncionamentoByIdRestaurante,
     selectAvaliacoesByIdRestaurante,
-    selectValorTotalComissaoValorLiquidoByIDRestaurante
+    selectValorTotalComissaoValorLiquidoByIDRestaurante,
+    selectAcompanhamentoDesempenhoByIDRestaurante,
+    selectAcompanhamentoDesempenhoMensalByIDRestaurante
 
 }

@@ -183,7 +183,7 @@ const getDetalhesPedido = async function () {
                     horario_pedido: detalhe.horario_pedido,
                     previsao_entrega: detalhe.previsao_entrega,
                     data_pedido: detalhe.data_pedido,
-                    valor_total: detalhe.valor_total,
+                    valor_total: detalhe.valor_total.toString().replace('.', ','),
                     status_pedido: detalhe.status_pedido,
                     id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
                     id_forma_pagamento: detalhe.id_forma_pagamento,
@@ -191,7 +191,7 @@ const getDetalhesPedido = async function () {
                     id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
                     id_frete_area_entrega: detalhe.id_frete_area_entrega,
                     km: detalhe.km,
-                    valor_entrega: detalhe.valor_entrega,
+                    valor_entrega: detalhe.valor_entrega.toString().replace('.', ','),
                     tempo_entrega: detalhe.tempo_entrega,
                     raio_entrega: detalhe.raio_entrega,
                     id_cliente: detalhe.id_cliente,
@@ -256,7 +256,7 @@ const getDetalhesPedidoPorID = async function (id) {
                 horario_pedido: dados[0].horario_pedido,
                 previsao_entrega: dados[0].previsao_entrega,
                 data_pedido: dados[0].data_pedido,
-                valor_total: dados[0].valor_total,
+                valor_total: dados[0].valor_total.toString().replace('.', ','),
                 status_pedido: dados[0].status_pedido,
                 id_restaurante_forma_pagamento: dados[0].id_restaurante_forma_pagamento,
                 id_forma_pagamento: dados[0].id_forma_pagamento,
@@ -264,7 +264,7 @@ const getDetalhesPedidoPorID = async function (id) {
                 id_restaurante_frete_area_entrega: dados[0].id_restaurante_frete_area_entrega,
                 id_frete_area_entrega: dados[0].id_frete_area_entrega,
                 km: dados[0].km,
-                valor_entrega: dados[0].valor_entrega,
+                valor_entrega: dados[0].valor_entrega.toString().replace('.', ','),
                 tempo_entrega: dados[0].tempo_entrega,
                 raio_entrega: dados[0].raio_entrega,
                 id_cliente: dados[0].id_cliente,
@@ -278,7 +278,7 @@ const getDetalhesPedidoPorID = async function (id) {
                 const produto = {
                     id_produto: detalhe.id_produto,
                     nome_produto: detalhe.nome_produto,
-                    preco_produto : detalhe.preco_produto,
+                    preco_produto : detalhe.preco_produto.toString().replace('.', ','),
                     descricao_produto: detalhe.descricao_produto,
                     imagem_produto: detalhe.imagem_produto,
                     id_status_produto: detalhe.id_status_produto,
@@ -300,7 +300,6 @@ const getDetalhesPedidoPorID = async function (id) {
 
 
 const getDetalhesPedidoPorIDRestaurante = async function (id) {
-
 
     let idDoRestaurante = id;
     let dadosRestauranteJSON = {};
@@ -324,7 +323,7 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
                     horario_pedido: detalhe.horario_pedido,
                     data_pedido: detalhe.data_pedido,
                     previsao_entrega: detalhe.previsao_entrega,
-                    valor_total: detalhe.valor_total,
+                    valor_total: detalhe.valor_total.toString().replace('.', ','),
                     status_pedido: detalhe.status_pedido,
                     id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
                     id_forma_pagamento: detalhe.id_forma_pagamento,
@@ -332,30 +331,30 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
                     id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
                     id_frete_area_entrega: detalhe.id_frete_area_entrega,
                     km: detalhe.km,
-                    valor_entrega: detalhe.valor_entrega,
+                    valor_entrega: detalhe.valor_entrega.toString().replace('.', ','),
                     tempo_entrega: detalhe.tempo_entrega,
                     raio_entrega: detalhe.raio_entrega,
                     id_cliente: detalhe.id_cliente,
                     nome_cliente: detalhe.nome_cliente,
                     telefone_cliente: detalhe.telefone_cliente,
-                    produtos: [], // Inicialize a array de produtos vazia
+                    // inicialize a array de produtos vazia
+                    produtos: [], 
                 };
                 detalhesPedido.push(detalhePedido);
             }
 
-            // Adicione os produtos a este detalhe do pedido
+            //  produtos a este detalhe do pedido
             const produto = {
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
                 descricao_produto: detalhe.descricao_produto,
-                preco_produto_formatado: detalhe.preco_produto_formatado,
-                // Outros campos de detalhes do produto
+                preco_produto: detalhe.preco_produto.toString().replace('.', ',')
             };
 
             detalhePedido.produtos.push(produto);
         });
 
-        // Adicione detalhes do pedido aos detalhes do pedido JSON
+        //  detalhes do pedido aos detalhes do pedido JSON
         dadosRestauranteJSON.detalhes_do_pedido = detalhesPedido;
 
         return dadosRestauranteJSON;
@@ -405,7 +404,7 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
                     horario_pedido: detalhe.horario_pedido,
                     data_pedido: detalhe.data_pedido,
                     previsao_entrega: detalhe.previsao_entrega,
-                    valor_total: detalhe.valor_total,
+                    valor_total: detalhe.valor_total.toString().replace('.', ','),
                     status_pedido: detalhe.status_pedido,
                     id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
                     id_forma_pagamento: detalhe.id_forma_pagamento,
@@ -413,7 +412,7 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
                     id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
                     id_frete_area_entrega: detalhe.id_frete_area_entrega,
                     km: detalhe.km,
-                    valor_entrega: detalhe.valor_entrega,
+                    valor_entrega: detalhe.valor_entrega.toString().replace('.', ','),
                     tempo_entrega: detalhe.tempo_entrega,
                     raio_entrega: detalhe.raio_entrega,
                     id_cliente: detalhe.id_cliente,
@@ -425,19 +424,19 @@ const getDetalhesPedidoPorIDCliente = async function (id) {
                 detalhesPedido.push(detalhePedido);
             }
 
-                // Adicione os produtos a este detalhe do pedido
+            // produtos a este detalhe do pedido
             const produto = {
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
                 descricao_produto: detalhe.descricao_produto,
-                preco_produto: detalhe.preco_produto,
-                // Outros campos de detalhes do produto
+                preco_produto: detalhe.preco_produto.toString().replace('.', ','),
+
             };
 
             detalhePedido.produtos.push(produto);
         }
 
-        // Adicione detalhes do pedido aos detalhes do pedido JSON
+        //detalhes do pedido aos detalhes do pedido JSON
         dadosRestauranteJSON.detalhes_do_pedido_do_cliente = detalhesPedido;
 
         return dadosRestauranteJSON;
@@ -473,7 +472,7 @@ const getDetalhesPedidoPorIDRestauranteNumeroPedido = async function (id,numeroP
                     horario_pedido: detalhe.horario_pedido,
                     data_pedido: detalhe.data_pedido,
                     previsao_entrega: detalhe.previsao_entrega,
-                    valor_total: detalhe.valor_total,
+                    valor_total: detalhe.valor_total.toString().replace('.', ','),
                     status_pedido: detalhe.status_pedido,
                     id_restaurante_forma_pagamento: detalhe.id_restaurante_forma_pagamento,
                     id_forma_pagamento: detalhe.id_forma_pagamento,
@@ -481,7 +480,7 @@ const getDetalhesPedidoPorIDRestauranteNumeroPedido = async function (id,numeroP
                     id_restaurante_frete_area_entrega: detalhe.id_restaurante_frete_area_entrega,
                     id_frete_area_entrega: detalhe.id_frete_area_entrega,
                     km: detalhe.km,
-                    valor_entrega: detalhe.valor_entrega,
+                    valor_entrega: detalhe.valor_entrega.toString().replace('.', ','),
                     tempo_entrega: detalhe.tempo_entrega,
                     raio_entrega: detalhe.raio_entrega,
                     id_cliente: detalhe.id_cliente,
@@ -498,7 +497,7 @@ const getDetalhesPedidoPorIDRestauranteNumeroPedido = async function (id,numeroP
                 id_produto: detalhe.id_produto,
                 nome_produto: detalhe.nome_produto,
                 descricao_produto: detalhe.descricao_produto,
-                preco_produto: detalhe.preco_produto,
+                preco_produto: detalhe.preco_produto.toString().replace('.', ','),
 
             };
 
