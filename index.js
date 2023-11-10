@@ -146,29 +146,25 @@ app.delete('/v1/saveeats/cliente/:id', cors(), bodyParserJSON, async function (r
 });
 
 //EndPoint: PUT - Atualiza cliente pelo id
-app.put('/v1/saveeats/cliente/:id', cors(), bodyParserJSON, async function (request, response) {
-    //reccebe o content-type da requisicao
+app.put('/v1/saveeats/cliente/', cors(), bodyParserJSON, async function (request, response) {
+    // Recebe o content-type da requisição
     let contentType = request.headers['content-type'];
 
-
-    if (String(contentType).toLowerCase() == 'application/json') {
-
+    if (String(contentType).toLowerCase() === 'application/json') {
         let idCliente = request.params.id;
-
         let dadosBody = request.body;
 
-        //Encaminha os dados para a controller
-        let resultDadosCliente = await controllerCliente.atualizarCliente(dadosBody, idCliente);
+        // Encaminha os dados para a controller
+        let resultDadosCliente = await controllerProcedure.atualizarCadastroCliente(dadosBody, idCliente);
 
-        response.status(resultDadosCliente.status)
-        response.json(resultDadosCliente)
-
+        response.status(resultDadosCliente.status);
+        response.json(resultDadosCliente);
     } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status);
+        response.json(message.ERROR_INVALID_CONTENT_TYPE);
     }
-
 });
+
 
 //EndPoint: GET - Retorna todos clientes
 app.get('/v1/saveeats/clientes', cors(),  async function (request, response) {
@@ -300,7 +296,7 @@ app.post('/v1/saveeats/restaurante/procedore',cors(), bodyParserJSON, async func
     if (String(contentType).toLowerCase() == 'application/json') {
         let dadosBody = request.body
 
-        let resulDados = await controllerProcedure.inserirCadastroProcedure(dadosBody)
+        let resulDados = await controllerProcedure.inserirCadastroProcedureRestaurante(dadosBody)
 
         response.status(resulDados.status)
         response.json(resulDados)

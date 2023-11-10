@@ -18,7 +18,7 @@ var freteAreaEntregaDAO = require('../model/DAO/frete_area_entregaDAO.js')
 var diaSemanaDAO = require('../model/DAO/dia_semanaDAO.js')
 
 //funcao para fazer o cadastro do restaurante 
-const inserirCadastroProcedure = async (dadosCadastro) => {
+const inserirCadastroProcedureRestaurante = async (dadosCadastro) => {
 
     if (dadosCadastro.nome_categoria == '' || dadosCadastro.nome_categoria == undefined ||
         dadosCadastro.nome_estado == '' || dadosCadastro.nome_estado == undefined ||
@@ -113,12 +113,12 @@ const inserirCadastroCliente = async (dadosCliente) => {
         dadosCliente.senha == '' || dadosCliente.senha == undefined ||
         dadosCliente.cpf == '' || dadosCliente.cpf == undefined ||
         dadosCliente.telefone == '' || dadosCliente.telefone == undefined ||
-        dadosCliente.nome_estado == '' || dadosCliente.nome_estado == undefined ||
-        dadosCliente.nome_cidade == '' || dadosCliente.nome_cidade == undefined ||
         dadosCliente.cep == '' || dadosCliente.cep == undefined ||
-        dadosCliente.rua == '' || dadosCliente.rua == undefined ||
+        dadosCliente.logradouro == '' || dadosCliente.logradouro == undefined ||
         dadosCliente.bairro == '' || dadosCliente.bairro == undefined ||
-        dadosCliente.numero == '' || dadosCliente.numero == undefined
+        dadosCliente.localidade == '' || dadosCliente.localidade == undefined ||
+        dadosCliente.numero == '' || dadosCliente.numero == undefined ||
+        dadosCliente.uf == '' || dadosCliente.uf == undefined 
     ) {
 
         return message.ERROR_REQUIRED_FIELDS
@@ -154,6 +154,41 @@ const inserirCadastroCliente = async (dadosCliente) => {
 
     }
 
+}
+
+
+//funcao para atualizar dados de um cliente
+const atualizarCadastroCliente = async (dadosCliente,idCliente) => { 
+
+    if (
+        dadosCliente.id_cliente == '' || dadosCliente.id_cliente == undefined ||
+        dadosCliente.nome == '' || dadosCliente.nome == undefined ||
+        dadosCliente.email == '' || dadosCliente.email == undefined ||
+        dadosCliente.senha == '' || dadosCliente.senha == undefined ||
+        dadosCliente.cpf == '' || dadosCliente.cpf == undefined ||
+        dadosCliente.telefone == '' || dadosCliente.telefone == undefined ||
+        dadosCliente.cep == '' || dadosCliente.cep == undefined ||
+        dadosCliente.logradouro == '' || dadosCliente.logradouro == undefined ||
+        dadosCliente.bairro == '' || dadosCliente.bairro == undefined ||
+        dadosCliente.localidade == '' || dadosCliente.localidade == undefined ||
+        dadosCliente.numero == '' || dadosCliente.numero == undefined ||
+        dadosCliente.uf == '' || dadosCliente.uf == undefined 
+    ) {
+        return message.ERROR_REQUIRED_FIELDS;
+    } else {
+
+        let dadosJSON = {}
+    
+        const resultadoDados = await proceduresDAO.procedureUpdateDadosCliente(dadosCliente,idCliente);
+
+        if (resultadoDados) {
+            dadosJSON.status = message.SUCESS_UPDATED_ITEM.status;
+            dadosJSON.message = message.SUCESS_UPDATED_ITEM.message;
+            return dadosJSON;
+        } else {
+            return message.ERROR_INTERNAL_SERVER;
+        }
+    }
 }
 
 
@@ -474,7 +509,7 @@ const clienteAvaliarRestaurante = async (dados) => {
 
 
 module.exports = {
-    inserirCadastroProcedure,
+    inserirCadastroProcedureRestaurante,
     inserirCadastroCliente,
     inserirProdutoNoCardapio,
     atualizarProdutoNoCardapio,
@@ -485,6 +520,7 @@ module.exports = {
     clienteInserirPedido,
     restauranteInserirSeusDiasHorariosFuncionamento,
     restauranteAtualizarHorarioFuncionamento,
-    clienteAvaliarRestaurante
+    clienteAvaliarRestaurante,
+    atualizarCadastroCliente
 
 }

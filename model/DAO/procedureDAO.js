@@ -47,22 +47,22 @@ const proceduresRestauranteCadastro = async function (dadosProcedures) {
 const procedureInsertCadastroCliente = async function (dadosProcedures) {
 
     let call = `
-    CALL procIntermedEnderecoCliente(
-        '${dadosProcedures.nome}',
-        '${dadosProcedures.email}',
-        '${dadosProcedures.senha}',
-        '${dadosProcedures.cpf}',
-        '${dadosProcedures.foto}',
-        '${dadosProcedures.telefone}',
-        '${dadosProcedures.nome_estado}',
-        '${dadosProcedures.nome_cidade}',
-        '${dadosProcedures.cep}',
-        '${dadosProcedures.rua}',
-        '${dadosProcedures.bairro}',
-        '${dadosProcedures.numero}',
-        '${dadosProcedures.complemento}'
-        
-    );
+CALL cadastrarCliente(
+    '${dadosProcedures.nome}',
+    '${dadosProcedures.email}',
+    '${dadosProcedures.senha}',
+    '${dadosProcedures.cpf}',
+    '${dadosProcedures.foto}',
+    '${dadosProcedures.telefone}',
+    '${dadosProcedures.cep}',
+    '${dadosProcedures.logradouro}',
+    '${dadosProcedures.complemento}',
+    '${dadosProcedures.bairro}',
+    '${dadosProcedures.localidade}',
+    ${dadosProcedures.numero},
+    '${dadosProcedures.uf}'
+);
+
     
 `
 
@@ -74,6 +74,38 @@ const procedureInsertCadastroCliente = async function (dadosProcedures) {
         return false
     }
 }
+
+
+//Funcao para atualizar um produto (na tela de cardapio do restaurante) - PROCEDURE
+const procedureUpdateDadosCliente = async function (dadosProcedures) {
+    
+    let call = `
+        CALL atualizarClienteEEndereco(
+            '${dadosProcedures.id_cliente}',
+            '${dadosProcedures.nome}',
+            '${dadosProcedures.email}',
+            '${dadosProcedures.senha}',
+            '${dadosProcedures.cpf}',
+            '${dadosProcedures.foto}',
+            '${dadosProcedures.telefone}',
+            '${dadosProcedures.cep}',
+            '${dadosProcedures.logradouro}',
+            '${dadosProcedures.complemento}',
+            '${dadosProcedures.bairro}',
+            '${dadosProcedures.localidade}',
+            ${dadosProcedures.numero},
+            '${dadosProcedures.uf}'
+        );
+    `;
+    let resultStatus = await prisma.$executeRawUnsafe(call)
+
+    if (resultStatus) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 //Funcao para cadastrar um produto (na tela de cardapio do restaurante) - PROCEDURE
 const procedureInsertProduto = async function (dadosProcedures) {
@@ -350,5 +382,6 @@ module.exports = {
     procedureRestauranteInsertDiasHorariosFuncionamento,
     procedureUpdateHorariosFuncionamentoDoRestaurante,
     procedureClienteAvaliarRestaurante,
+    procedureUpdateDadosCliente,
     selectLastId
 }
