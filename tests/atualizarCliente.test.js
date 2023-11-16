@@ -1,5 +1,6 @@
 // atualizarCliente.test.js
 
+// import dos módulo que contém a função a ser testada
 const controllerProcedure = require('../controller/controller_procedures');
 const message = require('../controller/modulo/config'); 
 
