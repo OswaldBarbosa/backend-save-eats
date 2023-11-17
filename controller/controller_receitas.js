@@ -118,9 +118,8 @@ const atualizarReceita = async function (dados, idReceita) {
 
 
 const getDetalhesReceitaPorId = async function (receita) {
-    
     let idReceita = receita;
-    let dadosJSON = {};
+    let dadosJSON = { detalhes_receita: {} }; // Inicialize detalhes_receita como um objeto vazio
 
     let dadosReceita = await receitasDAO.selectDetalhesReceitasByIdReceita(idReceita);
 
@@ -139,24 +138,23 @@ const getDetalhesReceitaPorId = async function (receita) {
             ingredientes.push(ingrediente);
         }
 
-            dadosJSON.status = 200;
-            dadosJSON.detalhes_receita = {
-            nome_receita: dadosReceita[0].nome_receita,
-            foto_receita: dadosReceita[0].foto_receita,
-            descricao: dadosReceita[0].descricao,
-            numero_porcoes: dadosReceita[0].numero_porcoes,
-            modo_preparo: dadosReceita[0].modo_preparo,
-            nivel_dificuldade: dadosReceita[0].nivel_dificuldade,
-            tempo_preparo: dadosReceita[0].tempo_preparo,
-            // Lista de ingredientes 
-            ingredientes: ingredientes 
-        };
+        // Atualize as propriedades de detalhes_receita
+        dadosJSON.status = 200;
+        dadosJSON.detalhes_receita.nome_receita = dadosReceita[0].nome_receita;
+        dadosJSON.detalhes_receita.foto_receita = dadosReceita[0].foto_receita;
+        dadosJSON.detalhes_receita.descricao = dadosReceita[0].descricao;
+        dadosJSON.detalhes_receita.numero_porcoes = dadosReceita[0].numero_porcoes;
+        dadosJSON.detalhes_receita.modo_preparo = dadosReceita[0].modo_preparo;
+        dadosJSON.detalhes_receita.nivel_dificuldade = dadosReceita[0].nivel_dificuldade;
+        dadosJSON.detalhes_receita.tempo_preparo = dadosReceita[0].tempo_preparo;
+        // Lista de ingredientes 
+        dadosJSON.detalhes_receita.ingredientes = ingredientes;
 
         return dadosJSON;
     } else {
-        return message.ERROR_NOT_FOUND
+        return message.ERROR_NOT_FOUND;
     }
-}
+};
 
 
 

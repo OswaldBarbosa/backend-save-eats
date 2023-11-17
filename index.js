@@ -4182,7 +4182,7 @@ app.post('/v1/saveeats/receita', cors(), bodyParserJSON, async function (request
 app.get('/v1/saveeats/detalhes/receitas/id/:id', cors(), async function (request, response) {
 
     let idReceita = request.params.id
-    console.log('porra');
+
     let dadosReceitas = await controllerReceitas.getDetalhesReceitaPorId(idReceita)
 
     response.status(dadosReceitas.status)

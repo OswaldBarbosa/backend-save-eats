@@ -333,7 +333,7 @@ const getDetalhesPedidoPorIDRestaurante = async function (id) {
                     km: detalhe.km,
                     valor_entrega: detalhe.valor_entrega.toString().replace('.', ','),
                     tempo_entrega: detalhe.tempo_entrega,
-                    raio_entrega: detalhhe.raio,
+                    raio_entrega: detalhe.raio,
                     id_cliente: detalhe.id_cliente,
                     nome_cliente: detalhe.nome_cliente,
                     telefone_cliente: detalhe.telefone_cliente,
