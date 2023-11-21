@@ -386,8 +386,7 @@ const clienteInserirPedido = async function (dadosProcedures) {
         dadosProcedures.id_restaurante_forma_pagamento == '' || dadosProcedures.id_restaurante_forma_pagamento == undefined ||
         dadosProcedures.id_restaurante_frete_area_entrega == '' || dadosProcedures.id_restaurante_frete_area_entrega == undefined ||
         dadosProcedures.id_cliente == '' || dadosProcedures.id_cliente == undefined ||
-        dadosProcedures.id_restaurante == '' || dadosProcedures.id_restaurante == undefined ||
-        dadosProcedures.produto_id1 == '' || dadosProcedures.produto_id1 == undefined 
+        dadosProcedures.id_restaurante == '' || dadosProcedures.id_restaurante == undefined 
     ){
         return message.ERROR_REQUIRED_FIELDS
     }else {
