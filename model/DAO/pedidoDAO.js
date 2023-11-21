@@ -327,7 +327,8 @@ const selectAllDetalhesPedidoByIdRestaurante = async function (idRestaurante) {
     on tbl_restaurante_frete_area_entrega.id_frete_area_entrega = tbl_frete_area_entrega.id
     inner join tbl_cliente
     on tbl_pedido.id_cliente = tbl_cliente.id
-    where tbl_pedido.id_restaurante = ${idRestaurante};`
+    where tbl_pedido.id_restaurante = ${idRestaurante}
+    ORDER BY tbl_pedido.data_pedido DESC;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
