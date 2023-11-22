@@ -463,18 +463,17 @@ const selectDiaHorarioFuncionamentoByIdRestaurante = async (idRestaurante) => {
 
     let idDoRestaurante = idRestaurante
 
-    let sql = `    SELECT
-    ds.dia_semana AS dia_da_semana,
-    TIME_FORMAT(hf.horario_inicio, '%H:%i') AS horario_inicio,
-    TIME_FORMAT(hf.horario_final, '%H:%i') AS horario_final
-    FROM
-    tbl_restaurante_funcionamento_dia_semana rfd
-    INNER JOIN
-    tbl_dia_semana ds ON rfd.id_dia_semana = ds.id
-    INNER JOIN
-    tbl_horario_funcionamento hf ON rfd.id_horario_funcionamento = hf.id
-    WHERE
-    rfd.id_restaurante =  ${idDoRestaurante};`
+    let sql = ` select tbl_restaurante_funcionamento_dia_semana.id,
+    tbl_dia_semana.dia_semana as dia_semana, 
+    TIME_FORMAT(tbl_horario_funcionamento.horario_inicio, '%H:%i') AS horario_inicio,
+    TIME_FORMAT(tbl_horario_funcionamento.horario_final, '%H:%i') AS horario_final
+    from tbl_restaurante_funcionamento_dia_semana 
+        INNER JOIN
+        tbl_dia_semana ON tbl_restaurante_funcionamento_dia_semana.id_dia_semana = tbl_dia_semana.id
+        INNER JOIN
+        tbl_horario_funcionamento ON tbl_restaurante_funcionamento_dia_semana.id_horario_funcionamento = tbl_horario_funcionamento.id
+        WHERE
+        tbl_restaurante_funcionamento_dia_semana.id_restaurante =  ${idDoRestaurante};`
 
     let rsDiaHorarioFuncionamento = await prisma.$queryRawUnsafe(sql);
 
