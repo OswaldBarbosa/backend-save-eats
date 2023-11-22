@@ -810,7 +810,38 @@ app.get('/v1/saveeats/acompanhamento-desempenho-mes-atual/restaurante/idRestaura
     }
 });
 
+//EndPoint: GET - Retorna o desempenho de vendas do MÊS atual de um restaurante 
+app.get('/v1/saveeats/acompanhamento-desempenho-mes-atual/restaurante/idRestaurante/:idRestaurante', cors(), async function (request, response) {
 
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getAcompanhamentoDesempenhoMensalByIDRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+//pedidos entregues e cancelados de um restaurante
+app.get('/v1/saveeats/pedidos-cancelados-entregues-mes-atual/restaurante/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getPedidosEntreguesECanceladosByIDRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
