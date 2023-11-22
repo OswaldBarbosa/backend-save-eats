@@ -632,6 +632,32 @@ const selectAcompanhamentoDesempenhoMensalByIDRestaurante = async function (idRe
     }
 }
 
+//traz os pedidos com status entregue e cancelado pelo id restaurante
+const selectPedidosEntreguesECanceladosByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    let sql = `
+
+    SELECT *
+    FROM tbl_pedido
+    WHERE id_status_pedido IN (
+
+        (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Cancelado'),
+        (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')
+    ) AND id_restaurante = ${idDoRestaurante}';
+
+    `
+
+    let rsPedidoRestaurante = await prisma.$queryRawUnsafe(sql);
+
+    if (rsPedidoRestaurante.length > 0) {
+        return rsPedidoRestaurante
+    } else {
+        return false;
+    }
+}
 
 module.exports = {
     insertRestaurante,
@@ -656,6 +682,7 @@ module.exports = {
     selectAvaliacoesByIdRestaurante,
     selectValorTotalComissaoValorLiquidoByIDRestaurante,
     selectAcompanhamentoDesempenhoByIDRestaurante,
-    selectAcompanhamentoDesempenhoMensalByIDRestaurante
+    selectAcompanhamentoDesempenhoMensalByIDRestaurante,
+    selectPedidosEntreguesECanceladosByIDRestaurante
 
 }

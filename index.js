@@ -556,12 +556,28 @@ app.get('/v1/saveeats/restaurante/frete-area-entrega/idRestaurante/:idRestaurant
         response.status(200);
     } else {
         console.log(dadosRestaurante);
-        console.log('Está caindo aqui?');
         response.status(message.ERROR_NOT_FOUND.status)
         response.json(message.ERROR_NOT_FOUND)
     }
 });
 
+//EndPoint: GET - Retorna todas areas de entrega de um restaurante
+app.get('/v1/saveeats/restaurante/frete-area-entrega2/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante; 
+
+    let dadosRestaurante = await controllerRestaurante.getFreteAreaEntregaIdDoRestaurante2(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        console.log('Está caindo aqui?');
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
 
 //EndPoint: POST - Restaurante adicionar suas areas de entrega (PROCEDURE)
 app.post('/v1/saveeats/restaurante/frete-area-entrega',cors(), bodyParserJSON, async function (request, response) {
@@ -774,6 +790,27 @@ app.get('/v1/saveeats/acompanhamento-desempenho-mes-atual/restaurante/idRestaura
         response.json(message.ERROR_NOT_FOUND)
     }
 });
+
+
+
+//EndPoint: GET - Retorna o desempenho de vendas do MÊS atual de um restaurante 
+app.get('/v1/saveeats/acompanhamento-desempenho-mes-atual/restaurante/idRestaurante/:idRestaurante', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dadosRestaurante = await controllerRestaurante.getAcompanhamentoDesempenhoMensalByIDRestaurante(idRestaurante);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
+
 
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 

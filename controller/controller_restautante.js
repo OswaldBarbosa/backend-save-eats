@@ -389,6 +389,27 @@ const getFreteAreaEntregaIdDoRestaurante = async function (idRestaurante) {
     }
 }
 
+const getFreteAreaEntregaIdDoRestaurante2 = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectFreteAreaEntregaByIDRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        dadosRestauranteJSON.quantidade = dadosRestaurante.length
+        dadosRestauranteJSON.frete_area_entrega_do_restaurante = dadosRestaurante[0];
+
+        return dadosRestauranteJSON
+
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
 
 const getRaioEntregaByIdDoRestaurante = async function (idRestaurante) {
 
@@ -598,6 +619,27 @@ const getAcompanhamentoDesempenhoMensalByIDRestaurante = async function (id) {
 }
 
 
+const getPedidosEntreguesECanceladosByIDRestaurante = async function (idRestaurante) {
+
+    let idDoRestaurante = idRestaurante
+
+    let dadosRestauranteJSON = {}
+
+    let dadosRestaurante = await restauranteDAO.selectPedidosEntreguesECanceladosByIDRestaurante(idDoRestaurante)
+
+    if (dadosRestaurante) {
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
+        dadosRestauranteJSON.pedidos_entregue_e_cancelados_de_um_restaurante = dadosRestaurante;
+
+
+        return dadosRestauranteJSON
+    } else {
+        return message.ERROR_INTERNAL_SERVER
+    }
+}
+
 
 
 
@@ -628,5 +670,7 @@ module.exports = {
     getAvaliacoesByIdRestaurante,
     getValorTotalComissaoValorLiquidoByIdRestaurante,
     getAcompanhamentoDesempenhoByIDRestaurante,
-    getAcompanhamentoDesempenhoMensalByIDRestaurante
+    getAcompanhamentoDesempenhoMensalByIDRestaurante,
+    getPedidosEntreguesECanceladosByIDRestaurante,
+    getFreteAreaEntregaIdDoRestaurante2
 }
