@@ -380,13 +380,14 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     tbl_cliente.telefone AS telefone_cliente,
     
     -- Adicionar campos de endereço do cliente
-    tbl_endereco_cliente.rua AS rua_cliente,
+    tbl_endereco_cliente.logradouro AS logradouro_cliente,
+    tbl_endereco_cliente.localidade AS localidade_cliente,
     tbl_endereco_cliente.cep AS cep_cliente,
     tbl_endereco_cliente.bairro AS bairro_cliente,
     tbl_endereco_cliente.numero AS numero_cliente,
     tbl_endereco_cliente.complemento AS complemento_cliente,
-    tbl_cidade_cliente.nome_cidade AS cidade_cliente,
-    tbl_estado_cliente.nome_estado AS estado_cliente
+    tbl_endereco_cliente.uf AS uf_cliente
+
     
     FROM tbl_pedido_produto
     INNER JOIN tbl_produto ON tbl_pedido_produto.id_produto = tbl_produto.id
@@ -404,8 +405,7 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     -- Adicionar o relacionamento com o endereço do cliente
     INNER JOIN tbl_intermed_endereco_cliente ON tbl_cliente.id = tbl_intermed_endereco_cliente.id_cliente
     INNER JOIN tbl_endereco_cliente ON tbl_intermed_endereco_cliente.id_endereco_cliente = tbl_endereco_cliente.id
-    INNER JOIN tbl_cidade_cliente ON tbl_endereco_cliente.id_cidade_cliente = tbl_cidade_cliente.id
-    INNER JOIN tbl_estado_cliente ON tbl_cidade_cliente.id_estado_cliente = tbl_estado_cliente.id
+
 
     WHERE tbl_pedido.id_cliente = ${idCliente};
 
@@ -421,7 +421,6 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     }
 
 }
-
 //Funcao para o restaurante editar status de um pedido
 const procedureUpdateStatusPedido = async function (dadosProcedures) {
 
