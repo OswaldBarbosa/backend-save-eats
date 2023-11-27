@@ -637,16 +637,25 @@ const selectPedidosEntreguesECanceladosByIDRestaurante = async function (idResta
 
     let idDoRestaurante = idRestaurante
 
-    // Script para trazer os pedidos/valor total e pedidos entregues da data atual
+    // Script para trazer os pedidos canceladoes e entregues do mes atual
     let sql = `
 
-    SELECT *
-    FROM tbl_pedido
-    WHERE id_status_pedido IN (
+    SELECT
+    p.id AS id_pedido,
+    p.numero_pedido,
+    p.horario,
+    DATE_FORMAT(p.data_pedido, '%d/%m/%Y') AS data_pedido_formatada,
+    p.previsao_entrega,
+    p.valor_total,
+    s.status_pedido
+    FROM tbl_pedido p
+    JOIN tbl_status_pedido s ON p.id_status_pedido = s.id
+    WHERE p.id_status_pedido IN (
+    (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Cancelado'),
+    (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')
+    ) AND p.id_restaurante = '${idDoRestaurante}';
 
-        (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Cancelado'),
-        (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')
-    ) AND id_restaurante = ${idDoRestaurante}';
+    ;
 
     `
 
@@ -658,6 +667,42 @@ const selectPedidosEntreguesECanceladosByIDRestaurante = async function (idResta
         return false;
     }
 }
+
+
+//traz os pedidos,valor total e pedidos concluidos da MêS atual pelo  id do restaurante
+
+const selectQuantidadePedidosPorStatus = async (idRestaurante) => {
+
+    let idDoRestaurante = idRestaurante
+
+    try {
+      const query = `
+        SELECT
+          s.status_pedido AS nome_status_pedido,
+          COUNT(p.id) AS quantidade_pedidos
+        FROM tbl_pedido p
+        JOIN tbl_status_pedido s ON p.id_status_pedido = s.id
+        WHERE p.id_status_pedido IN (
+          (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Cancelado'),
+          (SELECT id FROM tbl_status_pedido WHERE status_pedido = 'Pedido entregue')
+        ) AND p.id_restaurante = '${idDoRestaurante}'
+        GROUP BY s.status_pedido;
+      `;
+  
+      const results = await pool.query(query, [idRestaurante]);
+  
+      return results;
+    } catch (error) {
+      console.error('Erro ao obter a quantidade de pedidos por status', error);
+      throw error;
+    }
+  };
+  
+
+  
+
+
+
 
 module.exports = {
     insertRestaurante,
@@ -683,6 +728,7 @@ module.exports = {
     selectValorTotalComissaoValorLiquidoByIDRestaurante,
     selectAcompanhamentoDesempenhoByIDRestaurante,
     selectAcompanhamentoDesempenhoMensalByIDRestaurante,
-    selectPedidosEntreguesECanceladosByIDRestaurante
+    selectPedidosEntreguesECanceladosByIDRestaurante,
+    selectQuantidadePedidosPorStatus
 
 }

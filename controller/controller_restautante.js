@@ -618,25 +618,35 @@ const getAcompanhamentoDesempenhoMensalByIDRestaurante = async function (id) {
     }
 }
 
-
+//pedidos entregues e cancelados de um restaurante
 const getPedidosEntreguesECanceladosByIDRestaurante = async function (idRestaurante) {
-
     let idDoRestaurante = idRestaurante
-
     let dadosRestauranteJSON = {}
 
-    let dadosRestaurante = await restauranteDAO.selectPedidosEntreguesECanceladosByIDRestaurante(idDoRestaurante)
+    let dadosPedidos = await restauranteDAO.selectPedidosEntreguesECanceladosByIDRestaurante(idDoRestaurante)
 
-    if (dadosRestaurante) {
+    if (dadosPedidos) {
+        // Filtrar pedidos entregues e cancelados
+        const pedidosEntregues = dadosPedidos.filter(pedido => pedido.status_pedido === 'Pedido entregue');
+        const pedidosCancelados = dadosPedidos.filter(pedido => pedido.status_pedido === 'Cancelado');
 
-        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status
-        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message
-        dadosRestauranteJSON.pedidos_entregue_e_cancelados_de_um_restaurante = dadosRestaurante;
+        // Contar a quantidade de pedidos entregues e cancelados
+        const quantidadePedidosEntregues = pedidosEntregues.length;
+        const quantidadePedidosCancelados = pedidosCancelados.length;
+
+        // Adicionar informações ao objeto JSON
+
+        dadosRestauranteJSON.status = message.SUCESS_REQUEST.status;
+        dadosRestauranteJSON.message = message.SUCESS_REQUEST.message;
+        dadosRestauranteJSON.quantidade_pedidos_entregues = quantidadePedidosEntregues;
+        dadosRestauranteJSON.quantidade_pedidos_cancelados = quantidadePedidosCancelados;
+        dadosRestauranteJSON.pedidos_entregues = pedidosEntregues;
+        dadosRestauranteJSON.pedidos_cancelados = pedidosCancelados;
 
 
-        return dadosRestauranteJSON
+        return dadosRestauranteJSON;
     } else {
-        return message.ERROR_INTERNAL_SERVER
+        return message.ERROR_INTERNAL_SERVER;
     }
 }
 
