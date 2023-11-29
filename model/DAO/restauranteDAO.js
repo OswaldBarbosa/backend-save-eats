@@ -379,13 +379,11 @@ const selectFormaPagamentoByIDRestaurante = async function (idRestaurante) {
     // Script para Filtrar/Buscar as formas de pagamento do restaurante especifico pelo id do restaurante
     let sql = `
 
-    SELECT forma_pagamento.*
-
-    FROM tbl_forma_pagamento AS forma_pagamento
-
-    INNER JOIN tbl_restaurante_forma_pagamento AS restaurante_forma_pagamento ON forma_pagamento.id = restaurante_forma_pagamento.id_forma_pagamento
-
-    WHERE restaurante_forma_pagamento.id_restaurante = '${idDoRestaurante}';
+    SELECT restaurante_forma_pagamento.id AS id_restaurante_forma_pagamento, forma_pagamento.*
+    FROM tbl_restaurante_forma_pagamento AS restaurante_forma_pagamento
+    INNER JOIN tbl_forma_pagamento AS forma_pagamento 
+       ON restaurante_forma_pagamento.id_forma_pagamento = forma_pagamento.id
+    WHERE restaurante_forma_pagamento.id_restaurante =  '${idDoRestaurante}';
 
     `
 
