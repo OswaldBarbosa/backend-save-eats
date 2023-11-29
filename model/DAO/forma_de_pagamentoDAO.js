@@ -52,7 +52,7 @@ const updateFormaPagamento = async function (dados) {
 
                     foto_bandeira = '${dados.foto_bandeira}',
                     nome_forma_pagamento = '${dados.nome_forma_pagamento}',
-                    tipo_forma_pagamento = '${dados.nome_forma_pagamento}'
+                    tipo_forma_pagamento = '${dados.tipo_forma_pagamento}'
 
                 where id = ${dados.id}    
             `
