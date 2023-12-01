@@ -328,7 +328,7 @@ const selectAllDetalhesPedidoByIdRestaurante = async function (idRestaurante) {
     inner join tbl_cliente
     on tbl_pedido.id_cliente = tbl_cliente.id
     where tbl_pedido.id_restaurante = ${idRestaurante}
-    ORDER BY tbl_pedido.data_pedido DESC;`
+    ORDER BY tbl_pedido.numero_pedido DESC;`
 
     let rs = await prisma.$queryRawUnsafe(sql)
 
