@@ -517,7 +517,9 @@ const selectAvaliacoesByIdRestaurante = async (idRestaurante) => {
     recomendacao.id,
     recomendacao.recomendacao,
     cliente.nome,
-    cliente.foto;
+    cliente.foto
+    ORDER BY avaliacao.data_avaliacao DESC;
+    
 `
 
     let rsAvaliacoesRestaurante = await prisma.$queryRawUnsafe(sql);
