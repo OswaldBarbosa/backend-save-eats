@@ -15,7 +15,7 @@ var telefoneRestauranteDAO = require('../model/DAO/telefone_restauranteDAO.js')
 const inserirTelefoneDoRestaurante = async function (dadosTelefone) {
 
     if (
-        dadosTelefone.numero == '' || dadosTelefone.numero == undefined || dadosTelefone.numero.length > 45||
+        dadosTelefone.numero_telefone == '' || dadosTelefone.numero_telefone == undefined || dadosTelefone.numero_telefone.length > 45||
         dadosTelefone.id_restaurante == '' || dadosTelefone.id_restaurante == undefined 
     ){
         return message.ERROR_REQUIRED_FIELDS
