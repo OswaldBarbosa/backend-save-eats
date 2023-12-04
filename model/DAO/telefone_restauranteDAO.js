@@ -15,11 +15,11 @@ const insertTelefoneRestaurante = async function (dadosTelefone) {
 
     let sql = `insert into tbl_telefone_restaurante 
             (
-                numero, 
+                numero_telefone, 
                 id_restaurante
             )
             values (
-    '${dadosTelefone.numero}',
+    '${dadosTelefone.numero_telefone}',
      ${dadosTelefone.id_restaurante}
     )`
     let resultStatus = await prisma.$executeRawUnsafe(sql)

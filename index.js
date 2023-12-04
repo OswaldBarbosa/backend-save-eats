@@ -843,6 +843,27 @@ app.get('/v1/saveeats/pedidos-cancelados-entregues-mes-atual/restaurante/idResta
     }
 });
 
+//filtro de data para pedido de um restaurante pelo id restaurante
+app.get('/v1/saveeats/filtro-data-pedido/restaurante/idRestaurante/:idRestaurante/:dataInicio/:dataFinal', cors(), async function (request, response) {
+
+    let idRestaurante = request.params.idRestaurante;
+
+    let dataInicio = request.params.dataInicio;
+
+    let dataFinal= request.params.dataFinal;
+
+    let dadosRestaurante = await controllerPedido.getDetalhesPedidoPorIDRestauranteFiltroData(idRestaurante,dataInicio,dataFinal);
+
+    if (dadosRestaurante) {
+        response.json(dadosRestaurante);
+        response.status(200);
+    } else {
+        console.log(dadosRestaurante);
+        response.status(message.ERROR_NOT_FOUND.status)
+        response.json(message.ERROR_NOT_FOUND)
+    }
+});
+
 ///////////////////////////////////////// Telefone Do Restaurante //////////////////////////////////////////////
 
 
