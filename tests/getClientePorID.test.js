@@ -1,6 +1,5 @@
 
 // getClientePorID.test.js
-
 // import dos módulo que contém a função a ser testada
 const controllerCliente = require('../controller/controller_cliente');
 const clienteDAO = require('../model/DAO/clienteDAO');
