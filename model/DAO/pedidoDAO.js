@@ -407,7 +407,8 @@ const selectAllDetalhesPedidoByIdCliente = async function (idCliente) {
     INNER JOIN tbl_endereco_cliente ON tbl_intermed_endereco_cliente.id_endereco_cliente = tbl_endereco_cliente.id
 
 
-    WHERE tbl_pedido.id_cliente = ${idCliente};
+    WHERE tbl_pedido.id_cliente = ${idCliente}
+    ORDER BY tbl_pedido.data_pedido DESC;
 
   
  `
